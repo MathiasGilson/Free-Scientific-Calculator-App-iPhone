@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "ConvCalc",
+    "slug": "CalculatorApp",
+    "version": "1.0.3",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "backgroundColor": "#000000",
+    "plugins": [
+      "expo-localization"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.qualtir.convcalc",
+      "buildNumber": "18"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.qualtir.convcalc"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f0b3fd3c-31b9-458a-b3f1-6f01b66b7f46"
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+    "configVersion": 0,
+    "apple": {
+        "info": {
+            "en-US": {
+                "title": "Free Calculator with History",
+                "subtitle": "Calculator with History",
+                "description": "An elegant free calculator with history and advanced math functions.",
+                "keywords": ["calculator", "history", ""],
+                "marketingUrl": "https://example.com/en/promo",
+                "supportUrl": "https://example.com/en/support",
+                "privacyPolicyUrl": "https://example.com/en/privacy"
+            }
+        }
+    }
+}
