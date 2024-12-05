@@ -47,10 +47,9 @@ export default () => {
         setRatesUpdatedAt(0)
         const currentTime = new Date().getTime()
         try {
-            const response = await fetch(
-                `https://openexchangerates.org/api/latest.json?app_id=${process.env.EXPO_PUBLIC_OPEN_EXCHANGE_RATES_API_KEY}`
-            )
+            const response = await fetch(`https://api.billingjs.com/getExchangeRates?auth=mH8COwV9j5BETLdKoTXQ0T7CU`)
             const json = await response.json()
+            console.log(json)
             setRatesUpdatedAt(currentTime)
             setRates(json.rates)
             await AsyncStorage.setItem("ratesData", JSON.stringify({ rates: json.rates, updatedAt: currentTime }))

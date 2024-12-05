@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef } from "react"
 import { SafeAreaView, StyleSheet, StatusBar, Dimensions, ScrollView, View, Keyboard } from "react-native"
 
 import Currency from "./src/screens/Currency"
