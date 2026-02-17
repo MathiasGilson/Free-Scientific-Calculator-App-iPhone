@@ -70,17 +70,83 @@ const icons: Record<string, El[]> = {
         { type: "path", d: "M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" },
         { type: "circle", cx: 7.5, cy: 7.5, r: 0.5, fill: "currentColor" },
     ],
-    pin: [
-        { type: "path", d: "M12 17v5" },
-        { type: "path", d: "M9 11V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v7" },
-        { type: "path", d: "M5 17h14" },
-        { type: "path", d: "M9 11l-2.5 6h11L15 11" },
+    landmark: [
+        { type: "path", d: "M3 22h18" },
+        { type: "path", d: "M6 18v-7" },
+        { type: "path", d: "M10 18v-7" },
+        { type: "path", d: "M14 18v-7" },
+        { type: "path", d: "M18 18v-7" },
+        { type: "path", d: "M12 2 3 9h18Z" },
     ],
-    "pin-filled": [
-        { type: "path", d: "M12 17v5" },
-        { type: "path", d: "M9 11V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v7", fill: "currentColor" },
-        { type: "path", d: "M5 17h14" },
-        { type: "path", d: "M9 11l-2.5 6h11L15 11", fill: "currentColor" },
+    calculator: [
+        { type: "rect", x: 4, y: 2, width: 16, height: 20, rx: 2 },
+        { type: "path", d: "M8 6h8" },
+        { type: "path", d: "M16 14v4" },
+        { type: "path", d: "M16 10h.01" },
+        { type: "path", d: "M12 10h.01" },
+        { type: "path", d: "M8 10h.01" },
+        { type: "path", d: "M12 14h.01" },
+        { type: "path", d: "M8 14h.01" },
+        { type: "path", d: "M12 18h.01" },
+        { type: "path", d: "M8 18h.01" },
+    ],
+    "dollar-sign": [
+        { type: "path", d: "M12 2v20" },
+        { type: "path", d: "M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" },
+    ],
+    "layout-grid": [
+        { type: "rect", x: 3, y: 3, width: 7, height: 7, rx: 1 },
+        { type: "rect", x: 14, y: 3, width: 7, height: 7, rx: 1 },
+        { type: "rect", x: 14, y: 14, width: 7, height: 7, rx: 1 },
+        { type: "rect", x: 3, y: 14, width: 7, height: 7, rx: 1 },
+    ],
+    "chevron-left": [
+        { type: "path", d: "m15 18-6-6 6-6" },
+    ],
+    bookmark: [
+        { type: "path", d: "m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" },
+    ],
+    triangle: [
+        { type: "path", d: "M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" },
+    ],
+    flame: [
+        { type: "path", d: "M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4" },
+    ],
+    zap: [
+        { type: "path", d: "M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" },
+    ],
+    fuel: [
+        { type: "path", d: "M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0v-6.998a2 2 0 0 0-.59-1.42L18 5" },
+        { type: "path", d: "M14 21V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v16" },
+        { type: "path", d: "M2 21h13" },
+        { type: "path", d: "M3 9h11" },
+    ],
+    "arrow-down-to-line": [
+        { type: "path", d: "M12 17V3" },
+        { type: "path", d: "m6 11 6 6 6-6" },
+        { type: "path", d: "M19 21H5" },
+    ],
+    move: [
+        { type: "path", d: "M12 2v20" },
+        { type: "path", d: "m15 19-3 3-3-3" },
+        { type: "path", d: "m19 9 3 3-3 3" },
+        { type: "path", d: "M2 12h20" },
+        { type: "path", d: "m5 9-3 3 3 3" },
+        { type: "path", d: "m9 5 3-3 3 3" },
+    ],
+    "bookmark-filled": [
+        { type: "path", d: "m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z", fill: "currentColor" },
+    ],
+    x: [
+        { type: "path", d: "M18 6 6 18" },
+        { type: "path", d: "m6 6 12 12" },
+    ],
+    "trash-2": [
+        { type: "path", d: "M3 6h18" },
+        { type: "path", d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" },
+        { type: "path", d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" },
+        { type: "path", d: "M10 11v6" },
+        { type: "path", d: "M14 11v6" },
     ],
 }
 

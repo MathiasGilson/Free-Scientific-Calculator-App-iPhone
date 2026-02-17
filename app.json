@@ -13,7 +13,6 @@
         },
         "backgroundColor": "#000000",
         "plugins": ["expo-localization"],
-        "assetBundlePatterns": ["**/*"],
         "ios": {
             "supportsTablet": false,
             "bundleIdentifier": "com.qualtir.convcalc",

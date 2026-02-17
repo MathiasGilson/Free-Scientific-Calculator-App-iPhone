@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react"
-import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, Dimensions, ScrollView } from "react-native"
+import React, { useState, useEffect, useRef, useContext, useCallback } from "react"
+import { Text, TouchableOpacity, View, StyleSheet, Dimensions, ScrollView } from "react-native"
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import * as Clipboard from "expo-clipboard"
 
 import * as Localization from "expo-localization"
@@ -7,6 +8,9 @@ import { create, all } from "mathjs"
 
 import { hapticFeedback, hapticFeedbackSwitch, hapticSuccess } from "../utils"
 import Button from "../components/Button"
+import LucideIcon from "../components/LucideIcon"
+import { saveCalculation } from "../utils/historyStorage"
+import { CalcCallbackContext, HistoryContext } from "../../App"
 
 const config = {}
 const MathJS = create(all, config)
@@ -19,6 +23,8 @@ const BUTTON_SIZE = (screenWidth - 40) / 4
 const EXPANDED_BUTTON_SIZE = (screenWidth - 40) / 5
 
 const App = () => {
+    const { setOnSelect, bumpRefreshKey } = useContext(CalcCallbackContext)
+    const { openHistory } = useContext(HistoryContext)
     const [currentInput, setCurrentInput] = useState("")
     const [history, setHistory] = useState([])
     const [selectedChunk, setSelectedChunk] = useState(-1)
@@ -44,6 +50,12 @@ const App = () => {
     }, [isRadian])
 
     useEffect(() => {
+        setOnSelect((expression: string) => {
+            setCurrentInput(expression)
+        })
+    }, [setOnSelect])
+
+    useEffect(() => {
         const totalWidth = chunkWidths.reduce((acc, width) => acc + width, 0)
         console.log(totalWidth)
         const maxWidth = screenWidth - 100
@@ -66,7 +78,7 @@ const App = () => {
             return chunk.replace(".", Localization.getLocales()[0].decimalSeparator ?? ".")
         }
 
-        const formatted = new Intl.NumberFormat(Localization.locale ?? "en-US", {
+        const formatted = new Intl.NumberFormat(Localization.getLocales()[0]?.languageTag ?? "en-US", {
             maximumFractionDigits: 5,
             useGrouping: true
         }).format(chunk)
@@ -79,7 +91,7 @@ const App = () => {
     const formatResult = (result) => {
         if (result === "") return result
 
-        const formatted = new Intl.NumberFormat(Localization.locale ?? "en-US", {
+        const formatted = new Intl.NumberFormat(Localization.getLocales()[0]?.languageTag ?? "en-US", {
             maximumFractionDigits: 5,
             useGrouping: true
         }).format(result)
@@ -173,6 +185,7 @@ const App = () => {
                 if (prev.at(-1) === parsedResult) return prev
                 return [...prev, parsedResult]
             })
+            saveCalculation(currentInput, String(result)).then(() => bumpRefreshKey())
             setCurrentInput(String(result))
             setSelectedChunk(-1)
         } catch (error) {
@@ -402,9 +415,19 @@ const App = () => {
         )
     }
 
+    const openHistoryDrawer = () => {
+        hapticFeedback()
+        openHistory()
+    }
+
+    const insets = useSafeAreaInsets()
+
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
+                <TouchableOpacity style={[styles.historyButton, { top: insets.top + 4 }]} onPress={openHistoryDrawer} activeOpacity={0.6}>
+                    <LucideIcon name="clock" size={22} color="#888" />
+                </TouchableOpacity>
                 <View style={styles.historyContainer} onTouchStart={() => setSelectedChunk(-1)}>
                     <ScrollView
                         contentContainerStyle={{ padding: 10, alignItems: "flex-end" }}
@@ -457,7 +480,7 @@ const App = () => {
                     </View>
                 ))}
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -469,6 +492,18 @@ const styles = StyleSheet.create({
     },
     header: {
         flex: 1
+    },
+    historyButton: {
+        position: "absolute",
+        top: 0,
+        right: 16,
+        zIndex: 10,
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: "rgba(255,255,255,0.1)",
+        justifyContent: "center",
+        alignItems: "center",
     },
     historyContainer: {
         flex: 3,

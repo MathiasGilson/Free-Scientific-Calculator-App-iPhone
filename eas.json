@@ -1,36 +1,36 @@
 {
-  "cli": {
-    "version": ">= 5.6.0",
-    "promptToConfigurePushNotifications": false,
-    "appVersionSource": "remote"
-  },
-  "build": {
-    "development": {
-      "node": "18.18.0",
-      "developmentClient": true,
-      "distribution": "internal"
+    "cli": {
+        "version": ">= 16.0.0",
+        "promptToConfigurePushNotifications": false,
+        "appVersionSource": "remote"
     },
-    "preview": {
-      "node": "18.18.0",
-      "autoIncrement": true,
-      "distribution": "internal"
+    "build": {
+        "development": {
+            "node": "22.12.0",
+            "developmentClient": true,
+            "distribution": "internal"
+        },
+        "preview": {
+            "node": "22.12.0",
+            "autoIncrement": true,
+            "distribution": "internal"
+        },
+        "emulator": {
+            "ios": {
+                "simulator": true
+            }
+        },
+        "production": {
+            "node": "22.12.0",
+            "autoIncrement": true
+        }
     },
-    "emulator": {
-      "ios": {
-        "simulator": true
-      }
-    },
-    "production": {
-      "node": "18.18.0",
-      "autoIncrement": true
+    "submit": {
+        "production": {
+            "ios": {
+                "appName": "Free Calculator with History",
+                "companyName": "Free Calculator no ads"
+            }
+        }
     }
-  },
-  "submit": {
-    "production": {
-      "ios": {
-        "appName": "Free Calculator with History",
-        "companyName": "Free Calculator no ads"
-      }
-    }
-  }
 }

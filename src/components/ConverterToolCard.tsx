@@ -5,18 +5,24 @@ import { hapticFeedback } from "../utils"
 import LucideIcon from "./LucideIcon"
 
 const { width: screenWidth } = Dimensions.get("window")
-const CARD_SIZE = (screenWidth - 78) / 3
+const CARD_SIZE = (screenWidth - 20 - 8 * 8) / 4
 
 type Props = {
     tool: ConverterTool
-    onPress: () => void
+    onPress?: () => void
+    onLongPress?: () => void
+    onPressOut?: () => void
+    delayLongPress?: number
 }
 
-export default ({ tool, onPress }: Props) => (
+export default ({ tool, onPress, onLongPress, onPressOut, delayLongPress = 300 }: Props) => (
     <TouchableOpacity
         style={styles.card}
         onPressIn={hapticFeedback}
         onPress={onPress}
+        onLongPress={onLongPress}
+        onPressOut={onPressOut}
+        delayLongPress={delayLongPress}
         activeOpacity={0.7}
     >
         <View style={styles.iconContainer}>

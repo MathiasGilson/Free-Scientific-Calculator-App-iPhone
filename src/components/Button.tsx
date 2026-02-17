@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet, Dimensions, ScrollView } from "react-native"
+import { Text, TouchableOpacity, View, StyleSheet, Dimensions, ScrollView } from "react-native"
 import * as Haptics from "expo-haptics"
 import Svg, { Path } from "react-native-svg"
 import * as Localization from "expo-localization"

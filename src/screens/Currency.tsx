@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import {
-    SafeAreaView,
     Text,
     View,
     StyleSheet,
@@ -12,6 +11,7 @@ import {
     Dimensions,
     Pressable
 } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
 import currencies from "../currencies.json" // make sure this file contains the needed currency data
 
 import * as Localization from "expo-localization"
@@ -23,6 +23,7 @@ dayjs.extend(relativeTime)
 import AsyncStorage from "@react-native-async-storage/async-storage"
 LogBox.ignoreAllLogs()
 import Button from "../components/Button"
+import LucideIcon from "../components/LucideIcon"
 import { hapticFeedbackSwitch, hapticFeedback } from "../utils"
 
 // Get the device width and height
@@ -31,10 +32,16 @@ const { width: screenWidth } = Dimensions.get("window")
 // Calculate button width and height based on screen size
 const BUTTON_SIZE = (screenWidth - 40) / 4
 
-export default () => {
+type Props = {
+    onBack?: () => void
+}
+
+export default ({ onBack }: Props = {}) => {
     const [amounts, setAmounts] = useState(["1", "0", "0", "0"])
     const [rates, setRates] = useState(null)
     const [ratesUpdatedAt, setRatesUpdatedAt] = useState(0)
+    const [isRefreshing, setIsRefreshing] = useState(false)
+    const [rateFetchFailed, setRateFetchFailed] = useState(false)
 
     const [displayedCurrencies, setDisplayedCurrencies] = useState(["USD", "EUR", "GBP", "JPY"])
     const [searchText, setSearchText] = useState("")
@@ -44,7 +51,8 @@ export default () => {
     const [inputEdited, setInputEdited] = useState(false)
 
     const fetchRates = async () => {
-        setRatesUpdatedAt(0)
+        setIsRefreshing(true)
+        setRateFetchFailed(false)
         const currentTime = new Date().getTime()
         try {
             const response = await fetch(`https://api.billingjs.com/getExchangeRates?auth=mH8COwV9j5BETLdKoTXQ0T7CU`)
@@ -55,6 +63,9 @@ export default () => {
             await AsyncStorage.setItem("ratesData", JSON.stringify({ rates: json.rates, updatedAt: currentTime }))
         } catch (error) {
             console.error(error)
+            setRateFetchFailed(true)
+        } finally {
+            setIsRefreshing(false)
         }
     }
 
@@ -63,9 +74,13 @@ export default () => {
         const ratesDataParsed = ratesData ? JSON.parse(ratesData) : null
         const currentTime = new Date().getTime()
 
-        if (ratesDataParsed && currentTime - ratesDataParsed.updatedAt < 24 * 60 * 60 * 1000) {
+        if (ratesDataParsed) {
             setRatesUpdatedAt(ratesDataParsed.updatedAt)
-            return setRates(ratesDataParsed.rates)
+            setRates(ratesDataParsed.rates)
+
+            if (currentTime - ratesDataParsed.updatedAt < 24 * 60 * 60 * 1000) {
+                return
+            }
         }
         return fetchRates()
     }
@@ -157,7 +172,7 @@ export default () => {
                 ? activeAmount.replace(".", Localization.getLocales()[0].decimalSeparator ?? ".")
                 : Number(
                       parseFloat(isActiveCurrency ? activeAmount : amounts[index]).toFixed(currencyData.decimal_digits)
-                  ).toLocaleString(Localization.locale ?? "en-US", {
+                  ).toLocaleString(Localization.getLocales()[0]?.languageTag ?? "en-US", {
                       maximumFractionDigits: currencyData.decimal_digits
                   })
         return (
@@ -184,19 +199,32 @@ export default () => {
         )
     }
 
+    const showHeader = !!onBack
+    const Wrapper = showHeader ? View : SafeAreaView
+
     return (
-        <SafeAreaView style={styles.container}>
+        <Wrapper style={styles.container}>
+            {showHeader && (
+                <View style={styles.pinHeader}>
+                    <TouchableOpacity onPress={onBack} style={styles.glassButtonIcon}>
+                        <LucideIcon name="chevron-left" size={20} color="white" />
+                    </TouchableOpacity>
+                    <View style={styles.pinHeaderSpacer} />
+                    <View style={styles.pinHeaderSpacer} />
+                </View>
+            )}
             <View style={styles.currencyContainer}>
                 {displayedCurrencies.map(renderCurrency)}
 
                 <TouchableOpacity onPress={fetchRates} style={styles.ratesRefreshTimeContainer}>
                     <View style={styles.ratesRefreshTime}>
                         <Text style={{ color: "#555" }}>
-                            {ratesUpdatedAt > 0
-                                ? `Updated ${dayjs(ratesUpdatedAt).fromNow()} at ${dayjs(ratesUpdatedAt).format(
-                                      "HH:mm"
-                                  )}`
-                                : "Updating rates..."}
+                            {isRefreshing
+                                ? "Updating rates..."
+                                : ratesUpdatedAt > 0
+                                  ? `Updated ${dayjs(ratesUpdatedAt).fromNow()} at ${dayjs(ratesUpdatedAt).format("HH:mm")}` +
+                                    (rateFetchFailed ? " (update failed)" : "")
+                                  : "Tap to load rates"}
                         </Text>
                     </View>
                 </TouchableOpacity>
@@ -206,15 +234,15 @@ export default () => {
             <View style={styles.keyboard}>
                 <View style={styles.numberButtons}>
                     {[
-                        { type: "number", theme: "default", value: "3" },
-                        { type: "number", theme: "default", value: "2" },
-                        { type: "number", theme: "default", value: "1" },
-                        { type: "number", theme: "default", value: "6" },
-                        { type: "number", theme: "default", value: "5" },
-                        { type: "number", theme: "default", value: "4" },
                         { type: "number", theme: "default", value: "9" },
                         { type: "number", theme: "default", value: "8" },
                         { type: "number", theme: "default", value: "7" },
+                        { type: "number", theme: "default", value: "6" },
+                        { type: "number", theme: "default", value: "5" },
+                        { type: "number", theme: "default", value: "4" },
+                        { type: "number", theme: "default", value: "3" },
+                        { type: "number", theme: "default", value: "2" },
+                        { type: "number", theme: "default", value: "1" },
                         { type: "number", theme: "default", value: "." },
                         { type: "number", theme: "default", value: "0" }
                     ].map((button) => (
@@ -287,11 +315,30 @@ export default () => {
                     </View>
                 </View>
             </Modal>
-        </SafeAreaView>
+        </Wrapper>
     )
 }
 
 const styles = StyleSheet.create({
+    pinHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+    },
+    pinHeaderSpacer: {
+        width: 36,
+        height: 36,
+    },
+    glassButtonIcon: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: "rgba(255,255,255,0.1)",
+        justifyContent: "center",
+        alignItems: "center",
+    },
     container: {
         flex: 1,
         flexDirection: "column",

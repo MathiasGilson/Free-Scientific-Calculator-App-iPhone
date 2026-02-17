@@ -15,6 +15,8 @@ import {
     calculateAge,
     calculateDateDiff,
     calculateDiscount,
+    calculateLoan,
+    formatNumber,
 } from "../utils/conversions"
 import { hapticFeedback, hapticFeedbackSwitch } from "../utils"
 import Button from "./Button"
@@ -23,21 +25,31 @@ import LucideIcon from "./LucideIcon"
 const { width: screenWidth } = Dimensions.get("window")
 const BUTTON_SIZE = (screenWidth - 40) / 4
 
+function formatInputDisplay(value: string): string {
+    if (!value) return value
+    const endsWithDot = value.endsWith(".")
+    const num = parseFloat(value)
+    if (isNaN(num)) return value
+    const [intPart, decPart] = value.split(".")
+    const formatted = parseInt(intPart, 10).toLocaleString("en-US")
+    if (decPart !== undefined) return formatted + "." + decPart
+    if (endsWithDot) return formatted + "."
+    return formatted
+}
+
 type Props = {
     tool: ConverterTool
     onBack?: () => void
-    isPinned?: boolean
-    onTogglePin?: () => void
 }
 
-export default ({ tool, onBack, isPinned, onTogglePin }: Props) => {
-    if (tool.type === "unit") return <UnitConverter tool={tool} onBack={onBack} isPinned={isPinned} onTogglePin={onTogglePin} />
-    return <CalculatorView tool={tool} onBack={onBack} isPinned={isPinned} onTogglePin={onTogglePin} />
+export default ({ tool, onBack }: Props) => {
+    if (tool.type === "unit") return <UnitConverter tool={tool} onBack={onBack} />
+    return <CalculatorView tool={tool} onBack={onBack} />
 }
 
 // ─── Unit Converter ───────────────────────────────────────────
 
-function UnitConverter({ tool, onBack, isPinned, onTogglePin }: Props) {
+function UnitConverter({ tool, onBack }: Props) {
     const [input, setInput] = useState("1")
     const [inputEdited, setInputEdited] = useState(false)
     const [fromIndex, setFromIndex] = useState(0)
@@ -72,7 +84,7 @@ function UnitConverter({ tool, onBack, isPinned, onTogglePin }: Props) {
 
     return (
         <View style={styles.container}>
-            <Header icon={tool.icon} label={tool.label} onBack={onBack} isPinned={isPinned} onTogglePin={onTogglePin} />
+            <Header icon={tool.icon} label={tool.label} onBack={onBack} />
 
             <ScrollView style={styles.resultsList} contentContainerStyle={{ paddingBottom: 10 }}>
                 {results.map((r, i) => (
@@ -85,10 +97,13 @@ function UnitConverter({ tool, onBack, isPinned, onTogglePin }: Props) {
                             setInputEdited(false)
                         }}
                     >
-                        <Text style={[styles.resultLabel, i === fromIndex && { color: "white", fontSize: 22 }]}>{r.label}</Text>
-                        <Text style={[styles.resultValue, i === fromIndex && { color: "#F69A06", fontSize: 26 }]} numberOfLines={1}>
-                            {formatConversionResult(r.value)}
-                        </Text>
+                        <Text style={[styles.resultLabel, i === fromIndex && { color: "white", fontSize: 22 }]}>{r.name}</Text>
+                        <View style={styles.resultValueRow}>
+                            <Text style={[styles.resultValue, i === fromIndex && { color: "#F69A06", fontSize: 26 }]} numberOfLines={1}>
+                                {formatConversionResult(r.value)}
+                            </Text>
+                            <Text style={[styles.resultUnit, i === fromIndex && { fontSize: 16 }]}>{r.label}</Text>
+                        </View>
                     </TouchableOpacity>
                 ))}
             </ScrollView>
@@ -104,6 +119,7 @@ type CalcFieldConfig = {
     key: string
     label: string
     placeholder: string
+    suffix?: string
 }
 
 const calcFieldConfigs: Record<string, CalcFieldConfig[]> = {
@@ -128,9 +144,14 @@ const calcFieldConfigs: Record<string, CalcFieldConfig[]> = {
         { key: "price", label: "Price", placeholder: "100" },
         { key: "percent", label: "%", placeholder: "20" },
     ],
+    loan: [
+        { key: "principal", label: "Amount", placeholder: "200000" },
+        { key: "rate", label: "Rate", placeholder: "5", suffix: "%" },
+        { key: "years", label: "Duration", placeholder: "30", suffix: " yrs" },
+    ],
 }
 
-function CalculatorView({ tool, onBack, isPinned, onTogglePin }: Props) {
+function CalculatorView({ tool, onBack }: Props) {
     const fields = calcFieldConfigs[tool.key] || []
     const initialValues: Record<string, string> = {}
     fields.forEach((f) => (initialValues[f.key] = f.placeholder))
@@ -156,6 +177,8 @@ function CalculatorView({ tool, onBack, isPinned, onTogglePin }: Props) {
                 )
             case "discount":
                 return calculateDiscount(nums.price, nums.percent)
+            case "loan":
+                return calculateLoan(nums.principal, nums.rate, nums.years)
             default:
                 return null
         }
@@ -188,7 +211,7 @@ function CalculatorView({ tool, onBack, isPinned, onTogglePin }: Props) {
 
     return (
         <View style={styles.container}>
-            <Header icon={tool.icon} label={tool.label} onBack={onBack} isPinned={isPinned} onTogglePin={onTogglePin} />
+            <Header icon={tool.icon} label={tool.label} onBack={onBack} />
 
             <ScrollView style={styles.resultsList} contentContainerStyle={{ paddingBottom: 10 }}>
                 {fields.map((f) => (
@@ -199,7 +222,7 @@ function CalculatorView({ tool, onBack, isPinned, onTogglePin }: Props) {
                     >
                         <Text style={styles.resultLabel}>{f.label}</Text>
                         <Text style={[styles.resultValue, activeField === f.key && { color: "#F69A06" }]}>
-                            {values[f.key] || f.placeholder}
+                            {formatInputDisplay(values[f.key] || f.placeholder)}{f.suffix ? f.suffix : ""}
                         </Text>
                     </TouchableOpacity>
                 ))}
@@ -240,18 +263,27 @@ function renderCalcResult(key: string, result: any) {
             return (
                 <>
                     <Text style={styles.calcResultTitle}>Difference</Text>
-                    <Text style={styles.calcResultText}>{result.totalDays} days</Text>
-                    <Text style={styles.calcResultText}>{result.weeks} weeks</Text>
-                    <Text style={styles.calcResultText}>{result.months} months</Text>
-                    <Text style={styles.calcResultText}>{result.years} years</Text>
+                    <Text style={styles.calcResultText}>{formatNumber(result.totalDays, 0)} days</Text>
+                    <Text style={styles.calcResultText}>{formatNumber(result.weeks, 0)} weeks</Text>
+                    <Text style={styles.calcResultText}>{formatNumber(result.months, 1)} months</Text>
+                    <Text style={styles.calcResultText}>{formatNumber(result.years)} years</Text>
                 </>
             )
         case "discount":
             return (
                 <>
                     <Text style={styles.calcResultTitle}>Result</Text>
-                    <Text style={styles.calcResultText}>Savings: {result.savings}</Text>
-                    <Text style={styles.calcResultText}>Final price: {result.finalPrice}</Text>
+                    <Text style={styles.calcResultText}>Savings: {formatNumber(result.savings)}</Text>
+                    <Text style={styles.calcResultText}>Final price: {formatNumber(result.finalPrice)}</Text>
+                </>
+            )
+        case "loan":
+            return (
+                <>
+                    <Text style={styles.calcResultTitle}>Loan Summary</Text>
+                    <Text style={styles.calcResultText}>Monthly: {formatNumber(result.monthly)}</Text>
+                    <Text style={styles.calcResultText}>Total paid: {formatNumber(result.totalPaid)}</Text>
+                    <Text style={styles.calcResultText}>Total interest: {formatNumber(result.totalInterest)}</Text>
                 </>
             )
         default:
@@ -261,33 +293,22 @@ function renderCalcResult(key: string, result: any) {
 
 // ─── Shared Components ────────────────────────────────────────
 
-function Header({ icon, label, onBack, isPinned, onTogglePin }: {
+function Header({ icon, label, onBack }: {
     icon: string
     label: string
     onBack?: () => void
-    isPinned?: boolean
-    onTogglePin?: () => void
 }) {
     return (
         <View style={styles.header}>
             {onBack ? (
-                <TouchableOpacity onPress={onBack} style={styles.backButton}>
-                    <Text style={styles.backText}>‹ Back</Text>
+                <TouchableOpacity onPress={onBack} style={styles.glassButtonIcon}>
+                    <LucideIcon name="chevron-left" size={20} color="white" />
                 </TouchableOpacity>
             ) : (
-                <View style={styles.backButton} />
+                <View style={styles.headerSpacer} />
             )}
-            <View style={styles.headerCenter}>
-                <LucideIcon name={icon} size={20} color="white" />
-                <Text style={styles.headerTitle}>{label}</Text>
-            </View>
-            {onTogglePin ? (
-                <TouchableOpacity onPress={onTogglePin} style={[styles.backButton, { alignItems: "flex-end" }]}>
-                    <LucideIcon name={isPinned ? "pin-filled" : "pin"} size={20} color="#999" />
-                </TouchableOpacity>
-            ) : (
-                <View style={styles.backButton} />
-            )}
+            <View style={styles.headerCenter} />
+            <View style={styles.headerSpacer} />
         </View>
     )
 }
@@ -305,9 +326,9 @@ function Keypad({
         <View style={styles.keyboard}>
             <View style={styles.numberButtons}>
                 {[
-                    { value: "3" }, { value: "2" }, { value: "1" },
-                    { value: "6" }, { value: "5" }, { value: "4" },
                     { value: "9" }, { value: "8" }, { value: "7" },
+                    { value: "6" }, { value: "5" }, { value: "4" },
+                    { value: "3" }, { value: "2" }, { value: "1" },
                     { value: "." }, { value: "0" },
                 ].map((btn) => (
                     <View style={{ width: BUTTON_SIZE, height: BUTTON_SIZE, padding: 5 }} key={btn.value}>
@@ -354,6 +375,24 @@ const styles = StyleSheet.create({
     backButton: {
         width: 70,
     },
+    headerSpacer: {
+        width: 36,
+        height: 36,
+    },
+    glassButton: {
+        paddingHorizontal: 14,
+        paddingVertical: 8,
+        borderRadius: 20,
+        backgroundColor: "rgba(255,255,255,0.1)",
+    },
+    glassButtonIcon: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: "rgba(255,255,255,0.1)",
+        justifyContent: "center",
+        alignItems: "center",
+    },
     backText: {
         color: "#F69A06",
         fontSize: 18,
@@ -387,14 +426,26 @@ const styles = StyleSheet.create({
         color: "#999",
         fontSize: 18,
         fontWeight: "500",
-        width: 70,
+        minWidth: 70,
+    },
+    resultValueRow: {
+        flexDirection: "row",
+        alignItems: "baseline",
+        flex: 1,
+        justifyContent: "flex-end",
     },
     resultValue: {
         color: "white",
         fontSize: 18,
         fontWeight: "400",
-        flex: 1,
         textAlign: "right",
+    },
+    resultUnit: {
+        color: "#666",
+        fontSize: 13,
+        fontWeight: "400",
+        marginLeft: 4,
+        minWidth: 30,
     },
     calcFieldRow: {
         flexDirection: "row",
