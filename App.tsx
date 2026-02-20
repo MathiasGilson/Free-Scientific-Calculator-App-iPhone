@@ -49,6 +49,13 @@ const MainScreen = () => {
                         parsed.unshift("_calculator")
                     }
                     setScreenOrder(parsed)
+                    // Scroll to calculator on launch
+                    const calcIdx = parsed.indexOf("_calculator")
+                    if (calcIdx > 0) {
+                        setTimeout(() => {
+                            scrollViewRef.current?.scrollTo({ x: calcIdx * width, animated: false })
+                        }, 0)
+                    }
                 } catch {}
             }
         })
@@ -64,15 +71,11 @@ const MainScreen = () => {
 
     const pinnedToolKeys = screenOrder.filter((k) => k !== "_calculator")
 
-    const handlePinnedToolsChange = useCallback((toolKeys: string[]) => {
+    const handlePinnedToolsChange = useCallback((newOrder: string[]) => {
         stayOnConverterRef.current = true
-        setScreenOrder((prev) => {
-            const calcIdx = prev.indexOf("_calculator")
-            const next = [...toolKeys]
-            next.splice(Math.min(calcIdx, next.length), 0, "_calculator")
-            AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next))
-            return next
-        })
+        const next = newOrder.includes("_calculator") ? newOrder : ["_calculator", ...newOrder]
+        AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+        setScreenOrder(next)
     }, [])
 
     const showTabBar = useCallback(() => {
@@ -107,7 +110,7 @@ const MainScreen = () => {
         if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
         hideTimerRef.current = setTimeout(() => {
             hideTabBar()
-        }, 1000)
+        }, 200)
     }, [hideTabBar])
 
     const handleConverterRearrange = useCallback((active: boolean) => {
@@ -184,7 +187,7 @@ const MainScreen = () => {
                     onLayout={() => setMounted(true)}
                 >
                     {SCREENS.map((screen) => (
-                        <View key={screen.key} style={[styles.screen, { paddingTop: insets.top }]}>{mounted && screen.render()}</View>
+                        <View key={screen.key} style={[styles.screen, { paddingTop: insets.top / 2 }]}>{mounted && screen.render()}</View>
                     ))}
                 </Animated.ScrollView>
 

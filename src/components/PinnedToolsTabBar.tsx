@@ -38,10 +38,6 @@ export default ({ screenOrder, scrollX, opacity }: Props) => {
                         outputRange: [0, 1, 0],
                         extrapolate: "clamp",
                     })
-                    const bgOpacity = activity.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, 1],
-                    })
                     const activeIconOpacity = activity
                     const inactiveIconOpacity = activity.interpolate({
                         inputRange: [0, 1],
@@ -50,14 +46,13 @@ export default ({ screenOrder, scrollX, opacity }: Props) => {
 
                     return (
                         <View key={tab.key} style={styles.tabWrapper}>
-                            <Animated.View style={[styles.tabBg, { opacity: bgOpacity }]} />
                             <View style={styles.tabContent}>
                                 <View style={styles.iconWrapper}>
                                     <Animated.View style={{ opacity: inactiveIconOpacity }}>
-                                        <LucideIcon name={tab.icon} size={ICON_SIZE} color="#999" />
+                                        <LucideIcon name={tab.icon} size={ICON_SIZE} color="#555" />
                                     </Animated.View>
                                     <Animated.View style={[styles.iconOverlay, { opacity: activeIconOpacity }]}>
-                                        <LucideIcon name={tab.icon} size={ICON_SIZE} color="#F69A06" />
+                                        <LucideIcon name={tab.icon} size={ICON_SIZE} color="#fff" />
                                     </Animated.View>
                                 </View>
                             </View>
@@ -80,20 +75,13 @@ const styles = StyleSheet.create({
     },
     tabRow: {
         flexDirection: "row",
-        backgroundColor: "rgba(30,30,30,0.85)",
+        backgroundColor: "black",
         borderRadius: 16,
         paddingHorizontal: 4,
         paddingVertical: 4,
     },
     tabWrapper: {
         position: "relative",
-        borderRadius: 12,
-        overflow: "hidden",
-    },
-    tabBg: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: "rgba(255,255,255,0.1)",
-        borderRadius: 12,
     },
     tabContent: {
         alignItems: "center",

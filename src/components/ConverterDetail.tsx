@@ -81,6 +81,14 @@ function UnitConverter({ tool, onBack }: Props) {
         setInputEdited(true)
         setInput("0")
     }
+    const toggleSign = () => {
+        setInputEdited(true)
+        if (input.startsWith("-")) {
+            setInput(input.slice(1))
+        } else if (input !== "0") {
+            setInput("-" + input)
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -108,7 +116,7 @@ function UnitConverter({ tool, onBack }: Props) {
                 ))}
             </ScrollView>
 
-            <Keypad appendValue={appendValue} onClear={clear} onBackspace={backspace} />
+            <Keypad appendValue={appendValue} onClear={clear} onBackspace={backspace} onToggleSign={tool.key === "temperature" ? toggleSign : undefined} />
         </View>
     )
 }
@@ -317,10 +325,12 @@ function Keypad({
     appendValue,
     onClear,
     onBackspace,
+    onToggleSign,
 }: {
     appendValue: (v: string) => void
     onClear: () => void
     onBackspace: () => void
+    onToggleSign?: () => void
 }) {
     return (
         <View style={styles.keyboard}>
@@ -335,6 +345,13 @@ function Keypad({
                         <Button type="number" theme="default" value={btn.value} onPress={() => appendValue(btn.value)} />
                     </View>
                 ))}
+                {onToggleSign && (
+                    <View style={{ width: BUTTON_SIZE, height: BUTTON_SIZE, padding: 5 }}>
+                        <TouchableOpacity style={styles.toggleSignButton} onPressIn={hapticFeedbackSwitch} onPress={onToggleSign}>
+                            <Text style={{ color: "white", fontSize: 24, fontWeight: "400" }}>+/-</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
             </View>
             <View style={styles.actionButtons}>
                 <View style={styles.actionButtonWrapper}>
@@ -369,7 +386,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         paddingHorizontal: 16,
-        paddingVertical: 10,
+        paddingTop: 44,
+        paddingBottom: 10,
         marginBottom: 8,
     },
     backButton: {
@@ -501,6 +519,14 @@ const styles = StyleSheet.create({
         height: "100%",
         borderRadius: 25,
         backgroundColor: "#3E2702",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    toggleSignButton: {
+        width: "100%",
+        height: "100%",
+        borderRadius: 25,
+        backgroundColor: "#292929",
         justifyContent: "center",
         alignItems: "center",
     },

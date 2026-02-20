@@ -176,7 +176,7 @@ export default ({ onBack }: Props = {}) => {
                       maximumFractionDigits: currencyData.decimal_digits
                   })
         return (
-            <View style={styles.currencyInput} key={currency}>
+            <View style={styles.currencyInput} key={`${currency}-${index}`}>
                 <TouchableOpacity
                     style={styles.currencySelector}
                     onPress={() => {
@@ -325,7 +325,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         paddingHorizontal: 16,
-        paddingVertical: 10,
+        paddingTop: 44,
+        paddingBottom: 10,
     },
     pinHeaderSpacer: {
         width: 36,

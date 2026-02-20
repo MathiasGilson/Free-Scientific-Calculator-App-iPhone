@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect, useMemo } from "react"
-import { View, StyleSheet, ScrollView, Pressable, Dimensions } from "react-native"
+import { View, Text, StyleSheet, ScrollView, Pressable, Dimensions } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
@@ -31,7 +31,11 @@ const CELL_SIZE = CARD_SIZE + CARD_MARGIN * 2
 const TOOL_ORDER_KEY = "converterToolOrder"
 const INLINE_BAR_ICON = 28
 const INLINE_BAR_ITEM_WIDTH = INLINE_BAR_ICON + 20
+const INLINE_BAR_ITEM_STEP = INLINE_BAR_ITEM_WIDTH + 2
+const INLINE_BAR_ITEM_HEIGHT = INLINE_BAR_ICON + 16
 const NUM_TOOLS = converterTools.length
+const MAX_BAR_ITEMS = 20
+const MAX_PINNED_TOOLS = 5
 
 function iconForKey(key: string): string {
     if (key === "_calculator") return "calculator"
@@ -62,6 +66,7 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
     const [dragIdx, setDragIdx] = useState<number | null>(null)
     const [dropTarget, setDropTarget] = useState<string | null>(null)
     const [dropInsertIndex, setDropInsertIndex] = useState<number | null>(null)
+    const [highlightBarKey, setHighlightBarKey] = useState<string | null>(null)
 
     const rearrangingRef = useRef(false)
     const dragIdxRef = useRef<number | null>(null)
@@ -73,6 +78,8 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
     const screenOrderRef = useRef(screenOrder)
     const containerOffsetY = useRef(0)
     const containerRef = useRef<View>(null)
+    const dragStartAbs = useRef({ x: 0, y: 0 })
+    const dragStartIdx = useRef(0)
     const inlineBarRef = useRef<View>(null)
     const inlineBarLayout = useRef({ x: 0, y: 0, width: 0, height: 0 })
 
@@ -97,10 +104,38 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
     const dropPreviewScale = useSharedValue(0)
     const pulseValue = useSharedValue(0)
 
-    // Inline bar reorder drag state — all refs to avoid re-renders mid-drag
-    const [barDragVersion, setBarDragVersion] = useState(0)
-    const barDragKeyRef = useRef<string | null>(null)
-    const barDragInsertIdxRef = useRef<number | null>(null)
+    // Inline bar reorder drag state (mirrors grid card drag pattern)
+    const [barDragIdx, setBarDragIdx] = useState<number | null>(null)
+    const barDragIdxRef = useRef<number | null>(null)
+    const barLastTargetRef = useRef(0)
+    const barFloatingX = useSharedValue(0)
+    const barFloatingY = useSharedValue(0)
+    const barFloatingScale = useSharedValue(0)
+    const barFloatingOpacity = useSharedValue(0)
+    const barItemOffsets = useMemo(() =>
+        Array.from({ length: MAX_BAR_ITEMS }, () => makeMutable(0)),
+    [])
+
+    // Toast state
+    const [toastMessage, setToastMessage] = useState<string | null>(null)
+    const toastOpacity = useSharedValue(0)
+    const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+    const showToast = useCallback((msg: string) => {
+        if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
+        setToastMessage(msg)
+        toastOpacity.value = withTiming(1, { duration: 200 })
+        toastTimerRef.current = setTimeout(() => {
+            toastOpacity.value = withTiming(0, { duration: 300 }, () => {
+                runOnJS(setToastMessage)(null)
+            })
+        }, 2000)
+    }, [toastOpacity])
+
+    const toastAnimStyle = useAnimatedStyle(() => ({
+        opacity: toastOpacity.value,
+        transform: [{ translateY: withTiming(toastOpacity.value > 0 ? 0 : -10, { duration: 200 }) }],
+    }))
 
     useEffect(() => { onRearrangeChangeRef.current = onRearrangeChange }, [onRearrangeChange])
     useEffect(() => { pinnedToolsRef.current = pinnedTools }, [pinnedTools])
@@ -113,7 +148,7 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
 
     useEffect(() => {
         if (dropTarget) {
-            dropPreviewScale.value = withSpring(1, { damping: 12, stiffness: 200 })
+            dropPreviewScale.value = withTiming(1, { duration: 200 })
             pulseValue.value = withRepeat(
                 withSequence(
                     withTiming(1, { duration: 600 }),
@@ -167,10 +202,10 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
         dragIdxRef.current = null
         setDragIdx(null)
         isDragging.value = false
-        dragScale.value = withSpring(1)
+        dragScale.value = withTiming(1, { duration: 200 })
         cardOffsets.forEach(o => {
-            o.x.value = withSpring(0, { damping: 20, stiffness: 200 })
-            o.y.value = withSpring(0, { damping: 20, stiffness: 200 })
+            o.x.value = withTiming(0, { duration: 200 })
+            o.y.value = withTiming(0, { duration: 200 })
         })
     }, [isDragging, dragScale, cardOffsets])
 
@@ -192,13 +227,21 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
         }
 
         cardOffsets.forEach(o => { o.x.value = 0; o.y.value = 0 })
+        inlineBarRef.current?.measureInWindow((x, y, w, h) => {
+            inlineBarLayout.current = { x, y, width: w, height: h }
+        })
+        containerRef.current?.measureInWindow((_x, y) => {
+            containerOffsetY.current = y
+        })
         dragIdxRef.current = idx
+        dragStartIdx.current = idx
+        dragStartAbs.current = { x: absX, y: absY }
         lastTargetRef.current = idx
         setDragIdx(idx)
         dragAbsX.value = absX - CELL_SIZE / 2
         dragAbsY.value = absY - containerOffsetY.current - CELL_SIZE / 2
         isDragging.value = true
-        dragScale.value = withSpring(1.1)
+        dragScale.value = withTiming(1.1, { duration: 150 })
     }, [cardOffsets, dragAbsX, dragAbsY, dragScale, isDragging, startShake])
 
     // Compute insert index for dropping into the pinned bar
@@ -206,21 +249,13 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
         const bar = inlineBarLayout.current
         if (bar.width === 0) return null
 
-        const pinnedKeysNoCalc = screenOrderRef.current.filter(k => k !== "_calculator")
-        const itemCount = pinnedKeysNoCalc.length
-
-        // Calculate where pinned items are rendered in the bar
-        const totalItems = screenOrderRef.current.length + 1 // all screenOrder + grid icon
-        const totalWidth = totalItems * (INLINE_BAR_ITEM_WIDTH + 2)
+        const order = screenOrderRef.current
+        const totalWidth = order.length * INLINE_BAR_ITEM_STEP
         const barStartX = bar.x + (bar.width - totalWidth) / 2
 
-        // Find where pinned items start (after _calculator)
-        const calcIdx = screenOrderRef.current.indexOf("_calculator")
-        const pinnedStartX = barStartX + (calcIdx + 1) * (INLINE_BAR_ITEM_WIDTH + 2)
-
-        const relX = absX - pinnedStartX
-        const idx = Math.round(relX / (INLINE_BAR_ITEM_WIDTH + 2))
-        return Math.max(0, Math.min(itemCount, idx))
+        const relX = absX - barStartX
+        const idx = Math.round(relX / INLINE_BAR_ITEM_STEP)
+        return Math.max(0, Math.min(order.length, idx))
     }, [])
 
     const isOverInlineBar = useCallback((absY: number): boolean => {
@@ -237,28 +272,45 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
         dragAbsY.value = absY - containerOffsetY.current - CELL_SIZE / 2
 
         const draggedKey = toolOrderRef.current[fromIdx]
-        const overBar = isOverInlineBar(absY) && !pinnedToolsRef.current.includes(draggedKey)
+        const alreadyPinned = pinnedToolsRef.current.includes(draggedKey)
+        const barFull = pinnedToolsRef.current.length >= MAX_PINNED_TOOLS
+        const overBar = isOverInlineBar(absY) && !alreadyPinned && !barFull
+
+        setHighlightBarKey(isOverInlineBar(absY) && alreadyPinned ? draggedKey : null)
 
         if (overBar) {
+            const insertIdx = computeInsertIndex(absX) ?? screenOrderRef.current.length
             setDropTarget(draggedKey)
-            setDropInsertIndex(computeInsertIndex(absX))
+            setDropInsertIndex(insertIdx)
+            // Shift bar items to make room for the drop preview
+            const barCount = screenOrderRef.current.length
+            for (let i = 0; i < barCount; i++) {
+                barItemOffsets[i].value = withTiming(
+                    i >= insertIdx ? INLINE_BAR_ITEM_STEP : 0,
+                    { duration: 200 }
+                )
+            }
         } else {
             setDropTarget(null)
             setDropInsertIndex(null)
+            // Reset bar item offsets when leaving bar
+            const barCount = screenOrderRef.current.length
+            for (let i = 0; i < barCount; i++) {
+                barItemOffsets[i].value = withTiming(0, { duration: 200 })
+            }
         }
 
-        // Grid reorder logic
-        const fromPos = getPosition(fromIdx)
-        const gridLeft = (screenWidth - COLUMNS * CELL_SIZE) / 2
-        const currentX = absX - gridLeft
-        const currentY = absY - containerOffsetY.current
-
-        const col = Math.max(0, Math.min(COLUMNS - 1, Math.floor(currentX / CELL_SIZE)))
-        const row = Math.max(0, Math.floor(currentY / CELL_SIZE))
+        // Grid reorder logic — use relative movement from drag start
+        const startCol = dragStartIdx.current % COLUMNS
+        const startRow = Math.floor(dragStartIdx.current / COLUMNS)
+        const deltaX = absX - dragStartAbs.current.x
+        const deltaY = absY - dragStartAbs.current.y
         const count = toolOrderRef.current.length
         const maxRow = Math.ceil(count / COLUMNS) - 1
-        const clampedRow = Math.min(maxRow, row)
-        const targetIdx = Math.min(count - 1, Math.max(0, clampedRow * COLUMNS + col))
+
+        const col = Math.max(0, Math.min(COLUMNS - 1, startCol + Math.round(deltaX / CELL_SIZE)))
+        const row = Math.max(0, Math.min(maxRow, startRow + Math.round(deltaY / CELL_SIZE)))
+        const targetIdx = Math.min(count - 1, Math.max(0, row * COLUMNS + col))
         lastTargetRef.current = targetIdx
 
         for (let i = 0; i < count; i++) {
@@ -273,25 +325,31 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
             const displayPos = getPosition(displayIdx)
             const offset = cardOffsets[i]
             if (offset) {
-                offset.x.value = withSpring(displayPos.x - homePos.x, { damping: 20, stiffness: 200 })
-                offset.y.value = withSpring(displayPos.y - homePos.y, { damping: 20, stiffness: 200 })
+                offset.x.value = withTiming(displayPos.x - homePos.x, { duration: 200 })
+                offset.y.value = withTiming(displayPos.y - homePos.y, { duration: 200 })
             }
         }
-    }, [dragAbsX, dragAbsY, computeInsertIndex, isOverInlineBar, cardOffsets])
+    }, [dragAbsX, dragAbsY, computeInsertIndex, isOverInlineBar, cardOffsets, barItemOffsets])
 
     const handleDragEnd = useCallback((absX: number, absY: number) => {
         const fromIdx = dragIdxRef.current
         if (fromIdx === null) return
 
         const draggedKey = toolOrderRef.current[fromIdx]
-        const overBar = isOverInlineBar(absY) && !pinnedToolsRef.current.includes(draggedKey)
+        const alreadyPinned = pinnedToolsRef.current.includes(draggedKey)
+        const barFull = pinnedToolsRef.current.length >= MAX_PINNED_TOOLS
+        const overBar = isOverInlineBar(absY) && !alreadyPinned
 
         if (overBar) {
-            const insertIdx = computeInsertIndex(absX)
-            const currentPinned = pinnedToolsRef.current.slice()
-            const idx = insertIdx !== null ? Math.min(insertIdx, currentPinned.length) : currentPinned.length
-            currentPinned.splice(idx, 0, draggedKey)
-            onPinnedToolsChangeRef.current?.(currentPinned)
+            if (barFull) {
+                showToast("Toolbar is full (max 5)")
+            } else {
+                const insertIdx = computeInsertIndex(absX)
+                const currentOrder = screenOrderRef.current.slice()
+                const idx = insertIdx !== null ? Math.min(insertIdx, currentOrder.length) : currentOrder.length
+                currentOrder.splice(idx, 0, draggedKey)
+                onPinnedToolsChangeRef.current?.(currentOrder)
+            }
         }
 
         // Reorder grid
@@ -301,17 +359,23 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
         reordered.splice(toIdx, 0, item)
         toolOrderRef.current = reordered
 
-        // Reset
-        dragIdxRef.current = null
-        setDragIdx(null)
+        // Update state first so React re-renders with the new order
         setDropTarget(null)
         setDropInsertIndex(null)
-        isDragging.value = false
-        dragScale.value = withSpring(1)
-        cardOffsets.forEach(o => { o.x.value = 0; o.y.value = 0 })
+        setHighlightBarKey(null)
         setToolOrder(reordered)
         AsyncStorage.setItem(TOOL_ORDER_KEY, JSON.stringify(reordered))
-    }, [computeInsertIndex, isOverInlineBar, isDragging, dragScale, cardOffsets])
+
+        // Defer visual cleanup until after re-render to avoid flash of old order
+        requestAnimationFrame(() => {
+            dragIdxRef.current = null
+            setDragIdx(null)
+            isDragging.value = false
+            dragScale.value = withTiming(1, { duration: 200 })
+            cardOffsets.forEach(o => { o.x.value = 0; o.y.value = 0 })
+            for (let i = 0; i < MAX_BAR_ITEMS; i++) barItemOffsets[i].value = 0
+        })
+    }, [computeInsertIndex, isOverInlineBar, isDragging, dragScale, cardOffsets, barItemOffsets, showToast])
 
     const handleCardPressOut = useCallback((idx: number) => {
         setTimeout(() => {
@@ -323,53 +387,85 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
 
     const unpinTool = useCallback((key: string) => {
         if (!onPinnedToolsChangeRef.current) return
-        const next = pinnedToolsRef.current.filter(k => k !== key)
+        const next = screenOrderRef.current.filter(k => k !== key)
         onPinnedToolsChangeRef.current(next)
     }, [])
 
-    // Inline bar reorder handlers — stable callbacks using refs
-    const handleBarDragStart = useCallback((key: string) => {
+    // Inline bar reorder handlers (same pattern as grid card drag)
+    const startBarDrag = useCallback((idx: number, absX: number, absY: number) => {
         hapticFeedbackSwitch()
-        barDragKeyRef.current = key
-        barDragInsertIdxRef.current = null
-        setBarDragVersion(v => v + 1)
-    }, [])
+        for (let i = 0; i < MAX_BAR_ITEMS; i++) barItemOffsets[i].value = 0
+        barDragIdxRef.current = idx
+        barLastTargetRef.current = idx
+        setBarDragIdx(idx)
+        barFloatingX.value = absX - INLINE_BAR_ITEM_WIDTH / 2
+        barFloatingY.value = absY - containerOffsetY.current - INLINE_BAR_ITEM_HEIGHT / 2
+        barFloatingScale.value = withTiming(1.15, { duration: 150 })
+        barFloatingOpacity.value = 1
+    }, [barItemOffsets, barFloatingX, barFloatingY, barFloatingScale, barFloatingOpacity])
 
-    const handleBarDragMove = useCallback((key: string, absX: number) => {
-        const pinned = pinnedToolsRef.current
-        const currentIdx = pinned.indexOf(key)
-        if (currentIdx < 0) return
+    const handleBarDragMove = useCallback((absX: number, absY: number) => {
+        const fromIdx = barDragIdxRef.current
+        if (fromIdx === null) return
+
+        barFloatingX.value = absX - INLINE_BAR_ITEM_WIDTH / 2
+        barFloatingY.value = absY - containerOffsetY.current - INLINE_BAR_ITEM_HEIGHT / 2
 
         const bar = inlineBarLayout.current
         if (bar.width === 0) return
 
-        const totalItems = screenOrderRef.current.length + 1
-        const totalWidth = totalItems * (INLINE_BAR_ITEM_WIDTH + 2)
+        const order = screenOrderRef.current
+        const totalWidth = order.length * INLINE_BAR_ITEM_STEP
         const barStartX = bar.x + (bar.width - totalWidth) / 2
-        const calcIdx = screenOrderRef.current.indexOf("_calculator")
-        const pinnedStartX = barStartX + (calcIdx + 1) * (INLINE_BAR_ITEM_WIDTH + 2)
+        const relX = absX - barStartX
+        const targetIdx = Math.max(0, Math.min(order.length - 1, Math.round(relX / INLINE_BAR_ITEM_STEP)))
+        barLastTargetRef.current = targetIdx
 
-        const relX = absX - pinnedStartX
-        const targetIdx = Math.max(0, Math.min(pinned.length - 1, Math.round(relX / (INLINE_BAR_ITEM_WIDTH + 2))))
-        barDragInsertIdxRef.current = targetIdx
-    }, [])
-
-    const handleBarDragEnd = useCallback((key: string) => {
-        const targetIdx = barDragInsertIdxRef.current
-        barDragKeyRef.current = null
-        barDragInsertIdxRef.current = null
-        setBarDragVersion(v => v + 1)
-
-        if (targetIdx !== null) {
-            const pinned = pinnedToolsRef.current.slice()
-            const fromIdx = pinned.indexOf(key)
-            if (fromIdx >= 0 && fromIdx !== targetIdx) {
-                const [item] = pinned.splice(fromIdx, 1)
-                pinned.splice(targetIdx, 0, item)
-                onPinnedToolsChangeRef.current?.(pinned)
+        for (let i = 0; i < order.length; i++) {
+            if (i === fromIdx) continue
+            let shift = 0
+            if (targetIdx > fromIdx) {
+                if (i > fromIdx && i <= targetIdx) shift = -INLINE_BAR_ITEM_STEP
+            } else if (targetIdx < fromIdx) {
+                if (i >= targetIdx && i < fromIdx) shift = INLINE_BAR_ITEM_STEP
             }
+            barItemOffsets[i].value = withTiming(shift, { duration: 200 })
         }
-    }, [])
+    }, [barItemOffsets, barFloatingX, barFloatingY])
+
+    const handleBarDragEnd = useCallback(() => {
+        const fromIdx = barDragIdxRef.current
+        const toIdx = barLastTargetRef.current
+
+        // Update state first so React re-renders with the new order
+        if (fromIdx !== null && fromIdx !== toIdx) {
+            const order = screenOrderRef.current.slice()
+            const [item] = order.splice(fromIdx, 1)
+            order.splice(toIdx, 0, item)
+            onPinnedToolsChangeRef.current?.(order)
+        }
+
+        // Defer visual cleanup until after re-render to avoid flash of old order
+        requestAnimationFrame(() => {
+            barDragIdxRef.current = null
+            setBarDragIdx(null)
+            for (let i = 0; i < MAX_BAR_ITEMS; i++) barItemOffsets[i].value = 0
+            barFloatingScale.value = withTiming(0, { duration: 150 })
+            barFloatingOpacity.value = 0
+        })
+    }, [barItemOffsets, barFloatingScale, barFloatingOpacity])
+
+    const handleBarPressOut = useCallback((idx: number) => {
+        setTimeout(() => {
+            if (barDragIdxRef.current === idx) {
+                barDragIdxRef.current = null
+                setBarDragIdx(null)
+                for (let i = 0; i < MAX_BAR_ITEMS; i++) barItemOffsets[i].value = 0
+                barFloatingScale.value = withTiming(0, { duration: 150 })
+                barFloatingOpacity.value = 0
+            }
+        }, 50)
+    }, [barItemOffsets, barFloatingScale, barFloatingOpacity])
 
     // Animated styles
     const floatingCardStyle = useAnimatedStyle(() => {
@@ -383,6 +479,15 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
         }
     })
 
+    const floatingBarIconStyle = useAnimatedStyle(() => ({
+        transform: [
+            { translateX: barFloatingX.value },
+            { translateY: barFloatingY.value },
+            { scale: barFloatingScale.value },
+        ] as const,
+        opacity: barFloatingOpacity.value,
+    }))
+
     const dropPreviewAnimStyle = useAnimatedStyle(() => ({
         opacity: dropPreviewScale.value,
         transform: [{ scale: dropPreviewScale.value }],
@@ -395,10 +500,21 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
     // Swipe-back gesture for detail views
     const detailTranslateX = useSharedValue(0)
 
-    const goBack = useCallback(() => {
-        setSelectedTool(null)
-        detailTranslateX.value = 0
+    const openTool = useCallback((tool: ConverterTool) => {
+        detailTranslateX.value = screenWidth
+        setSelectedTool(tool)
+        detailTranslateX.value = withTiming(0, { duration: 300 })
     }, [detailTranslateX])
+
+    const goBack = useCallback(() => {
+        detailTranslateX.value = withTiming(screenWidth, { duration: 200 }, () => {
+            runOnJS(setSelectedTool)(null)
+        })
+    }, [detailTranslateX])
+
+    const clearSelectedTool = useCallback(() => {
+        setSelectedTool(null)
+    }, [])
 
     const detailPanGesture = Gesture.Pan()
         .activeOffsetX(10)
@@ -411,10 +527,10 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
         .onEnd((e) => {
             if (e.translationX > screenWidth * 0.3 || e.velocityX > 500) {
                 detailTranslateX.value = withTiming(screenWidth, { duration: 200 }, () => {
-                    runOnJS(goBack)()
+                    runOnJS(clearSelectedTool)()
                 })
             } else {
-                detailTranslateX.value = withSpring(0, { damping: 20, stiffness: 200 })
+                detailTranslateX.value = withTiming(0, { duration: 200 })
             }
         })
 
@@ -422,46 +538,22 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
         transform: [{ translateX: detailTranslateX.value }],
     }))
 
-    // Detail views
-    if (selectedTool) {
-        const detailContent = selectedTool.key === "currency"
-            ? <Currency onBack={goBack} />
-            : <ConverterDetail tool={selectedTool} onBack={goBack} />
-
-        return (
-            <GestureDetector gesture={detailPanGesture}>
-                <Animated.View style={[styles.container, detailAnimStyle]}>
-                    {detailContent}
-                </Animated.View>
-            </GestureDetector>
-        )
-    }
-
     const rows = Math.ceil(orderedTools.length / COLUMNS)
     const gridHeight = rows * CELL_SIZE
 
-    // Build inline bar items with drop-position-aware preview
+    // Build inline bar items with absolute positioning (same as grid cards)
     const renderInlineBarItems = () => {
         if (!rearranging) return null
 
         const items: React.ReactNode[] = []
-        const pinnedKeysNoCalc = screenOrder.filter(k => k !== "_calculator")
 
-        // Calculator icon
-        items.push(
-            <View key="_calculator" style={[styles.inlineBarItem, styles.inlineBarCalc]}>
-                <LucideIcon name="calculator" size={INLINE_BAR_ICON} color="#ccc" />
-            </View>
-        )
-
-        // Pinned items with insertion point for drop preview
-        pinnedKeysNoCalc.forEach((key, i) => {
-            // Insert drop preview before this item if this is the insert position
+        screenOrder.forEach((key, i) => {
+            // Drop preview from grid-to-bar drag
             if (dropTarget && dropInsertIndex === i) {
                 items.push(
                     <Animated.View
                         key="__drop_preview"
-                        style={[styles.inlineBarItem, dropPreviewAnimStyle]}
+                        style={[styles.inlineBarItem, styles.barItemAbsolute, { left: i * INLINE_BAR_ITEM_STEP, zIndex: 2 }, dropPreviewAnimStyle]}
                     >
                         <Animated.View style={[styles.dropPreviewBg, dropPreviewBgStyle]} />
                         <LucideIcon name={iconForKey(dropTarget)} size={INLINE_BAR_ICON} color="#F69A06" />
@@ -473,20 +565,27 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
                 <DraggableBarItem
                     key={key}
                     itemKey={key}
-                    onDragStart={handleBarDragStart}
+                    index={i}
+                    positionX={i * INLINE_BAR_ITEM_STEP}
+                    isDraggedIdx={barDragIdx}
+                    highlighted={highlightBarKey === key}
+                    barOffset={barItemOffsets[i]}
+                    onLongPress={(absX: number, absY: number) => startBarDrag(i, absX, absY)}
                     onDragMove={handleBarDragMove}
                     onDragEnd={handleBarDragEnd}
+                    onPressOut={() => handleBarPressOut(i)}
                     onUnpin={unpinTool}
+                    showUnpin={key !== "_calculator"}
                 />
             )
         })
 
-        // Insert drop preview at end if insert index is past all items
-        if (dropTarget && (dropInsertIndex === null || dropInsertIndex >= pinnedKeysNoCalc.length)) {
+        // Drop preview at end
+        if (dropTarget && (dropInsertIndex === null || dropInsertIndex >= screenOrder.length)) {
             items.push(
                 <Animated.View
                     key="__drop_preview"
-                    style={[styles.inlineBarItem, dropPreviewAnimStyle]}
+                    style={[styles.inlineBarItem, styles.barItemAbsolute, { left: screenOrder.length * INLINE_BAR_ITEM_STEP, zIndex: 2 }, dropPreviewAnimStyle]}
                 >
                     <Animated.View style={[styles.dropPreviewBg, dropPreviewBgStyle]} />
                     <LucideIcon name={iconForKey(dropTarget)} size={INLINE_BAR_ICON} color="#F69A06" />
@@ -494,14 +593,12 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
             )
         }
 
-        // Grid icon (active)
-        items.push(
-            <View key="__grid" style={[styles.inlineBarItem, styles.inlineBarActive]}>
-                <LucideIcon name="layout-grid" size={INLINE_BAR_ICON} color="#F69A06" />
+        const totalWidth = screenOrder.length * INLINE_BAR_ITEM_STEP
+        return (
+            <View style={{ width: totalWidth, height: INLINE_BAR_ITEM_HEIGHT }}>
+                {items}
             </View>
         )
-
-        return items
     }
 
     return (
@@ -542,7 +639,7 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
                                 shakeValue={shakeValue}
                                 offsetX={cardOffsets[i]?.x}
                                 offsetY={cardOffsets[i]?.y}
-                                onPress={() => setSelectedTool(tool)}
+                                onPress={() => openTool(tool)}
                                 onLongPress={(absX: number, absY: number) => startDrag(i, absX, absY)}
                                 onPressOut={() => handleCardPressOut(i)}
                                 onDragMove={handleDragMove}
@@ -563,82 +660,114 @@ export default ({ focused = false, pinnedTools = [], screenOrder = [], onPinnedT
                         <ConverterToolCard tool={orderedTools[dragIdx]} />
                     </Animated.View>
                 )}
+                {barDragIdx !== null && screenOrder[barDragIdx] && (
+                    <Animated.View
+                        pointerEvents="none"
+                        style={[styles.floatingBarIcon, floatingBarIconStyle]}
+                    >
+                        <LucideIcon name={iconForKey(screenOrder[barDragIdx])} size={INLINE_BAR_ICON} color="#999" />
+                    </Animated.View>
+                )}
+                {toastMessage && (
+                    <Animated.View pointerEvents="none" style={[styles.toast, toastAnimStyle]}>
+                        <Text style={styles.toastText}>{toastMessage}</Text>
+                    </Animated.View>
+                )}
             </View>
+            {selectedTool && (
+                <GestureDetector gesture={detailPanGesture}>
+                    <Animated.View style={[styles.detailOverlay, detailAnimStyle]}>
+                        {selectedTool.key === "currency"
+                            ? <Currency onBack={goBack} />
+                            : <ConverterDetail tool={selectedTool} onBack={goBack} />
+                        }
+                    </Animated.View>
+                </GestureDetector>
+            )}
         </SafeAreaView>
     )
 }
 
-// Draggable inline bar item for reordering pinned tools
+// Draggable inline bar item (same gesture pattern as DraggableCard)
 type DraggableBarItemProps = {
     itemKey: string
-    onDragStart: (key: string) => void
-    onDragMove: (key: string, absX: number) => void
-    onDragEnd: (key: string) => void
+    index: number
+    positionX: number
+    isDraggedIdx: number | null
+    highlighted?: boolean
+    barOffset?: SharedValue<number>
+    onLongPress: (absX: number, absY: number) => void
+    onDragMove: (absX: number, absY: number) => void
+    onDragEnd: () => void
+    onPressOut: () => void
     onUnpin: (key: string) => void
+    showUnpin?: boolean
 }
 
-const DraggableBarItem = React.memo(({ itemKey, onDragStart, onDragMove, onDragEnd, onUnpin }: DraggableBarItemProps) => {
-    const translateX = useSharedValue(0)
-    const translateY = useSharedValue(0)
-    const scale = useSharedValue(1)
-    const isDragging = useSharedValue(false)
+const DraggableBarItem = React.memo(({
+    itemKey, index, positionX, isDraggedIdx, highlighted,
+    barOffset, onLongPress, onDragMove, onDragEnd, onPressOut,
+    onUnpin, showUnpin = true,
+}: DraggableBarItemProps) => {
+    const isDragged = isDraggedIdx === index
+    const activated = useSharedValue(false)
 
-    // Keep callbacks in refs so gesture closures always call latest versions
-    const onDragStartRef = useRef(onDragStart)
-    const onDragMoveRef = useRef(onDragMove)
-    const onDragEndRef = useRef(onDragEnd)
-    onDragStartRef.current = onDragStart
-    onDragMoveRef.current = onDragMove
-    onDragEndRef.current = onDragEnd
-
-    const callDragStart = useCallback((key: string) => onDragStartRef.current(key), [])
-    const callDragMove = useCallback((key: string, absX: number) => onDragMoveRef.current(key, absX), [])
-    const callDragEnd = useCallback((key: string) => onDragEndRef.current(key), [])
+    const longPressGesture = Gesture.LongPress()
+        .minDuration(100)
+        .onStart((e) => {
+            activated.value = true
+            runOnJS(onLongPress)(e.absoluteX, e.absoluteY)
+        })
 
     const panGesture = Gesture.Pan()
-        .activateAfterLongPress(200)
-        .onStart(() => {
-            isDragging.value = true
-            scale.value = withSpring(1.2)
-            runOnJS(callDragStart)(itemKey)
-        })
+        .activateAfterLongPress(100)
         .onUpdate((e) => {
-            translateX.value = e.translationX
-            translateY.value = e.translationY
-            runOnJS(callDragMove)(itemKey, e.absoluteX)
+            runOnJS(onDragMove)(e.absoluteX, e.absoluteY)
         })
         .onEnd(() => {
-            isDragging.value = false
-            translateX.value = withSpring(0)
-            translateY.value = withSpring(0)
-            scale.value = withSpring(1)
-            runOnJS(callDragEnd)(itemKey)
+            activated.value = false
+            runOnJS(onDragEnd)()
         })
         .onFinalize(() => {
-            isDragging.value = false
-            translateX.value = withSpring(0)
-            translateY.value = withSpring(0)
-            scale.value = withSpring(1)
+            if (!activated.value) return
+            activated.value = false
+            runOnJS(onPressOut)()
         })
 
+    const composedGesture = Gesture.Simultaneous(longPressGesture, panGesture)
+
     const animStyle = useAnimatedStyle(() => {
+        const tx = barOffset ? barOffset.value : 0
         return {
-            transform: [
-                { translateX: translateX.value },
-                { translateY: translateY.value },
-                { scale: scale.value },
-            ] as const,
-            zIndex: isDragging.value ? 10 : 1,
+            opacity: isDragged ? 0 : 1,
+            zIndex: 1,
+            transform: [{ translateX: tx }],
         }
     })
 
     return (
-        <GestureDetector gesture={panGesture}>
-            <Animated.View style={[styles.inlineBarItem, animStyle]}>
-                <LucideIcon name={iconForKey(itemKey)} size={INLINE_BAR_ICON} color="#999" />
-                <Pressable style={styles.unpinBadge} onPress={() => onUnpin(itemKey)} hitSlop={6}>
-                    <LucideIcon name="x" size={8} color="#fff" />
-                </Pressable>
+        <GestureDetector gesture={composedGesture}>
+            <Animated.View
+                style={[
+                    styles.cardWrapper,
+                    {
+                        left: positionX,
+                        top: 0,
+                        width: INLINE_BAR_ITEM_WIDTH,
+                        height: INLINE_BAR_ITEM_HEIGHT,
+                        alignItems: "center" as const,
+                        justifyContent: "center" as const,
+                        overflow: "visible" as const,
+                    },
+                    animStyle,
+                ]}
+            >
+                <LucideIcon name={iconForKey(itemKey)} size={INLINE_BAR_ICON} color={highlighted ? "#F69A06" : "#999"} />
+                {showUnpin && (
+                    <Pressable style={styles.unpinBadge} onPress={() => onUnpin(itemKey)} hitSlop={6}>
+                        <LucideIcon name="x" size={8} color="#fff" />
+                    </Pressable>
+                )}
             </Animated.View>
         </GestureDetector>
     )
@@ -751,6 +880,11 @@ const styles = StyleSheet.create({
     innerContainer: {
         flex: 1,
     },
+    detailOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "black",
+        zIndex: 200,
+    },
     scrollContent: {
         flexGrow: 1,
         justifyContent: "center",
@@ -768,6 +902,16 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         zIndex: 100,
+    },
+    floatingBarIcon: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        zIndex: 100,
+        alignItems: "center",
+        justifyContent: "center",
+        width: INLINE_BAR_ITEM_WIDTH,
+        height: INLINE_BAR_ITEM_HEIGHT,
     },
     dismissOverlay: {
         position: "absolute",
@@ -794,13 +938,9 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         overflow: "visible",
     },
-    inlineBarCalc: {
-        opacity: 0.6,
-    },
-    inlineBarActive: {
-        backgroundColor: "rgba(246, 154, 6, 0.15)",
-        borderWidth: 1,
-        borderColor: "rgba(246, 154, 6, 0.4)",
+    barItemAbsolute: {
+        position: "absolute" as const,
+        top: 0,
     },
     unpinBadge: {
         position: "absolute",
@@ -817,5 +957,20 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         backgroundColor: "#F69A06",
         borderRadius: 12,
+    },
+    toast: {
+        position: "absolute",
+        top: 12,
+        alignSelf: "center",
+        backgroundColor: "rgba(50,50,50,0.95)",
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderRadius: 10,
+        zIndex: 150,
+    },
+    toastText: {
+        color: "#fff",
+        fontSize: 14,
+        fontWeight: "500",
     },
 })

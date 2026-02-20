@@ -21,7 +21,7 @@ export default ({ toolKey }: Props) => {
     if (!tool) return null
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, styles.toolContainer]}>
             <ConverterDetail tool={tool} />
         </View>
     )
@@ -32,5 +32,8 @@ const styles = StyleSheet.create({
         flex: 1,
         width: "100%",
         backgroundColor: "black",
+    },
+    toolContainer: {
+        paddingTop: 16,
     },
 })
