@@ -55,7 +55,7 @@ export default ({ onBack }: Props = {}) => {
         setRateFetchFailed(false)
         const currentTime = new Date().getTime()
         try {
-            const response = await fetch(`https://api.billingjs.com/getExchangeRates?auth=mH8COwV9j5BETLdKoTXQ0T7CU`)
+            const response = await fetch(`https://api.billingjs.com/getExchangeRates?auth=${process.env.EXPO_PUBLIC_EXCHANGE_RATE_TOKEN}`)
             const json = await response.json()
             console.log(json)
             setRatesUpdatedAt(currentTime)
