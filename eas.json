@@ -2,7 +2,7 @@
     "cli": {
         "version": ">= 16.0.0",
         "promptToConfigurePushNotifications": false,
-        "appVersionSource": "remote"
+        "appVersionSource": "local"
     },
     "build": {
         "development": {
@@ -28,6 +28,7 @@
     "submit": {
         "production": {
             "ios": {
+                "ascAppId": "6472445974",
                 "appName": "Free Calculator with History",
                 "companyName": "Free Calculator no ads"
             }
