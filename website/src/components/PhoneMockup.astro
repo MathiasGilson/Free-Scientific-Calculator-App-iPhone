@@ -1,0 +1,80 @@
+---
+interface Props {
+  src?: string;
+  alt?: string;
+  class?: string;
+}
+
+const { src, alt, class: className = "" } = Astro.props;
+const hasSlot = Astro.slots.has("default");
+---
+
+<div class:list={["phone-mockup", className]}>
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    {hasSlot ? (
+      <div class="phone-slot-content">
+        <slot />
+      </div>
+    ) : (
+      <img src={src} alt={alt} loading="lazy" />
+    )}
+  </div>
+</div>
+
+<style>
+  .phone-mockup {
+    display: flex;
+    justify-content: center;
+  }
+
+  .phone-frame {
+    position: relative;
+    width: 220px;
+    background: #000;
+    border-radius: 36px;
+    border: 3px solid #333;
+    padding: 12px 10px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  .phone-frame img {
+    width: 100%;
+    border-radius: 24px;
+    display: block;
+  }
+
+  .phone-slot-content {
+    width: 100%;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  /* Dynamic Island */
+  .phone-notch {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 22px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 2;
+  }
+
+  @media (max-width: 480px) {
+    .phone-frame {
+      width: 180px;
+      border-radius: 30px;
+      padding: 10px 8px;
+    }
+
+    .phone-notch {
+      width: 65px;
+      height: 18px;
+      top: 12px;
+    }
+  }
+</style>

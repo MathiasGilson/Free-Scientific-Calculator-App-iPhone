@@ -1,0 +1,85 @@
+---
+---
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <p class="footer-credit">
+      Made by <a href="https://github.com/mgilangjanuar" target="_blank" rel="noopener noreferrer">Mathias Gilson</a>
+    </p>
+    <div class="footer-links">
+      <a
+        href="https://github.com/mgilangjanuar/convcalc"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </a>
+      <span class="footer-dot"></span>
+      <a
+        href="https://apps.apple.com/app/convcalc-calculator-converter/id6472445974"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        App Store
+      </a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-lg) 0;
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-credit {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+  }
+
+  .footer-credit a {
+    color: var(--color-text);
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .footer-credit a:hover {
+    color: var(--color-accent);
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .footer-links a {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    transition: color 0.2s ease;
+  }
+
+  .footer-links a:hover {
+    color: var(--color-text);
+  }
+
+  .footer-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--color-text-secondary);
+  }
+
+  @media (max-width: 480px) {
+    .footer-inner {
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+  }
+</style>

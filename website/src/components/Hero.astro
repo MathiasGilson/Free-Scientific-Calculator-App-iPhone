@@ -1,0 +1,262 @@
+---
+import PhoneMockup from "./PhoneMockup.astro";
+---
+
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <span class="pill">Free & Open Source</span>
+      <h1>
+        The calculator<br />
+        your iPhone <span class="gradient-text">deserves</span>
+      </h1>
+      <p class="subtitle">
+        A beautifully designed scientific calculator & universal converter.
+        No ads, no tracking, no subscriptions. Just math.
+      </p>
+      <div class="cta-row">
+        <a
+          href="https://apps.apple.com/app/convcalc-calculator-converter/id6472445974"
+          class="cta-appstore"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="https://github.com/user-attachments/assets/f0d5a8de-e5f0-46fb-ac39-2f0b241e02b6"
+            alt="Download on the App Store"
+            width="160"
+            height="53"
+          />
+        </a>
+        <a
+          href="https://github.com/mgilangjanuar/convcalc"
+          class="cta-github"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          View on GitHub
+        </a>
+      </div>
+    </div>
+    <div class="hero-phone">
+      <div class="phone-glow"></div>
+      <PhoneMockup>
+        <div class="calc-preview">
+          <div class="calc-display">
+            <div class="calc-expression">48 × 12</div>
+            <div class="calc-result">576</div>
+          </div>
+          <div class="calc-buttons">
+            <button class="calc-btn sci">AC</button>
+            <button class="calc-btn sci">( )</button>
+            <button class="calc-btn sci">%</button>
+            <button class="calc-btn op">÷</button>
+            <button class="calc-btn num">7</button>
+            <button class="calc-btn num">8</button>
+            <button class="calc-btn num">9</button>
+            <button class="calc-btn op">×</button>
+            <button class="calc-btn num">4</button>
+            <button class="calc-btn num">5</button>
+            <button class="calc-btn num">6</button>
+            <button class="calc-btn op">−</button>
+            <button class="calc-btn num">1</button>
+            <button class="calc-btn num">2</button>
+            <button class="calc-btn num">3</button>
+            <button class="calc-btn op">+</button>
+            <button class="calc-btn num wide">0</button>
+            <button class="calc-btn num">.</button>
+            <button class="calc-btn eq">=</button>
+          </div>
+        </div>
+      </PhoneMockup>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: var(--space-2xl) 0 var(--space-xl);
+    position: relative;
+  }
+
+  .hero-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+  }
+
+  .hero-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 6px 16px;
+    background: var(--color-accent-dim);
+    color: var(--color-accent);
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 100px;
+    border: 1px solid rgba(246, 154, 6, 0.2);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--color-accent), #ffcc33);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    max-width: 480px;
+    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+    line-height: 1.6;
+  }
+
+  .cta-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    margin-top: var(--space-xs);
+  }
+
+  .cta-appstore img {
+    display: block;
+    transition: opacity 0.2s ease;
+  }
+
+  .cta-appstore:hover img {
+    opacity: 0.85;
+  }
+
+  .cta-github {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .cta-github:hover {
+    background: var(--color-surface-hover);
+    border-color: #444;
+  }
+
+  .hero-phone {
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .phone-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, var(--color-accent-glow) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* CSS Calculator Preview */
+  .calc-preview {
+    background: #000;
+    padding: 32px 8px 8px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .calc-display {
+    text-align: right;
+    padding: 8px 10px 14px;
+  }
+
+  .calc-expression {
+    color: #999;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .calc-result {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 500;
+  }
+
+  .calc-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .calc-btn {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    border-radius: 18px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: default;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .calc-btn.num {
+    background: #292929;
+    color: #fff;
+  }
+
+  .calc-btn.op {
+    background: #3E2702;
+    color: #FF9D00;
+  }
+
+  .calc-btn.sci {
+    background: #171717;
+    color: #BEBEBE;
+  }
+
+  .calc-btn.eq {
+    background: #F69A06;
+    color: #fff;
+  }
+
+  .calc-btn.wide {
+    grid-column: span 2;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: var(--space-xl) 0 var(--space-lg);
+    }
+
+    .hero-inner {
+      flex-direction: column;
+      text-align: center;
+      gap: var(--space-lg);
+    }
+
+    .hero-content {
+      align-items: center;
+    }
+
+    .cta-row {
+      justify-content: center;
+    }
+  }
+</style>

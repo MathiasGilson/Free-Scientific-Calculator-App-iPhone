@@ -1,0 +1,745 @@
+---
+import BentoCard from "./BentoCard.astro";
+---
+
+<section class="bento-section">
+  <div class="container">
+    <div class="bento-grid">
+
+      <!-- Scientific Calculator: 2x2 -->
+      <BentoCard span="2x2" variant="accent">
+        <h2>Scientific Calculator</h2>
+        <p>All the power you need, right in your pocket.</p>
+        <ul class="feature-list">
+          <li>Trigonometric functions (sin, cos, tan)</li>
+          <li>RAD / DEG mode switching</li>
+          <li>INV & HYP modifiers</li>
+          <li>Constants, factorials, powers</li>
+        </ul>
+        <div class="sci-calc-preview">
+          <div class="sci-calc-display">
+            <div class="sci-calc-expr">sin(45)×2</div>
+            <div class="sci-calc-result">1.41421</div>
+          </div>
+          <div class="sci-calc-buttons">
+            <button class="sci-btn fn">HYP</button>
+            <button class="sci-btn fn">INV</button>
+            <button class="sci-btn fn">sin</button>
+            <button class="sci-btn fn">cos</button>
+            <button class="sci-btn fn">tan</button>
+            <button class="sci-btn fn">√</button>
+            <button class="sci-btn fn">π</button>
+            <button class="sci-btn fn">ln</button>
+            <button class="sci-btn fn">log</button>
+            <button class="sci-btn fn">DEG</button>
+            <button class="sci-btn num">7</button>
+            <button class="sci-btn num">8</button>
+            <button class="sci-btn num">9</button>
+            <button class="sci-btn op">×</button>
+            <button class="sci-btn op">÷</button>
+            <button class="sci-btn num">4</button>
+            <button class="sci-btn num">5</button>
+            <button class="sci-btn num">6</button>
+            <button class="sci-btn op">+</button>
+            <button class="sci-btn op">−</button>
+            <button class="sci-btn num">1</button>
+            <button class="sci-btn num">2</button>
+            <button class="sci-btn num">3</button>
+            <button class="sci-btn num">0</button>
+            <button class="sci-btn eq">=</button>
+          </div>
+        </div>
+      </BentoCard>
+
+      <!-- 15 Unit Converters: 2x1 -->
+      <BentoCard span="2x1">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/>
+            <path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>
+          </svg>
+        </div>
+        <h2>15 Unit Converters</h2>
+        <p>Convert anything, instantly.</p>
+        <div class="pills-grid">
+          <span class="category-pill">Length</span>
+          <span class="category-pill">Area</span>
+          <span class="category-pill">Mass</span>
+          <span class="category-pill">Volume</span>
+          <span class="category-pill">Speed</span>
+          <span class="category-pill">Pressure</span>
+          <span class="category-pill">Power</span>
+          <span class="category-pill">Temp</span>
+          <span class="category-pill">Angle</span>
+          <span class="category-pill">Energy</span>
+          <span class="category-pill">Force</span>
+          <span class="category-pill">Fuel</span>
+          <span class="category-pill">Time</span>
+          <span class="category-pill">Data</span>
+          <span class="category-pill accent-pill">Currency</span>
+        </div>
+      </BentoCard>
+
+      <!-- No Ads: 1x1 -->
+      <BentoCard span="1x1">
+        <div class="card-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+          </svg>
+        </div>
+        <h2>No Ads</h2>
+        <p>Zero distractions. Ever.</p>
+      </BentoCard>
+
+      <!-- Offline Capable: 1x1 -->
+      <BentoCard span="1x1">
+        <div class="card-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 2l20 20"/>
+            <path d="M8.5 16.5a5 5 0 0 1 7 0"/>
+            <path d="M2 8.82a15 15 0 0 1 4.17-2.65"/>
+            <path d="M10.66 5c4.01-.36 8.14.9 11.34 3.76"/>
+            <path d="M16.85 11.25a10 10 0 0 1 2.22 1.68"/>
+            <path d="M5 13a10 10 0 0 1 5.24-2.76"/>
+            <path d="M12 20h.01"/>
+          </svg>
+        </div>
+        <h2>Offline</h2>
+        <p>Works without internet.</p>
+      </BentoCard>
+
+      <!-- Currency Converter: 2x1 -->
+      <BentoCard span="2x1" variant="accent">
+        <div class="card-currency">
+          <div class="card-currency-text">
+            <div class="card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <h2>Currency Converter</h2>
+            <p>Real-time exchange rates for 150+ currencies.</p>
+          </div>
+          <div class="currency-preview">
+            <div class="currency-row active">
+              <span class="currency-flag">🇺🇸</span>
+              <span class="currency-code">USD</span>
+              <span class="currency-value active-value">1,000.00</span>
+            </div>
+            <div class="currency-row">
+              <span class="currency-flag">🇪🇺</span>
+              <span class="currency-code">EUR</span>
+              <span class="currency-value">921.47</span>
+            </div>
+            <div class="currency-row">
+              <span class="currency-flag">🇬🇧</span>
+              <span class="currency-code">GBP</span>
+              <span class="currency-value">791.25</span>
+            </div>
+          </div>
+        </div>
+      </BentoCard>
+
+      <!-- Pinnable Tools: 2x1 -->
+      <BentoCard span="2x1">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+          </svg>
+        </div>
+        <h2>Pinnable Tools</h2>
+        <p>Drag and drop to pin your favorite converters to the toolbar for one-tap access.</p>
+        <div class="pin-demo">
+          <span class="pin-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Currency
+          </span>
+          <span class="pin-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/>
+            </svg>
+            Length
+          </span>
+          <span class="pin-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/>
+            </svg>
+            Temp
+          </span>
+          <span class="pin-item dragging">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.925-2.54L19.4 9.5A2 2 0 0 0 17.48 8Z"/>
+            </svg>
+            Mass
+          </span>
+        </div>
+      </BentoCard>
+
+      <!-- Calculation History: 1x1 -->
+      <BentoCard span="1x1">
+        <h2>History</h2>
+        <p>All calculations grouped by date.</p>
+        <div class="history-preview">
+          <div class="history-header">Today</div>
+          <div class="history-entry">
+            <span class="history-expr">12 × 45</span>
+            <span class="history-result">540</span>
+          </div>
+          <div class="history-entry">
+            <span class="history-expr">sin(30)</span>
+            <span class="history-result">0.5</span>
+          </div>
+        </div>
+      </BentoCard>
+
+      <!-- Editable Inputs: 1x1 -->
+      <BentoCard span="1x1">
+        <h2>Editable Inputs</h2>
+        <p>Smart chunk editing.</p>
+        <div class="chunk-preview">
+          <div class="chunk-display">
+            <span class="chunk">128</span>
+            <span class="chunk-op">+</span>
+            <span class="chunk active-chunk">256<span class="chunk-cursor"></span></span>
+          </div>
+          <div class="chunk-result">= 384</div>
+        </div>
+      </BentoCard>
+
+      <!-- 5 Specialized Calculators: 2x1 -->
+      <BentoCard span="2x1">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M16 14v4"/>
+            <path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/>
+            <path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/>
+          </svg>
+        </div>
+        <h2>5 Specialized Calculators</h2>
+        <p>Purpose-built tools beyond basic math.</p>
+        <div class="calc-icons-row">
+          <div class="calc-icon-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/>
+              <path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/>
+              <path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/>
+            </svg>
+            <span>Age</span>
+          </div>
+          <div class="calc-icon-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/>
+              <path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>
+            </svg>
+            <span>BMI</span>
+          </div>
+          <div class="calc-icon-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M8 2v4"/><path d="M16 2v4"/><path d="M3 10h18"/>
+            </svg>
+            <span>Date Diff</span>
+          </div>
+          <div class="calc-icon-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/>
+              <circle cx="7.5" cy="7.5" r="0.5" fill="currentColor"/>
+            </svg>
+            <span>Discount</span>
+          </div>
+          <div class="calc-icon-item">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 22h18"/><path d="M6 18v-7"/><path d="M10 18v-7"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="M12 2 3 9h18Z"/>
+            </svg>
+            <span>Loan</span>
+          </div>
+        </div>
+      </BentoCard>
+
+      <!-- Open Source: 4x1 -->
+      <BentoCard span="4x1" variant="accent">
+        <div class="opensource-card">
+          <div class="opensource-text">
+            <h2>Open Source</h2>
+            <p>Built in the open. MIT licensed. Contributions welcome.</p>
+          </div>
+          <div class="opensource-actions">
+            <span class="mit-badge">MIT</span>
+            <a
+              href="https://github.com/mgilangjanuar/convcalc"
+              class="os-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+              Star on GitHub
+            </a>
+            <a
+              href="https://apps.apple.com/app/convcalc-calculator-converter/id6472445974"
+              class="os-link os-link-accent"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download Free
+            </a>
+          </div>
+        </div>
+      </BentoCard>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .bento-section {
+    padding: 0 0 var(--space-2xl);
+  }
+
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+  }
+
+  /* Card icon */
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    color: var(--color-accent);
+  }
+
+  /* Feature list in Scientific Calculator card */
+  .feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .feature-list li {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .feature-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    background: var(--color-accent);
+    border-radius: 50%;
+  }
+
+  /* ---- Scientific Calculator Preview ---- */
+  .sci-calc-preview {
+    margin-top: auto;
+    background: #000;
+    border-radius: 16px;
+    padding: 10px 8px 8px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .sci-calc-display {
+    text-align: right;
+    padding: 6px 8px 10px;
+  }
+
+  .sci-calc-expr {
+    color: #999;
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+
+  .sci-calc-result {
+    color: #F69A06;
+    font-size: 22px;
+    font-weight: 500;
+  }
+
+  .sci-calc-buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+  }
+
+  .sci-btn {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    border-radius: 14px;
+    font-size: 10px;
+    font-weight: 500;
+    cursor: default;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .sci-btn.fn {
+    background: #171717;
+    color: #BEBEBE;
+  }
+
+  .sci-btn.num {
+    background: #292929;
+    color: #fff;
+  }
+
+  .sci-btn.op {
+    background: #3E2702;
+    color: #FF9D00;
+  }
+
+  .sci-btn.eq {
+    background: #F69A06;
+    color: #fff;
+  }
+
+  /* ---- Category pills for Unit Converters ---- */
+  .pills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .category-pill {
+    padding: 5px 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+  }
+
+  .accent-pill {
+    background: var(--color-accent-dim);
+    border-color: rgba(246, 154, 6, 0.2);
+    color: var(--color-accent);
+  }
+
+  /* ---- Currency Converter Preview ---- */
+  .card-currency {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    height: 100%;
+  }
+
+  .card-currency-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .currency-preview {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 180px;
+  }
+
+  .currency-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .currency-row.active {
+    border: 1px solid rgba(246, 154, 6, 0.3);
+  }
+
+  .currency-flag {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .currency-code {
+    font-size: 12px;
+    font-weight: 600;
+    color: #999;
+    min-width: 30px;
+  }
+
+  .currency-value {
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .currency-value.active-value {
+    color: #F69A06;
+  }
+
+  /* ---- History Preview ---- */
+  .history-preview {
+    margin-top: auto;
+    background: #1c1c1e;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .history-header {
+    font-size: 10px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .history-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 5px 0;
+  }
+
+  .history-entry + .history-entry {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .history-expr {
+    font-size: 12px;
+    color: #999;
+  }
+
+  .history-result {
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  /* ---- Editable Inputs / Chunk Preview ---- */
+  .chunk-preview {
+    margin-top: auto;
+    background: #000;
+    border-radius: 12px;
+    padding: 14px 12px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .chunk-display {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .chunk {
+    color: #fff;
+    padding: 2px 4px;
+    border-radius: 6px;
+  }
+
+  .chunk-op {
+    color: #FF9D00;
+    font-size: 16px;
+    padding: 0 2px;
+  }
+
+  .active-chunk {
+    background: rgba(40, 80, 200, 0.5);
+    border-radius: 10px;
+    padding: 2px 6px;
+    position: relative;
+  }
+
+  .chunk-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 20px;
+    background: #fff;
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .chunk-result {
+    color: #999;
+    font-size: 13px;
+    margin-top: 6px;
+    text-align: right;
+  }
+
+  /* ---- Pin demo ---- */
+  .pin-demo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .pin-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+  }
+
+  .pin-item.dragging {
+    background: var(--color-accent-dim);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: rotate(-2deg);
+    box-shadow: 0 4px 16px rgba(246, 154, 6, 0.2);
+  }
+
+  /* ---- Calculator icons row ---- */
+  .calc-icons-row {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .calc-icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+  }
+
+  .calc-icon-item svg {
+    color: var(--color-accent);
+  }
+
+  /* ---- Open Source card ---- */
+  .opensource-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-lg);
+    width: 100%;
+  }
+
+  .opensource-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .opensource-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-shrink: 0;
+  }
+
+  .mit-badge {
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: monospace;
+    color: var(--color-text-secondary);
+  }
+
+  .os-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .os-link:hover {
+    background: var(--color-surface-hover);
+    border-color: #444;
+  }
+
+  .os-link-accent {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #000;
+    font-weight: 600;
+  }
+
+  .os-link-accent:hover {
+    background: #e08e05;
+    border-color: #e08e05;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 768px) {
+    .bento-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .opensource-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .opensource-actions {
+      flex-wrap: wrap;
+    }
+
+    .currency-preview {
+      min-width: 150px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .bento-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .card-currency {
+      flex-direction: column;
+    }
+
+    .currency-preview {
+      align-self: stretch;
+    }
+
+    .calc-icons-row {
+      justify-content: center;
+    }
+  }
+</style>

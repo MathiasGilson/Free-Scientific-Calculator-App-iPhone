@@ -1,0 +1,93 @@
+---
+interface Props {
+  span?: "1x1" | "2x1" | "2x2" | "4x1";
+  variant?: "default" | "accent";
+  class?: string;
+}
+
+const { span = "1x1", variant = "default", class: className = "" } = Astro.props;
+---
+
+<div class:list={["bento-card", `span-${span}`, `variant-${variant}`, className]}>
+  <slot />
+</div>
+
+<style>
+  .bento-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .bento-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .variant-accent {
+    background: linear-gradient(
+      135deg,
+      rgba(246, 154, 6, 0.08) 0%,
+      rgba(246, 154, 6, 0.02) 100%
+    );
+    border-color: rgba(246, 154, 6, 0.15);
+  }
+
+  .variant-accent:hover {
+    border-color: rgba(246, 154, 6, 0.4);
+    box-shadow: 0 8px 32px rgba(246, 154, 6, 0.1);
+  }
+
+  /* Grid spanning */
+  .span-1x1 {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+
+  .span-2x1 {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+
+  .span-2x2 {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .span-4x1 {
+    grid-column: span 4;
+    grid-row: span 1;
+  }
+
+  @media (max-width: 768px) {
+    .span-2x1,
+    .span-2x2,
+    .span-4x1 {
+      grid-column: span 2;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .span-1x1,
+    .span-2x1,
+    .span-2x2,
+    .span-4x1 {
+      grid-column: span 1;
+    }
+
+    .span-2x2 {
+      grid-row: span 1;
+    }
+
+    .bento-card {
+      padding: var(--space-md);
+    }
+  }
+</style>

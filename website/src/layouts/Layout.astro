@@ -1,0 +1,59 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "ConvCalc - Free Scientific Calculator & Converter for iPhone",
+  description = "A free, open-source scientific calculator and universal unit converter app for iPhone. No ads, offline capable, with 15+ converters and 5 specialized calculators.",
+} = Astro.props;
+
+const ogImage = "https://github.com/user-attachments/assets/e9b81f2a-250b-456e-9daa-3f8f9d93990f";
+const siteUrl = "https://convcalc.com";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={siteUrl} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Apple Smart App Banner -->
+    <meta name="apple-itunes-app" content="app-id=6472445974" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href={ogImage} />
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  @import "../styles/global.css";
+</style>
