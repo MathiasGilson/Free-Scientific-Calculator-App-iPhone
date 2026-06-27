@@ -10,26 +10,47 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		7D18048152CF1A4A23749DBA /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C421D49ABF3E627E9DCB8F08 /* PrivacyInfo.xcprivacy */; };
+		A10000000000000000000001 /* NativeUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000010 /* NativeUI.swift */; };
+		A10000000000000000000002 /* CalculatorEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000011 /* CalculatorEngine.swift */; };
+		A10000000000000000000003 /* ConverterCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000012 /* ConverterCore.swift */; };
+		A10000000000000000000004 /* currencies.json in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000013 /* currencies.json */; };
+		A10000000000000000000005 /* CalculatorEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000015 /* CalculatorEngineTests.swift */; };
+		A5AC1BEA49445A7A6117A219 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C06DFCE62FBABA990232AE0 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		C30C9BBBF509B720E09A9C64 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437C47B4988074FB2212AEF0 /* ExpoModulesProvider.swift */; };
-		DAD1AFEFC736159AE2F27144 /* libPods-ConvCalc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C95CE80488DC9A687B0C0D9 /* libPods-ConvCalc.a */; };
+		E532A400C30E819D57B244A0 /* libPods-ConvCalc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A100A22A4ACBC581D165FB8A /* libPods-ConvCalc.a */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A10000000000000000000050 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
+			remoteInfo = ConvCalc;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* ConvCalc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ConvCalc.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ConvCalc/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ConvCalc/Info.plist; sourceTree = "<group>"; };
-		2C95CE80488DC9A687B0C0D9 /* libPods-ConvCalc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ConvCalc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D71E8FC9DC2C012923C4A9B /* Pods-ConvCalc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConvCalc.debug.xcconfig"; path = "Target Support Files/Pods-ConvCalc/Pods-ConvCalc.debug.xcconfig"; sourceTree = "<group>"; };
-		437C47B4988074FB2212AEF0 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ConvCalc/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		7C06DFCE62FBABA990232AE0 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-ConvCalc/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		89186C9D438E96E82DCBC99E /* Pods-ConvCalc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConvCalc.release.xcconfig"; path = "Target Support Files/Pods-ConvCalc/Pods-ConvCalc.release.xcconfig"; sourceTree = "<group>"; };
+		A10000000000000000000010 /* NativeUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NativeUI.swift; path = ConvCalc/NativeUI.swift; sourceTree = "<group>"; };
+		A10000000000000000000011 /* CalculatorEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CalculatorEngine.swift; path = ConvCalc/Core/CalculatorEngine.swift; sourceTree = "<group>"; };
+		A10000000000000000000012 /* ConverterCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ConverterCore.swift; path = ConvCalc/Core/ConverterCore.swift; sourceTree = "<group>"; };
+		A10000000000000000000013 /* currencies.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = currencies.json; path = ../src/currencies.json; sourceTree = "<group>"; };
+		A10000000000000000000014 /* ConvCalcTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConvCalcTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000015 /* CalculatorEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorEngineTests.swift; sourceTree = "<group>"; };
+		A100A22A4ACBC581D165FB8A /* libPods-ConvCalc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ConvCalc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = ConvCalc/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		C421D49ABF3E627E9DCB8F08 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = ConvCalc/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		D85462078E3565ACAA7D3508 /* Pods-ConvCalc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConvCalc.release.xcconfig"; path = "Target Support Files/Pods-ConvCalc/Pods-ConvCalc.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ConvCalc/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* ConvCalc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "ConvCalc-Bridging-Header.h"; path = "ConvCalc/ConvCalc-Bridging-Header.h"; sourceTree = "<group>"; };
+		FC1BEC90151968B80E891B35 /* Pods-ConvCalc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConvCalc.debug.xcconfig"; path = "Target Support Files/Pods-ConvCalc/Pods-ConvCalc.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,23 +58,41 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAD1AFEFC736159AE2F27144 /* libPods-ConvCalc.a in Frameworks */,
+				E532A400C30E819D57B244A0 /* libPods-ConvCalc.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000031 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		035014176B84B16E54C30B01 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				8173149D7E27176DC5B1D492 /* ConvCalc */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* ConvCalc */ = {
 			isa = PBXGroup;
 			children = (
 				F11748412D0307B40044C1D9 /* AppDelegate.swift */,
+				A10000000000000000000010 /* NativeUI.swift */,
+				A10000000000000000000020 /* Core */,
 				F11748442D0722820044C1D9 /* ConvCalc-Bridging-Header.h */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
 				C421D49ABF3E627E9DCB8F08 /* PrivacyInfo.xcprivacy */,
+				A10000000000000000000013 /* currencies.json */,
 			);
 			name = ConvCalc;
 			sourceTree = "<group>";
@@ -62,9 +101,17 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				2C95CE80488DC9A687B0C0D9 /* libPods-ConvCalc.a */,
+				A100A22A4ACBC581D165FB8A /* libPods-ConvCalc.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8173149D7E27176DC5B1D492 /* ConvCalc */ = {
+			isa = PBXGroup;
+			children = (
+				7C06DFCE62FBABA990232AE0 /* ExpoModulesProvider.swift */,
+			);
+			name = ConvCalc;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -78,11 +125,12 @@
 			isa = PBXGroup;
 			children = (
 				13B07FAE1A68108700A75B9A /* ConvCalc */,
+				A10000000000000000000021 /* ConvCalcTests */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				CBF9BF718297D37943DC490A /* Pods */,
-				FC65AF11ABFD5A2043D3DE60 /* ExpoModulesProviders */,
+				950AE53D900689679AC47074 /* Pods */,
+				035014176B84B16E54C30B01 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -93,16 +141,37 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* ConvCalc.app */,
+				A10000000000000000000014 /* ConvCalcTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A5754612B2F1320200599D12 /* ConvCalc */ = {
+		950AE53D900689679AC47074 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				437C47B4988074FB2212AEF0 /* ExpoModulesProvider.swift */,
+				FC1BEC90151968B80E891B35 /* Pods-ConvCalc.debug.xcconfig */,
+				89186C9D438E96E82DCBC99E /* Pods-ConvCalc.release.xcconfig */,
 			);
-			name = ConvCalc;
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000020 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000011 /* CalculatorEngine.swift */,
+				A10000000000000000000012 /* ConverterCore.swift */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000021 /* ConvCalcTests */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000015 /* CalculatorEngineTests.swift */,
+			);
+			name = ConvCalcTests;
+			path = ConvCalcTests;
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -114,45 +183,47 @@
 			path = ConvCalc/Supporting;
 			sourceTree = "<group>";
 		};
-		CBF9BF718297D37943DC490A /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				2D71E8FC9DC2C012923C4A9B /* Pods-ConvCalc.debug.xcconfig */,
-				D85462078E3565ACAA7D3508 /* Pods-ConvCalc.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		FC65AF11ABFD5A2043D3DE60 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				A5754612B2F1320200599D12 /* ConvCalc */,
-			);
-			name = ExpoModulesProviders;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		00E356ED1AD99517003FC87E /* ConvCalcTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A10000000000000000000040 /* Build configuration list for PBXNativeTarget "ConvCalcTests" */;
+			buildPhases = (
+				A10000000000000000000030 /* Sources */,
+				A10000000000000000000031 /* Frameworks */,
+				A10000000000000000000032 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A10000000000000000000051 /* PBXTargetDependency */,
+			);
+			name = ConvCalcTests;
+			productName = ConvCalcTests;
+			productReference = A10000000000000000000014 /* ConvCalcTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		13B07F861A680F5B00A75B9A /* ConvCalc */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "ConvCalc" */;
 			buildPhases = (
-				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				0D9C20FAB94CF79B32FF3658 /* [Expo] Configure project */,
+				809BA9DF2BA59FD724341402 /* [CP] Check Pods Manifest.lock */,
+				06B9DEB287E9F6083F6396FB /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
-				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				82E9E7C9C5627E94C93786E5 /* [CP] Embed Pods Frameworks */,
+				5BC1A4035201369A82E2C2BC /* [CP] Embed Pods Frameworks */,
+				213C7E139A45EDE349672EAA /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = ConvCalc;
+			packageProductDependencies = (
+				B20000000000000000000002 /* LucideSwift */,
+			);
 			productName = ConvCalc;
 			productReference = 13B07F961A680F5B00A75B9A /* ConvCalc.app */;
 			productType = "com.apple.product-type.application";
@@ -165,6 +236,10 @@
 			attributes = {
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
+					00E356ED1AD99517003FC87E = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1250;
 					};
@@ -179,11 +254,15 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
+			packageReferences = (
+				B20000000000000000000001 /* XCRemoteSwiftPackageReference "lucide-swift" */,
+			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* ConvCalc */,
+				00E356ED1AD99517003FC87E /* ConvCalcTests */,
 			);
 		};
 /* End PBXProject section */
@@ -197,52 +276,21 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
 				7D18048152CF1A4A23749DBA /* PrivacyInfo.xcprivacy in Resources */,
+				A10000000000000000000004 /* currencies.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000032 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/.xcode.env",
-				"$(SRCROOT)/.xcode.env.local",
-			);
-			name = "Bundle React Native code and images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  export SKIP_BUNDLING=1\nfi\nif [[ -z \"$ENTRY_FILE\" ]]; then\n  # Set the entry JS file using the bundler's entry resolution.\n  export ENTRY_FILE=\"$(\"$NODE_BINARY\" -e \"require('expo/scripts/resolveAppEntry')\" \"$PROJECT_ROOT\" ios absolute | tail -n 1)\"\nfi\n\nif [[ -z \"$CLI_PATH\" ]]; then\n  # Use Expo CLI\n  export CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require.resolve('@expo/cli', { paths: [require.resolve('expo/package.json')] })\")\"\nfi\nif [[ -z \"$BUNDLE_COMMAND\" ]]; then\n  # Default Expo CLI command for bundling\n  export BUNDLE_COMMAND=\"export:embed\"\nfi\n\n# Source .xcode.env.updates if it exists to allow\n# SKIP_BUNDLING to be unset if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.updates\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.updates\"\nfi\n# Source local changes to allow overrides\n# if needed\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n`\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n\n";
-		};
-		08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ConvCalc-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		0D9C20FAB94CF79B32FF3658 /* [Expo] Configure project */ = {
+		06B9DEB287E9F6083F6396FB /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -266,7 +314,7 @@
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-ConvCalc/expo-configure-project.sh\"\n";
 		};
-		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
+		213C7E139A45EDE349672EAA /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -275,10 +323,12 @@
 				"${PODS_ROOT}/Target Support Files/Pods-ConvCalc/Pods-ConvCalc-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/ExpoConstants_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXUpdates/EXUpdates.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem/ExpoFileSystem_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoLocalization/ExpoLocalization_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage_resources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/RNSVG/RNSVGFilters.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/ReachabilitySwift/ReachabilitySwift.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React-Core_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
 			);
@@ -286,10 +336,12 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoConstants_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXUpdates.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoFileSystem_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoLocalization_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNCAsyncStorage_resources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RNSVGFilters.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ReachabilitySwift.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-Core_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
 			);
@@ -298,7 +350,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ConvCalc/Pods-ConvCalc-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		82E9E7C9C5627E94C93786E5 /* [CP] Embed Pods Frameworks */ = {
+		5BC1A4035201369A82E2C2BC /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -320,6 +372,28 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ConvCalc/Pods-ConvCalc-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		809BA9DF2BA59FD724341402 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ConvCalc-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -328,16 +402,35 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				C30C9BBBF509B720E09A9C64 /* ExpoModulesProvider.swift in Sources */,
+				A10000000000000000000001 /* NativeUI.swift in Sources */,
+				A10000000000000000000002 /* CalculatorEngine.swift in Sources */,
+				A10000000000000000000003 /* ConverterCore.swift in Sources */,
+				A5AC1BEA49445A7A6117A219 /* ExpoModulesProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000030 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000005 /* CalculatorEngineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		A10000000000000000000051 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 13B07F861A680F5B00A75B9A /* ConvCalc */;
+			targetProxy = A10000000000000000000050 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2D71E8FC9DC2C012923C4A9B /* Pods-ConvCalc.debug.xcconfig */;
+			baseConfigurationReference = FC1BEC90151968B80E891B35 /* Pods-ConvCalc.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -363,7 +456,6 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qualtir.convcalc;
 				PRODUCT_NAME = ConvCalc;
-				SWIFT_OBJC_BRIDGING_HEADER = "ConvCalc/ConvCalc-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -373,7 +465,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D85462078E3565ACAA7D3508 /* Pods-ConvCalc.release.xcconfig */;
+			baseConfigurationReference = 89186C9D438E96E82DCBC99E /* Pods-ConvCalc.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -394,7 +486,6 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qualtir.convcalc;
 				PRODUCT_NAME = ConvCalc;
-				SWIFT_OBJC_BRIDGING_HEADER = "ConvCalc/ConvCalc-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -519,6 +610,38 @@
 			};
 			name = Release;
 		};
+		A10000000000000000000041 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = com.qualtir.convcalc.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ConvCalc.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ConvCalc";
+			};
+			name = Debug;
+		};
+		A10000000000000000000042 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
+				PRODUCT_BUNDLE_IDENTIFIER = com.qualtir.convcalc.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ConvCalc.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ConvCalc";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -540,7 +663,35 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		A10000000000000000000040 /* Build configuration list for PBXNativeTarget "ConvCalcTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000041 /* Debug */,
+				A10000000000000000000042 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B20000000000000000000001 /* XCRemoteSwiftPackageReference "lucide-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ajaxjiang96/lucide-swift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.6.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B20000000000000000000002 /* LucideSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B20000000000000000000001 /* XCRemoteSwiftPackageReference "lucide-swift" */;
+			productName = LucideSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

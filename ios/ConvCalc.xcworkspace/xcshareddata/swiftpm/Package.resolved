@@ -1,0 +1,24 @@
+{
+  "originHash" : "c108090b17e99d6287bf489be4147cd2757a6bcce0178ab6a2f0336783e5fe4f",
+  "pins" : [
+    {
+      "identity" : "lucide-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ajaxjiang96/lucide-swift.git",
+      "state" : {
+        "revision" : "d40ab30be4d0f9796e90b3ee398f2c7f5fcd74cc",
+        "version" : "0.6.3"
+      }
+    },
+    {
+      "identity" : "svgpath",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nicklockwood/SVGPath.git",
+      "state" : {
+        "revision" : "dc424c325f68852dc1ef32d07425276253772b09",
+        "version" : "1.3.0"
+      }
+    }
+  ],
+  "version" : 3
+}
