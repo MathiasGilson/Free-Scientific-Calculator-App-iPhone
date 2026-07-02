@@ -50,7 +50,15 @@ public struct CalculatorEngine: Sendable {
         guard result.isFinite else { return result }
         if result == 0 { return 0 }
         if result.rounded(.towardZero) == result { return result }
-        return (result * 100_000).rounded() / 100_000
+        // Round at the edge of Double's precision (12 significant digits) rather
+        // than to a fixed number of decimal places. This strips binary
+        // floating-point noise (e.g. 0.1 + 0.2 = 0.30000000000000004) while
+        // preserving as many real decimals as the value actually has.
+        let exponent = floor(log10(abs(result)))
+        let decimals = 12 - Int(exponent) - 1
+        guard decimals > 0 else { return result }
+        let factor = pow(10.0, Double(decimals))
+        return (result * factor).rounded() / factor
     }
 }
 

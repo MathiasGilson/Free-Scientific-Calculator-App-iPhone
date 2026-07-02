@@ -1108,7 +1108,9 @@ final class CalculatorViewModel: ObservableObject {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = .current
-        formatter.maximumFractionDigits = 5
+        // Show every meaningful decimal the engine produces; the engine has
+        // already rounded away floating-point noise at 12 significant digits.
+        formatter.maximumFractionDigits = 15
         return formatter
     }()
 }
@@ -1719,8 +1721,10 @@ private struct ReorderableConverterToolGrid: View {
         )
         .frame(width: itemSize, height: itemSize)
         .contentShape(Rectangle())
-        .scaleEffect(isPressed && !isActive ? 0.93 : 1)
-        .animation(.easeOut(duration: 0.16), value: isPressed)
+        .scaleEffect(cardScale(isActive: isActive, isPressed: isPressed))
+        // Snap down fast on press; ease back up gently.
+        .animation(.easeOut(duration: isPressed ? 0.05 : 0.18), value: isPressed)
+        .animation(.spring(response: 0.28, dampingFraction: 0.62), value: appState.isRearrangingTools)
 
         // NOTE: position cards with `.position`, not `.offset`. `.offset` is a
         // render-only transform that does not move a view's hit-testing frame,
@@ -1782,6 +1786,15 @@ private struct ReorderableConverterToolGrid: View {
 
     private func positionPoint(for index: Int, isActive: Bool) -> CGPoint {
         isActive ? activeCenter() : slotCenter(for: index)
+    }
+
+    /// Scale a grid card: lifted while dragged, pressed-down while held, and
+    /// nudged up in rearrange mode so it visibly reads as "movable".
+    private func cardScale(isActive: Bool, isPressed: Bool) -> CGFloat {
+        if isActive { return 1.12 }
+        if isPressed { return 0.88 }
+        if appState.isRearrangingTools { return 1.08 }
+        return 1
     }
 
     private func handlePinTap(_ tool: ConverterTool) {
@@ -1954,6 +1967,14 @@ struct PinnedToolScreen: View {
     }
 }
 
+private enum ToolPageCloseGesture {
+    static let minimumDistance: CGFloat = 28
+    static let horizontalDominanceRatio: CGFloat = 2.0
+    static let closeProgressThreshold: CGFloat = 0.45
+    static let minimumDragBeforeVelocityClose: CGFloat = 0.2
+    static let velocityCloseProgressThreshold: CGFloat = 0.62
+}
+
 private struct ToolDetailPage: View {
     let tool: ConverterTool
     let onClose: () -> Void
@@ -1974,14 +1995,17 @@ private struct ToolDetailPage: View {
     }
 
     private func closeGesture(width: CGFloat) -> some Gesture {
-        DragGesture(minimumDistance: 18, coordinateSpace: .local)
+        DragGesture(minimumDistance: ToolPageCloseGesture.minimumDistance, coordinateSpace: .local)
             .onChanged { value in
                 guard isClosingDrag(value.translation) else { return }
                 dragOffset = min(width, max(0, value.translation.width))
             }
             .onEnded { value in
-                let projectedOffset = max(dragOffset, value.predictedEndTranslation.width)
-                let shouldClose = projectedOffset > width * 0.32
+                let shouldClose = shouldCloseToolPage(
+                    dragOffset: dragOffset,
+                    predictedEndWidth: value.predictedEndTranslation.width,
+                    pageWidth: width
+                )
                 if shouldClose {
                     onClose()
                 } else {
@@ -1993,7 +2017,21 @@ private struct ToolDetailPage: View {
     }
 
     private func isClosingDrag(_ translation: CGSize) -> Bool {
-        translation.width > 0 && translation.width > abs(translation.height) * 1.2
+        translation.width > 0
+            && translation.width > abs(translation.height) * ToolPageCloseGesture.horizontalDominanceRatio
+    }
+
+    private func shouldCloseToolPage(dragOffset: CGFloat, predictedEndWidth: CGFloat, pageWidth: CGFloat) -> Bool {
+        guard pageWidth > 0 else { return false }
+
+        let progress = dragOffset / pageWidth
+        if progress >= ToolPageCloseGesture.closeProgressThreshold {
+            return true
+        }
+
+        let predictedProgress = max(dragOffset, predictedEndWidth) / pageWidth
+        return progress >= ToolPageCloseGesture.minimumDragBeforeVelocityClose
+            && predictedProgress >= ToolPageCloseGesture.velocityCloseProgressThreshold
     }
 }
 
@@ -2050,7 +2088,7 @@ private struct DetailHeader: View {
 
 private enum ToolDetailLayout {
     static let headerTopExtra: CGFloat = 4
-    static let headerBottomSpacing: CGFloat = 6
+    static let headerBottomSpacing: CGFloat = 18
     static let pinnedContentTopExtra: CGFloat = 4
 
     static func contentTopInset(hasBackButton: Bool) -> CGFloat {
@@ -2570,20 +2608,35 @@ struct CurrencyScreen: View {
     }
 
     private func appendValue(_ value: String) {
-        inputEdited = true
+        let code = displayedCurrencies[activeCurrencyIndex]
+        let decimalLimit = catalog[code]?.decimalDigits ?? 2
+
         if value == "." {
-            let code = displayedCurrencies[activeCurrencyIndex]
-            if catalog[code]?.decimalDigits == 0 { return }
+            if decimalLimit == 0 { return }
             if activeAmount.contains(".") { return }
-            if !inputEdited {
-                activeAmount = "1."
-                return
-            }
+            // Starting from the unedited default: begin a fresh decimal entry.
+            activeAmount = inputEdited ? activeAmount + "." : "0."
+            inputEdited = true
+            return
         }
-        activeAmount = inputEdited ? activeAmount + value : value
-        if activeAmount.hasPrefix("1"), activeAmount.count == 2, activeAmount.last != "." {
-            activeAmount = String(activeAmount.dropFirst())
+
+        // The first keystroke replaces the default placeholder rather than
+        // appending to it, so "1" + "100" becomes "100" and not a reset to 0.
+        guard inputEdited else {
+            activeAmount = value
+            inputEdited = true
+            return
         }
+
+        // Ignore digits once the fractional part already has the maximum number
+        // of decimals this currency displays.
+        if let dotIndex = activeAmount.firstIndex(of: ".") {
+            let fractionCount = activeAmount.distance(from: activeAmount.index(after: dotIndex), to: activeAmount.endIndex)
+            if fractionCount >= decimalLimit { return }
+        }
+
+        // Replace a lone leading zero so "0" + "5" becomes "5", not "05".
+        activeAmount = activeAmount == "0" ? value : activeAmount + value
     }
 
     private func backspace() {
@@ -2685,8 +2738,12 @@ private struct CurrencyPicker: View {
     }
 
     private func focusSearchField() {
+        // Focus the search field immediately so the keyboard rises together with
+        // the picker. Re-assert on the next runloop as a safety net (no visible
+        // delay) in case the field isn't first responder on the first layout pass.
         searchPresented = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+        searchFocused = true
+        DispatchQueue.main.async {
             searchPresented = true
             searchFocused = true
         }
@@ -2716,8 +2773,9 @@ private struct PressableButtonStyle: ButtonStyle {
                     .fill(Color.white.opacity(configuration.isPressed ? 0.10 : 0))
                     .allowsHitTesting(false)
             )
-            .scaleEffect(configuration.isPressed ? 0.93 : 1)
-            .animation(.easeOut(duration: 0.16), value: configuration.isPressed)
+            .scaleEffect(configuration.isPressed ? 0.88 : 1)
+            // Snap down fast for an immediate, visible press; ease back up gently.
+            .animation(.easeOut(duration: configuration.isPressed ? 0.05 : 0.18), value: configuration.isPressed)
     }
 }
 
