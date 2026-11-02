@@ -28,3 +28,6 @@ project.xcworkspace
 
 # CocoaPods
 /Pods/
+
+# Local build secrets
+ConvCalc/Secrets.xcconfig

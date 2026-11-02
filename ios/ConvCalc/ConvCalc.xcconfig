@@ -1,0 +1,3 @@
+// The exchange rate token lives in the untracked Secrets.xcconfig, as one line:
+// EXCHANGE_RATE_TOKEN = your-token
+#include? "Secrets.xcconfig"
