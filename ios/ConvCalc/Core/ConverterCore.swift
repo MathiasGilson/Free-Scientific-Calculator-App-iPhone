@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 
 public struct UnitDefinition: Sendable {
@@ -115,6 +116,10 @@ public struct DiscountResult: Equatable, Sendable {
 }
 
 public enum ConverterCore {
+    /// Longest number the keypads accept. Doubles lose integer precision past this, and it
+    /// keeps every typed value safely inside the range of `Int`.
+    public static let maxInputLength = 15
+
     public static func convertToAll(value: Double, fromIndex: Int, units: [UnitDefinition]) -> [ConversionResult] {
         guard units.indices.contains(fromIndex) else { return [] }
         let baseValue = units[fromIndex].toBase(value)
@@ -127,7 +132,9 @@ public enum ConverterCore {
         }
     }
 
-    public static func formatConversionResult(_ value: Double) -> String {
+    public static func formatConversionResult(_ value: Double, locale: Locale = .current) -> String {
+        // Fuel units divide by the value, so typing 0 produces infinity.
+        guard value.isFinite else { return "—" }
         if value == 0 { return "0" }
         let absolute = abs(value)
         if absolute >= 1e12 || (absolute < 1e-6 && absolute > 0) {
@@ -137,11 +144,11 @@ public enum ConverterCore {
         let integerDigits = absolute >= 1 ? Int(floor(log10(absolute))) + 1 : 1
         let maximumFractionDigits = max(0, 8 - integerDigits)
         let rounded = Double(String(format: "%.\(maximumFractionDigits)f", value)) ?? value
-        return NumberFormatter.compactDecimal(maximumFractionDigits: maximumFractionDigits).string(from: NSNumber(value: rounded)) ?? "\(rounded)"
+        return NumberFormatter.compactDecimal(maximumFractionDigits: maximumFractionDigits, locale: locale).string(from: NSNumber(value: rounded)) ?? "\(rounded)"
     }
 
-    public static func formatNumber(_ value: Double, decimals: Int = 2) -> String {
-        NumberFormatter.compactDecimal(maximumFractionDigits: decimals).string(from: NSNumber(value: value)) ?? "\(value)"
+    public static func formatNumber(_ value: Double, decimals: Int = 2, locale: Locale = .current) -> String {
+        NumberFormatter.compactDecimal(maximumFractionDigits: decimals, locale: locale).string(from: NSNumber(value: value)) ?? "\(value)"
     }
 
     public static func calculateBMI(heightCm: Double, weightKg: Double) -> BMIResult? {
@@ -214,10 +221,14 @@ public enum ConverterCore {
     }
 
     public static func calculateLoan(principal: Double, rate: Double, years: Double) -> LoanResult? {
-        guard principal > 0, rate > 0, years > 0 else { return nil }
+        guard principal > 0, rate >= 0, years > 0 else { return nil }
         let monthlyRate = rate / 100 / 12
         let numberOfPayments = years * 12
-        let monthly = principal * (monthlyRate * pow(1 + monthlyRate, numberOfPayments)) / (pow(1 + monthlyRate, numberOfPayments) - 1)
+        let monthly = rate == 0
+            ? principal / numberOfPayments
+            : principal * (monthlyRate * pow(1 + monthlyRate, numberOfPayments)) / (pow(1 + monthlyRate, numberOfPayments) - 1)
+        // A very long duration overflows the compounding factor.
+        guard monthly.isFinite else { return nil }
         let totalPaid = monthly * numberOfPayments
         let totalInterest = totalPaid - principal
         return LoanResult(
@@ -228,7 +239,7 @@ public enum ConverterCore {
     }
 
     public static func calculateDiscount(price: Double, percent: Double) -> DiscountResult? {
-        guard price >= 0, percent >= 0 else { return nil }
+        guard price >= 0, percent >= 0, percent <= 100 else { return nil }
         let savings = price * (percent / 100)
         return DiscountResult(savings: roundCurrency(savings), finalPrice: roundCurrency(price - savings))
     }
@@ -238,6 +249,7 @@ public enum ConverterCore {
     }
 
     private static func makeDate(year: Int, month: Int, day: Int, calendar: Calendar) -> Date? {
+        guard (1...9999).contains(year) else { return nil }
         var components = DateComponents()
         components.calendar = calendar
         components.year = year
@@ -251,10 +263,10 @@ public enum ConverterCore {
 }
 
 extension NumberFormatter {
-    public static func compactDecimal(maximumFractionDigits: Int) -> NumberFormatter {
+    public static func compactDecimal(maximumFractionDigits: Int, locale: Locale = .current) -> NumberFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        formatter.locale = Locale(identifier: "en_US")
+        formatter.locale = locale
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = maximumFractionDigits
         return formatter
@@ -452,18 +464,6 @@ public struct ExchangeRateResponse: Decodable, Sendable {
     public let rates: [String: Double]
 }
 
-public struct PublicExchangeRateResponse: Decodable, Sendable {
-    public let result: String
-    public let timeLastUpdateUnix: TimeInterval
-    public let rates: [String: Double]
-
-    enum CodingKeys: String, CodingKey {
-        case result
-        case timeLastUpdateUnix = "time_last_update_unix"
-        case rates
-    }
-}
-
 public struct CurrencyRateSnapshot: Codable, Equatable, Sendable {
     public let rates: [String: Double]
     public let updatedAt: Date
@@ -518,6 +518,24 @@ public enum CurrencyRateStore {
         "BTC": 0.000016
     ]
 
+    /// Returns nil when either rate is missing, because the catalog lists currencies that
+    /// rate providers do not cover and a made-up 1:1 conversion would look like a real one.
+    public static func convert(_ amount: Double, from source: String, to target: String, rates: [String: Double]) -> Double? {
+        guard let sourceRate = rates[source], let targetRate = rates[target], sourceRate > 0 else { return nil }
+        return amount / sourceRate * targetRate
+    }
+
+    /// Uses the currency's usual decimals, adding more only when the amount would round to
+    /// zero: 1 IRR is a tiny but real amount of USD, and showing "0" would be wrong.
+    public static func formatAmount(_ value: Double, decimalDigits: Int, locale: Locale = .current) -> String {
+        var digits = decimalDigits
+        let magnitude = abs(value)
+        if magnitude > 0, magnitude < 0.5 * pow(10, -Double(decimalDigits)) {
+            digits = min(12, Int(ceil(-log10(magnitude))) + 1)
+        }
+        return NumberFormatter.compactDecimal(maximumFractionDigits: digits, locale: locale).string(from: NSNumber(value: value)) ?? "\(value)"
+    }
+
     public static func load(defaults: UserDefaults = .standard) -> CurrencyRateSnapshot? {
         guard let data = defaults.data(forKey: key) else { return nil }
         return try? JSONDecoder().decode(CurrencyRateSnapshot.self, from: data)
@@ -530,7 +548,9 @@ public enum CurrencyRateStore {
 
     public static func shouldRefresh(_ snapshot: CurrencyRateSnapshot?, now: Date = Date()) -> Bool {
         guard let snapshot else { return true }
-        return now.timeIntervalSince(snapshot.updatedAt) >= refreshInterval
+        let age = now.timeIntervalSince(snapshot.updatedAt)
+        // A negative age means the device clock moved back; don't wait for it to catch up.
+        return age < 0 || age >= refreshInterval
     }
 
     public static func token(bundle: Bundle = .main) -> String? {
@@ -547,21 +567,75 @@ public enum CurrencyRateStore {
         guard let url = components?.url else { throw URLError(.badURL) }
         let (data, _) = try await session.data(from: url)
         let response = try JSONDecoder().decode(ExchangeRateResponse.self, from: data)
+        guard !response.rates.isEmpty else { throw URLError(.cannotParseResponse) }
         return CurrencyRateSnapshot(rates: response.rates, updatedAt: Date())
     }
+}
 
-    public static func fetchPublic(session: URLSession = .shared) async throws -> CurrencyRateSnapshot {
-        guard let url = URL(string: "https://open.er-api.com/v6/latest/USD") else {
-            throw URLError(.badURL)
+/// Rates and the chosen currencies, shared by every currency screen and owned by the app so
+/// that refreshing depends on opening the app rather than on visiting the currency tab.
+@MainActor
+public final class CurrencyRatesModel: ObservableObject {
+    @Published public private(set) var snapshot: CurrencyRateSnapshot?
+    @Published public private(set) var isRefreshing = false
+    @Published public private(set) var refreshFailed = false
+    @Published public private(set) var displayedCurrencies = ["USD", "EUR", "GBP", "JPY"]
+
+    private let defaults: UserDefaults
+    private let token: () -> String?
+    private let fetch: @Sendable (String) async throws -> CurrencyRateSnapshot
+    private static let displayedCurrenciesKey = "displayedCurrencies"
+
+    public init(
+        defaults: UserDefaults = .standard,
+        token: @escaping () -> String? = { CurrencyRateStore.token() },
+        fetch: @escaping @Sendable (String) async throws -> CurrencyRateSnapshot = { try await CurrencyRateStore.fetch(token: $0) }
+    ) {
+        self.defaults = defaults
+        self.token = token
+        self.fetch = fetch
+        snapshot = CurrencyRateStore.load(defaults: defaults)
+        if
+            let data = defaults.data(forKey: Self.displayedCurrenciesKey),
+            let decoded = try? JSONDecoder().decode([String].self, from: data),
+            decoded.count == displayedCurrencies.count
+        {
+            displayedCurrencies = decoded
         }
-        let (data, _) = try await session.data(from: url)
-        let response = try JSONDecoder().decode(PublicExchangeRateResponse.self, from: data)
-        guard response.result == "success" else { throw URLError(.cannotParseResponse) }
+    }
 
-        let mergedRates = fallbackRates.merging(response.rates) { _, liveRate in liveRate }
-        return CurrencyRateSnapshot(
-            rates: mergedRates,
-            updatedAt: Date()
-        )
+    public var rates: [String: Double] {
+        snapshot?.rates ?? CurrencyRateStore.fallbackRates
+    }
+
+    /// Called whenever the app opens. Rates fetched within the last hour are kept; a failed
+    /// fetch leaves them stale, so the next open tries again.
+    public func refresh(force: Bool = false, now: Date = Date()) async {
+        guard !isRefreshing, force || CurrencyRateStore.shouldRefresh(snapshot, now: now) else { return }
+
+        isRefreshing = true
+        refreshFailed = false
+        defer { isRefreshing = false }
+
+        do {
+            guard let token = token() else { throw URLError(.userAuthenticationRequired) }
+            let fetched = try await fetch(token)
+            snapshot = fetched
+            CurrencyRateStore.save(fetched, defaults: defaults)
+        } catch {
+            refreshFailed = true
+        }
+    }
+
+    /// Choosing a currency that another row already shows swaps the two rows.
+    public func setCurrency(_ code: String, at index: Int) {
+        guard displayedCurrencies.indices.contains(index) else { return }
+        if let existing = displayedCurrencies.firstIndex(of: code) {
+            displayedCurrencies.swapAt(existing, index)
+        } else {
+            displayedCurrencies[index] = code
+        }
+        guard let data = try? JSONEncoder().encode(displayedCurrencies) else { return }
+        defaults.set(data, forKey: Self.displayedCurrenciesKey)
     }
 }

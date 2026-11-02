@@ -1,7 +1,6 @@
 import LucideSwift
 import SwiftUI
 import UIKit
-import UniformTypeIdentifiers
 
 private struct AppIcon: View {
     let name: String
@@ -23,12 +22,7 @@ private struct AppIcon: View {
 
 private enum AppColor {
     static let background = Color.black
-    static let button = Color(red: 0.16, green: 0.16, blue: 0.16)
-    static let secondaryButton = Color(red: 0.09, green: 0.09, blue: 0.09)
-    static let primaryButton = Color(red: 0.24, green: 0.15, blue: 0.01)
     static let accent = Color(red: 0.96, green: 0.60, blue: 0.02)
-    static let muted = Color(red: 0.56, green: 0.56, blue: 0.56)
-    static let sheet = Color(red: 0.11, green: 0.11, blue: 0.12)
 }
 
 private let toolPageAnimation = Animation.interactiveSpring(response: 0.28, dampingFraction: 0.88, blendDuration: 0.02)
@@ -89,6 +83,11 @@ struct CalculationEntry: Codable, Identifiable, Equatable {
     let timestamp: Date
 
     var id: String { "\(timestamp.timeIntervalSince1970)-\(expression)-\(result)" }
+
+    /// `result` is locale-independent so that it can be loaded back into the calculator.
+    var displayResult: String {
+        Double(result).map { CalculatorNumberFormat.display($0) } ?? result
+    }
 }
 
 final class CalculationHistoryStore: ObservableObject {
@@ -170,9 +169,7 @@ final class ConvCalcAppState: ObservableObject {
             let decoded = try? JSONDecoder().decode([String].self, from: data),
             !decoded.isEmpty
         {
-            screenOrder = Self.sanitizeScreenOrder(
-                decoded.contains("_calculator") ? decoded : ["_calculator"] + decoded
-            )
+            screenOrder = Self.sanitizeScreenOrder(decoded)
         } else {
             screenOrder = ["_calculator", "currency"]
         }
@@ -205,17 +202,20 @@ final class ConvCalcAppState: ObservableObject {
     }
 
     func setPinnedToolKeys(_ keys: [String]) {
-        screenOrder = Self.sanitizeScreenOrder(["_calculator"] + keys)
+        // The calculator tab can be dragged too, so pinning must not reset its position.
+        var order = keys
+        order.insert("_calculator", at: min(screenOrder.firstIndex(of: "_calculator") ?? 0, keys.count))
+        screenOrder = Self.sanitizeScreenOrder(order)
     }
 
     private static func sanitizeScreenOrder(_ order: [String]) -> [String] {
         var seen: Set<String> = []
-        let pinned = order.filter { key in
-            guard key != "_calculator", key != "_converter", !seen.contains(key) else { return false }
+        let tabs = order.filter { key in
+            guard key != "_converter", !seen.contains(key) else { return false }
             seen.insert(key)
             return true
         }
-        return ["_calculator"] + pinned
+        return tabs.contains("_calculator") ? tabs : ["_calculator"] + tabs
     }
 
     func pin(_ key: String) -> Bool {
@@ -231,20 +231,6 @@ final class ConvCalcAppState: ObservableObject {
         var keys = pinnedToolKeys
         keys.removeAll { $0 == key }
         setPinnedToolKeys(keys)
-    }
-
-    func moveTool(_ sourceKey: String, before targetKey: String) {
-        guard sourceKey != targetKey else { return }
-        var order = Self.normalizedToolOrder(toolOrder)
-        guard
-            let sourceIndex = order.firstIndex(of: sourceKey),
-            let targetIndex = order.firstIndex(of: targetKey)
-        else { return }
-
-        let moving = order.remove(at: sourceIndex)
-        let adjustedTargetIndex = sourceIndex < targetIndex ? targetIndex - 1 : targetIndex
-        order.insert(moving, at: adjustedTargetIndex)
-        toolOrder = order
     }
 
     func moveTool(_ sourceKey: String, to destinationIndex: Int) {
@@ -299,6 +285,8 @@ final class ConvCalcAppState: ObservableObject {
         if tabs.last == "_converter" {
             tabs.removeLast()
         }
+        // Called on every drag update; only a real move should re-render and persist.
+        guard tabs != screenOrder else { return }
         screenOrder = tabs
     }
 
@@ -436,6 +424,9 @@ struct RootView: View {
                     .zIndex(20)
             }
         }
+        .onAppear {
+            pageIndex = appState.screenOrder.firstIndex(of: "_calculator") ?? 0
+        }
         .sheet(isPresented: $historyVisible) {
             HistorySheet(
                 onSelect: { expression in
@@ -523,6 +514,7 @@ private enum DebugRoute: Equatable {
     case calculator
     case calculatorInput
     case calculatorExpanded
+    case calculatorExpression(String)
     case history
     case historyEmpty
     case currency
@@ -542,6 +534,9 @@ private enum DebugRoute: Equatable {
         if raw == "currencyPicker" { return .currencyPicker }
         if raw == "converterGrid" { return .converterGrid }
         if raw == "converterGridRearranging" { return .converterGridRearranging }
+        if raw.hasPrefix("expression:") {
+            return .calculatorExpression(String(raw.dropFirst("expression:".count)))
+        }
         if raw.hasPrefix("tool:") {
             return .tool(String(raw.dropFirst("tool:".count)))
         }
@@ -576,6 +571,13 @@ private struct DebugRouteView: View {
                 .onAppear {
                     calculatorModel.expanded = true
                     calculatorModel.angleMode = .degrees
+                }
+            case .calculatorExpression(let expression):
+                CalculatorScreen(model: calculatorModel) {
+                    showHistory = true
+                }
+                .onAppear {
+                    calculatorModel.setExpression(expression)
                 }
             case .history:
                 HistorySheet(onSelect: { _ in }, onClose: {})
@@ -678,6 +680,8 @@ struct PinnedTabBar: View {
         .appGlass(cornerRadius: 18, tint: Color.white.opacity(0.04), fallbackOpacity: 0.08)
         .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         .onLongPressGesture(minimumDuration: 0.42, maximumDistance: 24) {
+            // The bar also flashes while paging, but only the grid can exit rearranging.
+            guard pageIndex == appState.screenOrder.count else { return }
             impact(.heavy)
             appState.beginRearrangingTools()
         }
@@ -706,7 +710,6 @@ struct PinnedTabBar: View {
                     .zIndex(isActive ? 10 : 1)
                     .animation(isActive ? nil : .interactiveSpring(response: 0.22, dampingFraction: 0.84), value: tabs)
                     .simultaneousGesture(dragGesture(for: key, at: index, tabs: tabs))
-                    .toolDrop(enabled: true, target: .shortcut(key), appState: appState)
             }
         }
         .frame(width: barWidth(tabCount: tabs.count), height: Self.barHeight)
@@ -821,37 +824,6 @@ private struct PinnedTabIcon: View {
     }
 }
 
-private enum ToolDropTarget {
-    case grid(String)
-    case shortcut(String)
-}
-
-private struct ToolDropDelegate: DropDelegate {
-    let target: ToolDropTarget
-    let appState: ConvCalcAppState
-
-    func dropEntered(info: DropInfo) {
-        guard let sourceKey = appState.draggedToolKey else { return }
-        withAnimation(.easeInOut(duration: 0.16)) {
-            switch target {
-            case .grid(let targetKey):
-                appState.moveTool(sourceKey, before: targetKey)
-            case .shortcut(let targetKey):
-                _ = appState.reorderToolbarTab(sourceKey, before: targetKey)
-            }
-        }
-    }
-
-    func dropUpdated(info: DropInfo) -> DropProposal? {
-        DropProposal(operation: .move)
-    }
-
-    func performDrop(info: DropInfo) -> Bool {
-        appState.draggedToolKey = nil
-        return true
-    }
-}
-
 private struct ReorderShakeModifier: ViewModifier {
     let active: Bool
     @State private var shakeStart = Date()
@@ -888,28 +860,6 @@ private struct ReorderShakeModifier: ViewModifier {
 private extension View {
     func reorderShake(_ active: Bool) -> some View {
         modifier(ReorderShakeModifier(active: active))
-    }
-
-    @ViewBuilder
-    func toolDrag(enabled: Bool, key: String, appState: ConvCalcAppState) -> some View {
-        if enabled {
-            self.onDrag {
-                appState.draggedToolKey = key
-                appState.beginRearrangingTools()
-                return NSItemProvider(object: key as NSString)
-            }
-        } else {
-            self
-        }
-    }
-
-    @ViewBuilder
-    func toolDrop(enabled: Bool, target: ToolDropTarget, appState: ConvCalcAppState) -> some View {
-        if enabled {
-            self.onDrop(of: [UTType.text], delegate: ToolDropDelegate(target: target, appState: appState))
-        } else {
-            self
-        }
     }
 }
 
@@ -953,9 +903,30 @@ final class CalculatorViewModel: ObservableObject {
         syncExpression()
     }
 
+    /// For values that begin a new number, such as 1/x, rather than extending the current one.
+    func pressFactor(_ value: String) {
+        error = ""
+        selectedChunkIndex = nil
+        reducer.appendFactor(value)
+        syncExpression()
+    }
+
     func decimalPoint() {
         error = ""
-        reducer.appendDecimalPoint()
+        if let selectedChunkIndex {
+            var chunks = splitExpression(expression)
+            guard chunks.indices.contains(selectedChunkIndex) else { return }
+            if Self.isOperatorChunk(chunks[selectedChunkIndex]) {
+                self.selectedChunkIndex = nil
+                reducer.appendDecimalPoint()
+            } else {
+                chunks[selectedChunkIndex] = isEditingChunk ? "0." : CalculatorInputReducer.addingDecimalPoint(to: chunks[selectedChunkIndex])
+                isEditingChunk = false
+                reducer.replace(with: chunks.joined())
+            }
+        } else {
+            reducer.appendDecimalPoint()
+        }
         syncExpression()
     }
 
@@ -966,7 +937,7 @@ final class CalculatorViewModel: ObservableObject {
     }
 
     func random() {
-        press(String(format: "%.5f", Double.random(in: 0..<1)))
+        pressFactor(String(format: "%.5f", Double.random(in: 0..<1)))
     }
 
     func clear() {
@@ -989,6 +960,10 @@ final class CalculatorViewModel: ObservableObject {
             guard chunks.indices.contains(selectedChunkIndex) else { return }
             chunks[selectedChunkIndex] = CalculatorInputReducer.removingLastToken(from: chunks[selectedChunkIndex])
             reducer.replace(with: chunks.joined())
+            // An emptied chunk disappears, which would shift the selection onto its neighbor.
+            if chunks[selectedChunkIndex].isEmpty {
+                self.selectedChunkIndex = nil
+            }
         } else {
             reducer.backspace()
         }
@@ -996,15 +971,18 @@ final class CalculatorViewModel: ObservableObject {
     }
 
     func calculate(historyStore: CalculationHistoryStore) {
+        guard !expression.isEmpty else { return }
         do {
             let result = try engine.evaluate(expression)
-            let resultString = Self.displayFormatter.string(from: NSNumber(value: result)) ?? "\(result)"
-            let parsedResult = "\(expression) = \(resultString)"
+            let resultValue = CalculatorNumberFormat.expressionValue(result)
+            // Pressing = again on a lone result has nothing new to record.
+            guard resultValue != expression else { return }
+            let parsedResult = "\(expression) = \(CalculatorNumberFormat.display(result))"
             if sessionHistory.last != parsedResult {
                 sessionHistory.append(parsedResult)
             }
-            historyStore.save(expression: expression, result: resultString)
-            reducer.replace(with: resultString.replacingOccurrences(of: ",", with: ""))
+            historyStore.save(expression: expression, result: resultValue)
+            reducer.replace(with: resultValue)
             selectedChunkIndex = nil
             isEditingChunk = false
             syncExpression()
@@ -1030,7 +1008,8 @@ final class CalculatorViewModel: ObservableObject {
 
     func pasteClipboard() {
         guard let string = UIPasteboard.general.string else { return }
-        reducer.replace(with: string)
+        error = ""
+        reducer.replace(with: CalculatorNumberFormat.normalizedPaste(string))
         syncExpression()
     }
 
@@ -1039,17 +1018,16 @@ final class CalculatorViewModel: ObservableObject {
     }
 
     func formatChunk(_ chunk: String) -> String {
-        guard !chunk.isEmpty else { return chunk }
-        if chunk.contains(".") && [".", "0"].contains(chunk.last.map(String.init) ?? "") {
-            return chunk.replacingOccurrences(of: ".", with: Locale.current.decimalSeparator ?? ".")
+        if chunk == "*" { return "×" }
+        if chunk == "/" { return "÷" }
+        if chunk.contains("E"), let value = Double(chunk) {
+            return CalculatorNumberFormat.display(value)
         }
-        guard let value = Double(chunk) else { return chunk }
-        return Self.displayFormatter.string(from: NSNumber(value: value)) ?? chunk
+        return CalculatorNumberFormat.typedNumber(chunk)
     }
 
     func formatResult(_ result: String) -> String {
-        guard let value = Double(result) else { return result }
-        return Self.displayFormatter.string(from: NSNumber(value: value)) ?? result
+        Double(result).map { CalculatorNumberFormat.display($0) } ?? result
     }
 
     private func syncExpression() {
@@ -1062,17 +1040,28 @@ final class CalculatorViewModel: ObservableObject {
             tempResult = ""
             return
         }
-        tempResult = ((try? engine.evaluate(expression)).map { "\($0)" }) ?? ""
+        tempResult = ((try? engine.evaluate(expression)).map(CalculatorNumberFormat.expressionValue)) ?? ""
     }
 
     private func editSelectedChunk(with value: String, at index: Int) {
         var chunks = splitExpression(expression)
         guard chunks.indices.contains(index) else {
             selectedChunkIndex = nil
+            reducer.append(value)
             return
         }
 
-        if value.range(of: #"^[0-9.,]$"#, options: .regularExpression) != nil {
+        if Self.isOperatorChunk(chunks[index]) {
+            // A selected operator can be swapped for another, but typing a digit over it
+            // would merge the numbers on either side.
+            selectedChunkIndex = nil
+            if Self.isOperatorChunk(value) {
+                chunks[index] = value
+                reducer.replace(with: chunks.joined())
+            } else {
+                reducer.append(value)
+            }
+        } else if value.range(of: #"^[0-9.,]$"#, options: .regularExpression) != nil {
             if isEditingChunk {
                 chunks[index] = value
                 isEditingChunk = false
@@ -1086,11 +1075,16 @@ final class CalculatorViewModel: ObservableObject {
         }
     }
 
+    private static func isOperatorChunk(_ chunk: String) -> Bool {
+        ["+", "-", "*", "/"].contains(chunk)
+    }
+
     private func splitExpression(_ text: String) -> [String] {
         var chunks: [String] = []
         var current = ""
         for character in text {
-            if "+-*/".contains(character) {
+            // The sign of a scientific exponent such as 1E+20 belongs to its number.
+            if "+-*/".contains(character), current.last != "E" {
                 if !current.isEmpty {
                     chunks.append(current)
                     current = ""
@@ -1103,16 +1097,6 @@ final class CalculatorViewModel: ObservableObject {
         if !current.isEmpty { chunks.append(current) }
         return chunks
     }
-
-    private static let displayFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.locale = .current
-        // Show every meaningful decimal the engine produces; the engine has
-        // already rounded away floating-point noise at 12 significant digits.
-        formatter.maximumFractionDigits = 15
-        return formatter
-    }()
 }
 
 private enum CalculatorButtonTheme {
@@ -1154,6 +1138,10 @@ private enum CalculatorAction {
 }
 
 struct CalculatorScreen: View {
+    private static let expressionScrollID = "expression"
+    /// History button, input row and live result, with the session history scrolled away.
+    private static let minimumHeaderHeight: CGFloat = 40 + 100 + 40 + 18
+
     @EnvironmentObject private var historyStore: CalculationHistoryStore
     @ObservedObject var model: CalculatorViewModel
     let onOpenHistory: () -> Void
@@ -1166,6 +1154,11 @@ struct CalculatorScreen: View {
             let availableWidth = geometry.size.width - (horizontalPadding * 2)
             let buttonSize = floor((availableWidth - (CGFloat(columnCount - 1) * spacing)) / CGFloat(columnCount))
             let bottomPadding: CGFloat = model.expanded ? 10 : 12
+            // On small phones the expanded keypad is taller than the space under the display,
+            // so the keys flatten instead of pushing the layout off screen.
+            let rowCount = CGFloat(keypadRows.count)
+            let availableHeight = geometry.size.height - Self.minimumHeaderHeight - bottomPadding
+            let buttonHeight = min(buttonSize, floor((availableHeight - (rowCount - 1) * spacing) / rowCount))
 
             VStack(spacing: 0) {
                 calculatorHeader
@@ -1178,9 +1171,10 @@ struct CalculatorScreen: View {
                                     handle(button)
                                 } label: {
                                     CalculatorButton(definition: button, expanded: model.expanded, inverted: model.inverted, hyperbolic: model.hyperbolic, angleMode: model.angleMode)
-                                        .frame(width: buttonSize, height: buttonSize)
+                                        .frame(width: buttonSize, height: buttonHeight)
                                 }
                                 .buttonStyle(PressableButtonStyle(cornerRadius: model.expanded ? 18 : 24))
+                                .accessibilityLabel(accessibilityName(for: button))
                             }
                         }
                     }
@@ -1205,11 +1199,13 @@ struct CalculatorScreen: View {
                         .frame(width: 36, height: 36)
                         .appGlassCircle(tint: Color.white.opacity(0.06), interactive: true, fallbackOpacity: 0.10)
                 }
+                .accessibilityLabel("History")
                 Spacer()
             }
             .padding(.horizontal, 16)
             .padding(.top, ToolDetailLayout.headerTopExtra)
 
+            ScrollViewReader { reader in
             ScrollView {
                 VStack(alignment: .trailing, spacing: 8) {
                     ForEach(Array(model.sessionHistory.enumerated()), id: \.offset) { _, item in
@@ -1231,6 +1227,10 @@ struct CalculatorScreen: View {
                     }
                 }
                 .padding(10)
+            }
+            .onChange(of: model.sessionHistory.count) { count in
+                reader.scrollTo(count - 1, anchor: .bottom)
+            }
             }
             .frame(maxHeight: .infinity)
 
@@ -1269,6 +1269,8 @@ struct CalculatorScreen: View {
                     }
             } else {
                 HStack(alignment: .center, spacing: 8) {
+                    GeometryReader { container in
+                    ScrollViewReader { reader in
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 2) {
                             ForEach(Array(model.formattedChunks().enumerated()), id: \.offset) { index, chunk in
@@ -1286,13 +1288,26 @@ struct CalculatorScreen: View {
                                     }
                                 }
                             }
-                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .frame(minWidth: container.size.width, minHeight: container.size.height, alignment: .trailing)
+                            .id(Self.expressionScrollID)
                     }
+                    // Long expressions stay pinned to what is being typed, unless editing a chunk.
+                    .onChange(of: model.expression) { _ in
+                        guard model.selectedChunkIndex == nil else { return }
+                        reader.scrollTo(Self.expressionScrollID, anchor: .trailing)
+                    }
+                    .onAppear {
+                        reader.scrollTo(Self.expressionScrollID, anchor: .trailing)
+                    }
+                    }
+                    }
+                    .frame(height: 70)
 
                     Button(action: model.backspace) {
                         AppIcon(name: "delete", size: 27, color: Color(red: 0.71, green: 0.71, blue: 0.71))
                             .frame(width: 38, height: 44)
                     }
+                    .accessibilityLabel("Delete")
                 }
             }
         }
@@ -1348,8 +1363,36 @@ struct CalculatorScreen: View {
         }
     }
 
+    private func accessibilityName(for button: CalculatorButtonDefinition) -> String {
+        switch button.value {
+        case "expand": return model.expanded ? "Collapse keypad" : "Expand keypad"
+        case "/": return "Divide"
+        case "*": return "Multiply"
+        case "-": return "Minus"
+        case "+": return "Plus"
+        case "=": return "Equals"
+        case "()": return "Parentheses"
+        case ".": return "Decimal point"
+        case "^": return "Power"
+        case "!": return "Factorial"
+        case "1/": return "Reciprocal"
+        case "pi": return "Pi"
+        case "sqrt(": return "Square root"
+        case "log(": return "Natural logarithm"
+        case "log10(": return "Logarithm base 10"
+        case "HYP": return model.hyperbolic ? "Hyperbolic on" : "Hyperbolic off"
+        case "INV": return model.inverted ? "Inverse on" : "Inverse off"
+        case "DEG": return model.angleMode == .degrees ? "Degrees" : "Radians"
+        case "AC": return "All clear"
+        default: return button.label
+        }
+    }
+
     private func handle(_ button: CalculatorButtonDefinition) {
-        impact(.light)
+        // Clearing plays its own heavier haptic.
+        if button.action != .clear {
+            impact(.light)
+        }
         switch button.action {
         case .clear:
             model.clear()
@@ -1371,7 +1414,9 @@ struct CalculatorScreen: View {
             model.random()
         case nil:
             if ["sin", "cos", "tan"].contains(button.value) {
-                model.press("\(model.inverted ? "a" : "")\(button.value)\(model.hyperbolic ? "h" : "")(")
+                model.pressFactor("\(model.inverted ? "a" : "")\(button.value)\(model.hyperbolic ? "h" : "")(")
+            } else if ["1/", "pi", "e", "log(", "log10(", "sqrt("].contains(button.value) {
+                model.pressFactor(button.value)
             } else {
                 model.press(button.value)
             }
@@ -1640,11 +1685,6 @@ struct ConverterGridScreen: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             if toast == message { toast = nil }
         }
-    }
-
-    private func symbolName(for key: String) -> String {
-        if key == "_calculator" { return "calculator" }
-        return ConverterTool.all.first(where: { $0.key == key })?.symbolName ?? "bookmark"
     }
 }
 
@@ -2074,6 +2114,7 @@ private struct DetailHeader: View {
                         .frame(width: 36, height: 36)
                         .appGlassCircle(tint: Color.white.opacity(0.06), interactive: true, fallbackOpacity: 0.10)
                 }
+                .accessibilityLabel("Back")
             } else {
                 Color.clear.frame(width: 36, height: 36)
             }
@@ -2122,6 +2163,7 @@ struct UnitConverterScreen: View {
                     VStack(spacing: 0) {
                         ForEach(Array(results.enumerated()), id: \.element.id) { index, result in
                             Button {
+                                guard index != fromIndex else { return }
                                 fromIndex = index
                                 input = "1"
                                 inputEdited = false
@@ -2134,7 +2176,7 @@ struct UnitConverterScreen: View {
 
                                     Spacer(minLength: 8)
 
-                                    Text(ConverterCore.formatConversionResult(result.value))
+                                    Text(index == fromIndex ? CalculatorNumberFormat.typedNumber(input) : ConverterCore.formatConversionResult(result.value))
                                         .font(.system(size: index == fromIndex ? 26 : 18))
                                         .foregroundColor(index == fromIndex ? AppColor.accent : .white)
                                         .lineLimit(1)
@@ -2180,12 +2222,14 @@ struct UnitConverterScreen: View {
             return
         }
         if value == ".", input.contains(".") { return }
+        guard input.count < ConverterCore.maxInputLength else { return }
         input = input == "0" && value != "." ? value : input + value
     }
 
     private func backspace() {
         inputEdited = true
-        input = input.count <= 1 ? "0" : String(input.dropLast())
+        let remaining = String(input.dropLast())
+        input = remaining.isEmpty || remaining == "-" ? "0" : remaining
     }
 
     private func clear() {
@@ -2361,6 +2405,7 @@ struct UtilityCalculatorScreen: View {
         }
         let current = values[activeField] ?? ""
         if value == ".", current.contains(".") { return }
+        guard current.count < ConverterCore.maxInputLength else { return }
         values[activeField] = current == "0" && value != "." ? value : current + value
     }
 
@@ -2376,14 +2421,9 @@ struct UtilityCalculatorScreen: View {
     }
 
     private func formatInputDisplay(_ value: String) -> String {
-        guard !value.isEmpty, let number = Double(value) else { return value }
-        let integerAndDecimal = value.split(separator: ".", omittingEmptySubsequences: false)
-        let formatter = NumberFormatter.compactDecimal(maximumFractionDigits: 8)
-        let formattedInteger = formatter.string(from: NSNumber(value: Int(number))) ?? String(integerAndDecimal.first ?? "")
-        if integerAndDecimal.count > 1 {
-            return "\(formattedInteger).\(integerAndDecimal[1])"
-        }
-        return formatter.string(from: NSNumber(value: number)) ?? value
+        // Dates read as "1990", not "1,990".
+        let isDateField = tool.key == "age" || tool.key == "date"
+        return isDateField ? value : CalculatorNumberFormat.typedNumber(value)
     }
 
     private static let configs: [String: [CalcFieldConfig]] = [
@@ -2432,16 +2472,16 @@ struct CurrencyScreen: View {
     let onBack: (() -> Void)?
     private let initialPickerVisible: Bool
 
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var catalog = CurrencyCatalog.load()
-    @State private var displayedCurrencies = ["USD", "EUR", "GBP", "JPY"]
+    @EnvironmentObject private var currencyRates: CurrencyRatesModel
+    private let catalog = Self.sharedCatalog
     @State private var activeCurrencyIndex = 0
     @State private var activeAmount = "1"
     @State private var inputEdited = false
-    @State private var snapshot: CurrencyRateSnapshot?
-    @State private var isRefreshing = false
-    @State private var rateFetchFailed = false
     @State private var pickerVisible = false
+    @State private var pickerRowIndex = 0
+
+    // SwiftUI re-creates this struct on every parent update, so the catalog is decoded once.
+    private static let sharedCatalog = CurrencyCatalog.load()
 
     init(onBack: (() -> Void)?, initialPickerVisible: Bool = false) {
         self.onBack = onBack
@@ -2452,39 +2492,44 @@ struct CurrencyScreen: View {
         GeometryReader { geometry in
             let bottomInset = geometry.resolvedSafeAreaInsets.bottom
             let topPadding = ToolDetailLayout.contentTopInset(hasBackButton: onBack != nil)
+            // Small phones need tighter rows to show all four currencies above the keypad.
+            let compact = geometry.size.height < 700
 
             VStack(spacing: 0) {
                 if onBack != nil {
                     DetailHeader(onBack: onBack)
                 }
 
-                VStack(spacing: 0) {
-                    ForEach(displayedCurrencies.indices, id: \.self) { index in
-                        currencyRow(code: displayedCurrencies[index], index: index)
-                    }
+                // Only scrolls if a tool page's back button still pushes the rows past the keypad.
+                ScrollView {
+                    VStack(spacing: 0) {
+                        ForEach(currencyRates.displayedCurrencies.indices, id: \.self) { index in
+                            currencyRow(code: currencyRates.displayedCurrencies[index], index: index, compact: compact)
+                        }
 
-                    Button {
-                        guard !isRefreshing else { return }
-                        Task { await fetchRates(force: true) }
-                    } label: {
-                        Text(rateStatus)
-                            .font(.system(size: 14))
-                            .foregroundColor(rateFetchFailed ? AppColor.accent : Color(red: 0.33, green: 0.33, blue: 0.33))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.75)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 8)
-                            .contentShape(Rectangle())
+                        Button {
+                            Task { await currencyRates.refresh(force: true) }
+                        } label: {
+                            // Re-rendered periodically so "Updated 5 minutes ago" doesn't freeze.
+                            TimelineView(.periodic(from: .now, by: 30)) { timeline in
+                                Text(rateStatus(at: timeline.date))
+                                    .font(.system(size: 14))
+                                    .foregroundColor(currencyRates.refreshFailed ? AppColor.accent : Color(red: 0.33, green: 0.33, blue: 0.33))
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.75)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 8)
+                                    .contentShape(Rectangle())
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 6)
+                        .padding(.bottom, 12)
                     }
-                    .buttonStyle(.plain)
-                    .padding(.top, 6)
-                    .padding(.bottom, 12)
+                    .padding(.horizontal, 20)
+                    .padding(.top, topPadding)
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, topPadding)
-
-                Spacer(minLength: 0)
 
                 NumericKeypad(appendValue: appendValue, onClear: reset, onBackspace: backspace)
                     .padding(.top, 16)
@@ -2495,8 +2540,6 @@ struct CurrencyScreen: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(AppColor.background.ignoresSafeArea(edges: .bottom))
         .onAppear {
-            loadDisplayedCurrencies()
-            snapshot = CurrencyRateStore.load()
             if initialPickerVisible {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                     pickerVisible = true
@@ -2504,27 +2547,24 @@ struct CurrencyScreen: View {
             } else {
                 pickerVisible = false
             }
-            Task { await fetchRates(force: false) }
-        }
-        .onChange(of: scenePhase) { phase in
-            guard phase == .active else { return }
-            Task { await fetchRates(force: false) }
         }
         .sheet(isPresented: $pickerVisible) {
             CurrencyPicker(catalog: catalog) { code in
-                displayedCurrencies[activeCurrencyIndex] = code
-                saveDisplayedCurrencies()
+                currencyRates.setCurrency(code, at: pickerRowIndex)
+                let activeCode = currencyRates.displayedCurrencies[activeCurrencyIndex]
+                activeAmount = CalculatorNumberFormat.limitingFraction(of: activeAmount, to: catalog[activeCode]?.decimalDigits ?? 2)
                 pickerVisible = false
             }
         }
     }
 
-    private func currencyRow(code: String, index: Int) -> some View {
+    private func currencyRow(code: String, index: Int, compact: Bool) -> some View {
         let info = catalog[code]
         let isActive = index == activeCurrencyIndex
         return HStack(alignment: .center) {
             Button {
-                activeCurrencyIndex = index
+                // Only opens the picker: the typed amount still belongs to the active row.
+                pickerRowIndex = index
                 pickerVisible = true
             } label: {
                 Text(code)
@@ -2536,18 +2576,16 @@ struct CurrencyScreen: View {
             Spacer(minLength: 8)
 
             Button {
-                activeCurrencyIndex = index
-                activeAmount = "1"
-                inputEdited = false
+                activateRow(index)
             } label: {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(displayedAmount(for: code, index: index))
-                        .font(.system(size: 42, weight: .regular))
+                        .font(.system(size: compact ? 28 : 42, weight: .regular))
                         .foregroundColor(isActive ? AppColor.accent : .white)
                         .lineLimit(1)
                         .minimumScaleFactor(0.55)
                     Text(info?.name ?? code)
-                        .font(.system(size: 18))
+                        .font(.system(size: compact ? 13 : 18))
                         .foregroundColor(Color(red: 0.35, green: 0.35, blue: 0.35))
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
@@ -2557,58 +2595,55 @@ struct CurrencyScreen: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 12)
-        .padding(.vertical, 8)
+        .padding(.vertical, compact ? 4 : 8)
         .appGlassWhen(isActive, cornerRadius: 18, tint: Color.white.opacity(0.055), interactive: true, fallbackOpacity: 0.10)
         .padding(.vertical, 2)
         .contentShape(Rectangle())
         .onTapGesture {
-            activeCurrencyIndex = index
-            activeAmount = "1"
-            inputEdited = false
+            activateRow(index)
         }
         .buttonStyle(.plain)
     }
 
-    private var convertedAmounts: [String] {
-        let rates = snapshot?.rates ?? CurrencyRateStore.fallbackRates
-        let baseRate = rates[displayedCurrencies[activeCurrencyIndex]] ?? 1
-        let amount = Double(activeAmount) ?? 0
-        return displayedCurrencies.enumerated().map { index, code in
-            if index == activeCurrencyIndex { return activeAmount }
-            return String((amount / baseRate) * (rates[code] ?? 1))
-        }
+    private func activateRow(_ index: Int) {
+        guard index != activeCurrencyIndex else { return }
+        activeCurrencyIndex = index
+        activeAmount = "1"
+        inputEdited = false
     }
 
     private func displayedAmount(for code: String, index: Int) -> String {
-        let info = catalog[code]
-        if index == activeCurrencyIndex, activeAmount.hasSuffix(".") {
-            return activeAmount.replacingOccurrences(of: ".", with: Locale.current.decimalSeparator ?? ".")
+        if index == activeCurrencyIndex {
+            return CalculatorNumberFormat.typedNumber(activeAmount)
         }
 
-        let value = Double(convertedAmounts[index]) ?? 0
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.locale = .current
-        formatter.maximumFractionDigits = info?.decimalDigits ?? 2
-        return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
+        guard let value = CurrencyRateStore.convert(
+            Double(activeAmount) ?? 0,
+            from: currencyRates.displayedCurrencies[activeCurrencyIndex],
+            to: code,
+            rates: currencyRates.rates
+        ) else {
+            return "—"
+        }
+        return CurrencyRateStore.formatAmount(value, decimalDigits: catalog[code]?.decimalDigits ?? 2)
     }
 
-    private var rateStatus: String {
-        if isRefreshing { return "Refreshing rates..." }
-        guard let snapshot else {
-            return rateFetchFailed ? "Using built-in rates. Update failed" : "Using built-in rates."
+    private func rateStatus(at date: Date) -> String {
+        if currencyRates.isRefreshing { return "Refreshing rates..." }
+        guard let snapshot = currencyRates.snapshot else {
+            return currencyRates.refreshFailed ? "Using built-in rates. Update failed" : "Using built-in rates."
         }
         let relative = RelativeDateTimeFormatter()
         relative.unitsStyle = .full
-        let relativeText = abs(snapshot.updatedAt.timeIntervalSinceNow) < 5
+        let relativeText = abs(snapshot.updatedAt.timeIntervalSince(date)) < 5
             ? "just now"
-            : relative.localizedString(for: snapshot.updatedAt, relativeTo: Date())
+            : relative.localizedString(for: snapshot.updatedAt, relativeTo: date)
         let updatedText = "Updated \(relativeText)"
-        return rateFetchFailed ? "\(updatedText). Update failed" : updatedText
+        return currencyRates.refreshFailed ? "\(updatedText). Update failed" : updatedText
     }
 
     private func appendValue(_ value: String) {
-        let code = displayedCurrencies[activeCurrencyIndex]
+        let code = currencyRates.displayedCurrencies[activeCurrencyIndex]
         let decimalLimit = catalog[code]?.decimalDigits ?? 2
 
         if value == "." {
@@ -2634,6 +2669,7 @@ struct CurrencyScreen: View {
             let fractionCount = activeAmount.distance(from: activeAmount.index(after: dotIndex), to: activeAmount.endIndex)
             if fractionCount >= decimalLimit { return }
         }
+        guard activeAmount.count < ConverterCore.maxInputLength else { return }
 
         // Replace a lone leading zero so "0" + "5" becomes "5", not "05".
         activeAmount = activeAmount == "0" ? value : activeAmount + value
@@ -2649,40 +2685,6 @@ struct CurrencyScreen: View {
         activeAmount = "1"
     }
 
-    private func fetchRates(force: Bool) async {
-        guard force || CurrencyRateStore.shouldRefresh(snapshot) else { return }
-
-        isRefreshing = true
-        rateFetchFailed = false
-        defer { isRefreshing = false }
-
-        do {
-            let fetched: CurrencyRateSnapshot
-            if let token = CurrencyRateStore.token() {
-                fetched = try await CurrencyRateStore.fetch(token: token)
-            } else {
-                fetched = try await CurrencyRateStore.fetchPublic()
-            }
-            snapshot = fetched
-            CurrencyRateStore.save(fetched)
-        } catch {
-            rateFetchFailed = true
-        }
-    }
-
-    private func loadDisplayedCurrencies() {
-        guard
-            let data = UserDefaults.standard.data(forKey: "displayedCurrencies"),
-            let decoded = try? JSONDecoder().decode([String].self, from: data),
-            decoded.count == 4
-        else { return }
-        displayedCurrencies = decoded
-    }
-
-    private func saveDisplayedCurrencies() {
-        guard let data = try? JSONEncoder().encode(displayedCurrencies) else { return }
-        UserDefaults.standard.set(data, forKey: "displayedCurrencies")
-    }
 }
 
 private struct CurrencyPicker: View {
@@ -2845,6 +2847,7 @@ private struct NumericKeypad: View {
                         NumericPadButtonContent(iconName: "delete", fontSize: 32, tint: AppColor.accent.opacity(0.72), fallbackOpacity: 0.72)
                             .frame(width: buttonSize, height: buttonSize * 2 + spacing)
                     }
+                    .accessibilityLabel("Delete")
                 }
                 .frame(width: buttonSize, height: keypadHeight)
             }
@@ -2928,6 +2931,7 @@ struct HistorySheet: View {
                         .frame(width: 36, height: 36)
                         .appGlassCircle(tint: Color.white.opacity(0.04), interactive: true, fallbackOpacity: 0.08)
                 }
+                .accessibilityLabel("Close")
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
@@ -2956,7 +2960,7 @@ struct HistorySheet: View {
                                     Text(entry.expression)
                                         .font(.system(size: 15))
                                         .foregroundColor(Color(red: 0.6, green: 0.6, blue: 0.6))
-                                    Text("= \(entry.result)")
+                                    Text("= \(entry.displayResult)")
                                         .font(.system(size: 20, weight: .medium))
                                         .foregroundColor(.white)
                                 }
@@ -2971,12 +2975,12 @@ struct HistorySheet: View {
                                         copiedEntryID = nil
                                         return
                                     }
-                                    onSelect(entry.result.replacingOccurrences(of: ",", with: ""))
+                                    onSelect(entry.expression)
                                 }
                                 .onLongPressGesture(minimumDuration: 0.45) {
                                     copiedEntryID = entry.id
                                     success()
-                                    UIPasteboard.general.string = entry.result
+                                    UIPasteboard.general.string = entry.displayResult
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
                                         if copiedEntryID == entry.id {
                                             copiedEntryID = nil

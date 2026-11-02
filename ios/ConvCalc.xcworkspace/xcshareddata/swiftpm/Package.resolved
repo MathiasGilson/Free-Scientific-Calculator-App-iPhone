@@ -15,7 +15,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/nicklockwood/SVGPath.git",
       "state" : {
-        "revision" : "dc424c325f68852dc1ef32d07425276253772b09",
+        "revision" : "439417b227af462f1428e8db9746fb2dcc174a5a",
         "version" : "1.3.0"
       }
     }
