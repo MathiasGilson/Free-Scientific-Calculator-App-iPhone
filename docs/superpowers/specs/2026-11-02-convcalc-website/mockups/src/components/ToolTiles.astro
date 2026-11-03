@@ -1,0 +1,5 @@
+---
+import Icon from "./Icon.astro";
+import { GRID, SHOT_TOOLS } from "../lib/tools.js";
+---
+<div class="surface bigtiles">{GRID.map(([k,l,i]) => <button type="button" class="tile" data-open={k} data-shotname={SHOT_TOOLS[k]}><Icon name={i} /><span>{l}</span></button>)}</div>

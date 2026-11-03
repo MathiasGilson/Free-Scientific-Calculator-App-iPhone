@@ -1,0 +1,642 @@
+[
+{
+"k": "usd to inr",
+"t": "currency"
+},
+{
+"k": "cm to inches",
+"t": "length"
+},
+{
+"k": "kg to lbs",
+"t": "mass"
+},
+{
+"k": "mm to inches",
+"t": "length"
+},
+{
+"k": "celsius to fahrenheit",
+"t": "temperature"
+},
+{
+"k": "jpy to usd",
+"t": "currency"
+},
+{
+"k": "lbs to kg",
+"t": "mass"
+},
+{
+"k": "inches to cm",
+"t": "length"
+},
+{
+"k": "cad to usd",
+"t": "currency"
+},
+{
+"k": "km to miles",
+"t": "length"
+},
+{
+"k": "miles to km",
+"t": "length"
+},
+{
+"k": "fahrenheit to celsius",
+"t": "temperature"
+},
+{
+"k": "usd to cad",
+"t": "currency"
+},
+{
+"k": "meters to feet",
+"t": "length"
+},
+{
+"k": "usd to mxn",
+"t": "currency"
+},
+{
+"k": "ounces to lbs",
+"t": "mass"
+},
+{
+"k": "lbs to ounces",
+"t": "mass"
+},
+{
+"k": "liters to gallons",
+"t": "volume"
+},
+{
+"k": "usd to krw",
+"t": "currency"
+},
+{
+"k": "inches to mm",
+"t": "length"
+},
+{
+"k": "feet to meters",
+"t": "length"
+},
+{
+"k": "grams to ounces",
+"t": "mass"
+},
+{
+"k": "gbp to usd",
+"t": "currency"
+},
+{
+"k": "aud to usd",
+"t": "currency"
+},
+{
+"k": "inr to usd",
+"t": "currency"
+},
+{
+"k": "krw to usd",
+"t": "currency"
+},
+{
+"k": "cm to feet",
+"t": "length"
+},
+{
+"k": "inches to feet",
+"t": "length"
+},
+{
+"k": "square feet to acres",
+"t": "area"
+},
+{
+"k": "acres to square feet",
+"t": "area"
+},
+{
+"k": "grams to lbs",
+"t": "mass"
+},
+{
+"k": "eur to usd",
+"t": "currency"
+},
+{
+"k": "mm to cm",
+"t": "length"
+},
+{
+"k": "cm to mm",
+"t": "length"
+},
+{
+"k": "cm to meters",
+"t": "length"
+},
+{
+"k": "meters to cm",
+"t": "length"
+},
+{
+"k": "feet to inches",
+"t": "length"
+},
+{
+"k": "feet to miles",
+"t": "length"
+},
+{
+"k": "quarts to cups",
+"t": "volume"
+},
+{
+"k": "usd to eur",
+"t": "currency"
+},
+{
+"k": "usd to jpy",
+"t": "currency"
+},
+{
+"k": "chf to usd",
+"t": "currency"
+},
+{
+"k": "feet to cm",
+"t": "length"
+},
+{
+"k": "liters to ml",
+"t": "volume"
+},
+{
+"k": "gallons to quarts",
+"t": "volume"
+},
+{
+"k": "quarts to gallons",
+"t": "volume"
+},
+{
+"k": "usd to aud",
+"t": "currency"
+},
+{
+"k": "usd to gbp",
+"t": "currency"
+},
+{
+"k": "meters to km",
+"t": "length"
+},
+{
+"k": "meters to miles",
+"t": "length"
+},
+{
+"k": "km to meters",
+"t": "length"
+},
+{
+"k": "feet to yards",
+"t": "length"
+},
+{
+"k": "knots to mph",
+"t": "speed"
+},
+{
+"k": "mxn to usd",
+"t": "currency"
+},
+{
+"k": "grams to kg",
+"t": "mass"
+},
+{
+"k": "ounces to grams",
+"t": "mass"
+},
+{
+"k": "ml to cups",
+"t": "volume"
+},
+{
+"k": "km/h to mph",
+"t": "speed"
+},
+{
+"k": "usd to brl",
+"t": "currency"
+},
+{
+"k": "cad to inr",
+"t": "currency"
+},
+{
+"k": "cny to usd",
+"t": "currency"
+},
+{
+"k": "brl to usd",
+"t": "currency"
+},
+{
+"k": "meters to inches",
+"t": "length"
+},
+{
+"k": "meters to yards",
+"t": "length"
+},
+{
+"k": "inches to meters",
+"t": "length"
+},
+{
+"k": "square meters to square feet",
+"t": "area"
+},
+{
+"k": "square feet to square meters",
+"t": "area"
+},
+{
+"k": "lbs to tons",
+"t": "mass"
+},
+{
+"k": "tons to lbs",
+"t": "mass"
+},
+{
+"k": "liters to quarts",
+"t": "volume"
+},
+{
+"k": "gallons to liters",
+"t": "volume"
+},
+{
+"k": "cups to quarts",
+"t": "volume"
+},
+{
+"k": "kelvin to celsius",
+"t": "temperature"
+},
+{
+"k": "minutes to hours",
+"t": "time"
+},
+{
+"k": "mb to gb",
+"t": "data"
+},
+{
+"k": "gb to mb",
+"t": "data"
+},
+{
+"k": "usd to cny",
+"t": "currency"
+},
+{
+"k": "yards to meters",
+"t": "length"
+},
+{
+"k": "yards to miles",
+"t": "length"
+},
+{
+"k": "miles to yards",
+"t": "length"
+},
+{
+"k": "miles to feet",
+"t": "length"
+},
+{
+"k": "hectares to acres",
+"t": "area"
+},
+{
+"k": "kg to ounces",
+"t": "mass"
+},
+{
+"k": "ounces to kg",
+"t": "mass"
+},
+{
+"k": "celsius to kelvin",
+"t": "temperature"
+},
+{
+"k": "radians to degrees",
+"t": "angle"
+},
+{
+"k": "seconds to minutes",
+"t": "time"
+},
+{
+"k": "seconds to days",
+"t": "time"
+},
+{
+"k": "days to seconds",
+"t": "time"
+},
+{
+"k": "minutes to seconds",
+"t": "time"
+},
+{
+"k": "kb to mb",
+"t": "data"
+},
+{
+"k": "mb to kb",
+"t": "data"
+},
+{
+"k": "eur to inr",
+"t": "currency"
+},
+{
+"k": "gbp to inr",
+"t": "currency"
+},
+{
+"k": "yards to feet",
+"t": "length"
+},
+{
+"k": "stone to lbs",
+"t": "mass"
+},
+{
+"k": "pints to quarts",
+"t": "volume"
+},
+{
+"k": "bar to psi",
+"t": "pressure"
+},
+{
+"k": "ms to seconds",
+"t": "time"
+},
+{
+"k": "seconds to ms",
+"t": "time"
+},
+{
+"k": "mm to feet",
+"t": "length"
+},
+{
+"k": "feet to mm",
+"t": "length"
+},
+{
+"k": "miles to meters",
+"t": "length"
+},
+{
+"k": "lbs to grams",
+"t": "mass"
+},
+{
+"k": "ml to liters",
+"t": "volume"
+},
+{
+"k": "ml to fl oz",
+"t": "volume"
+},
+{
+"k": "fl oz to ml",
+"t": "volume"
+},
+{
+"k": "liters to cups",
+"t": "volume"
+},
+{
+"k": "m/s to mph",
+"t": "speed"
+},
+{
+"k": "mph to m/s",
+"t": "speed"
+},
+{
+"k": "kpa to psi",
+"t": "pressure"
+},
+{
+"k": "degrees to radians",
+"t": "angle"
+},
+{
+"k": "calories to kcal",
+"t": "energy"
+},
+{
+"k": "hours to years",
+"t": "time"
+},
+{
+"k": "inches to yards",
+"t": "length"
+},
+{
+"k": "kg to grams",
+"t": "mass"
+},
+{
+"k": "cups to ml",
+"t": "volume"
+},
+{
+"k": "cups to liters",
+"t": "volume"
+},
+{
+"k": "cups to fl oz",
+"t": "volume"
+},
+{
+"k": "fl oz to cups",
+"t": "volume"
+},
+{
+"k": "fl oz to gallons",
+"t": "volume"
+},
+{
+"k": "fahrenheit to kelvin",
+"t": "temperature"
+},
+{
+"k": "joules to kj",
+"t": "energy"
+},
+{
+"k": "kj to joules",
+"t": "energy"
+},
+{
+"k": "seconds to hours",
+"t": "time"
+},
+{
+"k": "hours to days",
+"t": "time"
+},
+{
+"k": "kb to gb",
+"t": "data"
+},
+{
+"k": "gb to kb",
+"t": "data"
+},
+{
+"k": "usd to chf",
+"t": "currency"
+},
+{
+"k": "mm to meters",
+"t": "length"
+},
+{
+"k": "km to feet",
+"t": "length"
+},
+{
+"k": "feet to km",
+"t": "length"
+},
+{
+"k": "mg to grams",
+"t": "mass"
+},
+{
+"k": "ml to gallons",
+"t": "volume"
+},
+{
+"k": "gallons to ml",
+"t": "volume"
+},
+{
+"k": "quarts to liters",
+"t": "volume"
+},
+{
+"k": "mph to km/h",
+"t": "speed"
+},
+{
+"k": "kw to hp",
+"t": "power"
+},
+{
+"k": "gb to tb",
+"t": "data"
+},
+{
+"k": "tb to gb",
+"t": "data"
+},
+{
+"k": "aud to inr",
+"t": "currency"
+},
+{
+"k": "cm to km",
+"t": "length"
+},
+{
+"k": "meters to mm",
+"t": "length"
+},
+{
+"k": "km to cm",
+"t": "length"
+},
+{
+"k": "lbs to metric tons",
+"t": "mass"
+},
+{
+"k": "metric tons to lbs",
+"t": "mass"
+},
+{
+"k": "ml to quarts",
+"t": "volume"
+},
+{
+"k": "quarts to ml",
+"t": "volume"
+},
+{
+"k": "psi to bar",
+"t": "pressure"
+},
+{
+"k": "kelvin to fahrenheit",
+"t": "temperature"
+},
+{
+"k": "newtons to lbf",
+"t": "force"
+},
+{
+"k": "lbf to newtons",
+"t": "force"
+},
+{
+"k": "seconds to years",
+"t": "time"
+},
+{
+"k": "hours to weeks",
+"t": "time"
+},
+{
+"k": "bytes to gb",
+"t": "data"
+},
+{
+"k": "acres to square miles",
+"t": "area"
+},
+{
+"k": "pa to atm",
+"t": "pressure"
+},
+{
+"k": "atm to pa",
+"t": "pressure"
+},
+{
+"k": "hours to minutes",
+"t": "time"
+},
+{
+"k": "bytes to mb",
+"t": "data"
+}
+]

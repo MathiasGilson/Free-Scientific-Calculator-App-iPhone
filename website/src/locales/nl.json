@@ -1,0 +1,550 @@
+{
+  "meta": {
+    "siteName": "ConvCalc",
+    "homeTitle": "ConvCalc: een mooie gratis rekenmachine app voor iPhone, zonder advertenties",
+    "homeDescription": "Een gratis wetenschappelijke rekenmachine app voor iPhone met geschiedenis, een valuta omrekenen, eenheden omrekenen en dagelijkse rekenmachines. Geen advertenties. Probeer het hier."
+  },
+  "nav": {
+    "tools": "Tools",
+    "compare": "Vergelijken",
+    "features": "Functies",
+    "download": "Downloaden"
+  },
+  "cta": {
+    "download": "Gratis downloaden in de App Store",
+    "try": "De toetsen op deze pagina werken. Probeer ze.",
+    "bottomTitle": "Gratis. Geen advertenties. Binnen tien seconden op je iPhone."
+  },
+  "footer": {
+    "tagline": "Een gratis rekenmachine en converter voor iPhone.",
+    "tools": "Tools",
+    "features": "Functies",
+    "compare": "Vergelijken",
+    "more": "Meer",
+    "conversions": "Alle conversies",
+    "privacy": "Privacy",
+    "support": "Ondersteuning",
+    "source": "Broncode",
+    "language": "Taal"
+  },
+  "home": {
+    "h1": "Rekenmachines op iOS zien er verschrikkelijk uit. Deze niet.",
+    "lede": "ConvCalc is een gratis wetenschappelijke rekenmachine met 20 ingebouwde tools voor eenheden, valuta en dagelijkse wiskunde. Native voor iPhone, zonder advertenties.",
+    "toolsTitle": "Eén app in plaats van een map vol",
+    "toolsLede": "Tik op een tool om deze op de telefoon te openen. De tools en de wiskunde zijn hetzelfde als in de app.",
+    "shots": {
+      "scientific": {
+        "title": "Wetenschappelijke toetsen",
+        "text": "Tik op de hoektoets om trig, logaritmen, machten, faculteiten en constanten te openen. Tik nogmaals om ze te sluiten."
+      },
+      "history": {
+        "title": "Geschiedenis",
+        "text": "Elk resultaat wordt opgeslagen. Tik op een resultaat om het terug te halen in je berekening."
+      },
+      "currency": {
+        "title": "Valuta",
+        "text": "Typ een bedrag en zie de andere valuta's volgen."
+      },
+      "loan": {
+        "title": "Lening",
+        "text": "Voer het bedrag, de rente en het aantal jaren in. Zie de maandelijkse betaling en de totale rente."
+      }
+    }
+  },
+  "demo": {
+    "tabs": {
+      "calculator": "Rekenmachine",
+      "currency": "Valuta",
+      "all": "Alle tools"
+    },
+    "historyEmpty": "Je berekeningen verschijnen hier.",
+    "rateNote": "Tarieven van {date}",
+    "labels": {
+      "year": "Jaar",
+      "month": "Maand",
+      "day": "Dag",
+      "age": "Leeftijd",
+      "height": "Lengte (cm)",
+      "weight": "Gewicht (kg)",
+      "bmi": "BMI",
+      "underweight": "Ondergewicht",
+      "normal": "Normaal",
+      "overweight": "Overgewicht",
+      "obese": "Zwaarlijvig",
+      "year1": "Startjaar",
+      "month1": "Startmaand",
+      "day1": "Startdag",
+      "year2": "Eindjaar",
+      "month2": "Eindmaand",
+      "day2": "Einddag",
+      "difference": "Verschil",
+      "yearsUnit": "jaren",
+      "monthsUnit": "maanden",
+      "weeksUnit": "weken",
+      "daysUnit": "dagen",
+      "price": "Prijs",
+      "percent": "Korting (%)",
+      "savings": "Je bespaart",
+      "finalPrice": "Definitieve prijs",
+      "principal": "Leningbedrag",
+      "rate": "Jaarlijkse rente (%)",
+      "years": "Jaren",
+      "monthly": "Maandelijkse betaling",
+      "totalPaid": "Totaal betaald",
+      "totalInterest": "Totale rente"
+    },
+    "currencies": {
+      "USD": "Amerikaanse Dollar",
+      "EUR": "Euro",
+      "GBP": "Britse Pond",
+      "JPY": "Japanse Yen"
+    },
+    "units": {
+      "Millimeter": "Millimeter",
+      "Centimeter": "Centimeter",
+      "Meter": "Meter",
+      "Kilometer": "Kilometer",
+      "Inch": "Inch",
+      "Foot": "Voet",
+      "Yard": "Yard",
+      "Mile": "Mijl",
+      "Square Meter": "Vierkante Meter",
+      "Square Foot": "Vierkante Voet",
+      "Square Kilometer": "Vierkante Kilometer",
+      "Square Mile": "Vierkante Mijl",
+      "Acre": "Acre",
+      "Hectare": "Hectare",
+      "Milligram": "Milligram",
+      "Gram": "Gram",
+      "Kilogram": "Kilogram",
+      "Dram": "Dram",
+      "Ounce": "Ounce",
+      "Pound": "Pond",
+      "Stone": "Stone",
+      "Slug": "Slug",
+      "Short Ton": "Short Ton",
+      "Long Ton": "Long Ton",
+      "Metric Ton": "Metrische Ton",
+      "Milliliter": "Milliliter",
+      "Liter": "Liter",
+      "Gallon": "Gallon",
+      "Quart": "Quart",
+      "Pint": "Pint",
+      "Cup": "Cup",
+      "Fluid Ounce": "Vloeibare Ounce",
+      "Meter per Second": "Meter per Seconde",
+      "Kilometer per Hour": "Kilometer per Uur",
+      "Mile per Hour": "Mijl per Uur",
+      "Knot": "Knoop",
+      "Pascal": "Pascal",
+      "Kilopascal": "Kilopascal",
+      "Bar": "Bar",
+      "Atmosphere": "Atmosfeer",
+      "Pound per Sq Inch": "Pond per Vierkante Inch",
+      "Inch of Mercury": "Inch Kwik",
+      "Torr": "Torr",
+      "Watt": "Watt",
+      "Kilowatt": "Kilowatt",
+      "Horsepower": "Paardenkracht",
+      "BTU per Minute": "BTU per Minuut",
+      "Celsius": "Celsius",
+      "Fahrenheit": "Fahrenheit",
+      "Kelvin": "Kelvin",
+      "Radian": "Radiaal",
+      "Milliradian": "Milliradiaal",
+      "Microradian": "Microradiaal",
+      "Degree": "Graad",
+      "Arcminute": "Boogminuut",
+      "Arcsecond": "Boogseconde",
+      "Milliarcsecond": "Milli-boogseconde",
+      "Microarcsecond": "Micro-boogseconde",
+      "Joule": "Joule",
+      "Kilojoule": "Kilojoule",
+      "Calorie": "Calorie",
+      "Kilocalorie": "Kilocalorie",
+      "British Thermal Unit": "Britse Thermische Eenheid",
+      "Kilowatt-Hour": "Kilowattuur",
+      "Erg": "Erg",
+      "Foot-Pound": "Voet-Pond",
+      "Newton-Meter": "Newton-Meter",
+      "Newton": "Newton",
+      "Kilogram-Force": "Kilogramkracht",
+      "Pound-Force": "Pondkracht",
+      "Poundal": "Poundal",
+      "Dyne": "Dyne",
+      "Kilometer per Liter": "Kilometer per Liter",
+      "Mile per Gallon": "Mijl per Gallon",
+      "Liter per 100km": "Liter per 100km",
+      "Gallon per 100mi": "Gallon per 100mi",
+      "Millisecond": "Milliseconde",
+      "Second": "Seconde",
+      "Minute": "Minuut",
+      "Hour": "Uur",
+      "Day": "Dag",
+      "Week": "Week",
+      "Year": "Jaar",
+      "Byte": "Byte",
+      "Kilobyte": "Kilobyte",
+      "Megabyte": "Megabyte",
+      "Gigabyte": "Gigabyte",
+      "Terabyte": "Terabyte",
+      "Petabyte": "Petabyte"
+    }
+  },
+  "toolsHub": {
+    "title": "20 gratis rekenmachines en converters, op het web en op iPhone",
+    "description": "Gratis converters voor valuta, lengte, massa, volume, temperatuur en meer, plus leeftijd, BMI, datum, korting en lening rekenmachines.",
+    "h1": "Elke tool in ConvCalc",
+    "lede": "Probeer ze hier allemaal, en houd ze vervolgens allemaal op je iPhone met de gratis app."
+  },
+  "toolPage": {
+    "tryLabel": "Probeer het op de telefoon",
+    "how": "Hoe het werkt",
+    "inApp": "Houd het op je iPhone",
+    "inAppText": "Deze tool is een van de 20 in ConvCalc, naast een wetenschappelijke rekenmachine met geschiedenis. De app is gratis en bevat geen advertenties.",
+    "more": "Meer tools",
+    "popular": "Populaire conversies"
+  },
+  "tools": {
+    "currency": {
+      "label": "Valuta",
+      "title": "Valuta omrekenen: gratis wisselkoers rekenmachine",
+      "description": "Zet Amerikaanse dollars, euro's, ponden, yens en andere valuta gratis om tegen een recente wisselkoers. Ook beschikbaar in de ConvCalc iPhone app.",
+      "h1": "Valuta omrekenen",
+      "intro": "Typ een bedrag in één valuta en zie het direct in de andere valuta's.",
+      "how": "Tik op een valuta om deze de valuta te maken waarin je typt. De koersen op deze pagina worden dagelijks ververst en zijn alleen ter referentie, omdat banken en kaartuitgevers meestal een marge toevoegen. Met de ConvCalc app kun je je eigen lijst met valuta's kiezen."
+    },
+    "length": {
+      "label": "Lengte",
+      "title": "Lengte omrekenen: mm, cm, meters, km, inches, feet, yards, miles",
+      "description": "Zet millimeters, centimeters, meters, kilometers, inches, feet, yards en miles om. Zie elke eenheid tegelijk, gratis.",
+      "h1": "Lengte omrekenen",
+      "intro": "Zie millimeters, centimeters, meters, kilometers, inches, feet, yards en miles samen terwijl je typt.",
+      "how": "Tik op een eenheid en typ je waarde. Elke andere eenheid wordt onmiddellijk bijgewerkt, dus je hoeft niet eerst een doeleenheid te kiezen. Het werkt voor alles, van een schroefmaat tot een roadtrip."
+    },
+    "area": {
+      "label": "Oppervlakte",
+      "title": "Oppervlakte omrekenen: vierkante meters, vierkante feet, acres, hectares",
+      "description": "Zet vierkante meters, vierkante feet, vierkante kilometers, vierkante mijlen, acres en hectares gratis om.",
+      "h1": "Oppervlakte omrekenen",
+      "intro": "Zet vierkante meters, vierkante feet, vierkante kilometers, vierkante mijlen, acres en hectares op één plek om.",
+      "how": "Tik op een eenheid en typ je waarde om de andere te zien. Het is handig voor het vergelijken van appartementen, percelen en plattegronden die verschillende eenheden gebruiken."
+    },
+    "mass": {
+      "label": "Massa",
+      "title": "Gewicht en massa omrekenen: kg, lbs, ounces, gram, stone, ton",
+      "description": "Zet kilogrammen, ponden, ounces, grammen, stone, tonnen en meer om. Zie elke eenheid tegelijk, gratis.",
+      "h1": "Gewicht en massa omrekenen",
+      "intro": "Zet milligrammen, grammen, kilogrammen, ounces, ponden, stone en tonnen om, samen met minder gangbare eenheden zoals drams en slugs.",
+      "how": "Tik op een eenheid en typ je waarde om alle andere te zien. Het omvat keukenweegschalen, lichaamsgewicht, bagagelimieten en vracht. De tonnen worden afzonderlijk vermeld als short, long en metrisch, omdat ze niet hetzelfde zijn."
+    },
+    "volume": {
+      "label": "Volume",
+      "title": "Volume omrekenen: liters, gallons, cups, quarts, pints, ml",
+      "description": "Zet milliliters, liters, Amerikaanse gallons, quarts, pints, cups en vloeibare ounces gratis om.",
+      "h1": "Volume omrekenen",
+      "intro": "Zet milliliters, liters, gallons, quarts, pints, cups en vloeibare ounces om terwijl je typt.",
+      "how": "Tik op een eenheid en typ je waarde. De gallon, quart, pint, cup en vloeibare ounce zijn Amerikaanse maten, dus de resultaten voor Britse recepten zullen anders zijn."
+    },
+    "speed": {
+      "label": "Snelheid",
+      "title": "Snelheid omrekenen: km/u, mph, knopen, m/s",
+      "description": "Zet kilometers per uur, mijlen per uur, knopen en meters per seconde gratis om.",
+      "h1": "Snelheid omrekenen",
+      "intro": "Schakel tussen kilometers per uur, mijlen per uur, knopen en meters per seconde.",
+      "how": "Tik op een eenheid en typ je waarde om de andere te zien. Het is handig voor verkeersborden in het buitenland, windvoorspellingen en zeilen of vliegen."
+    },
+    "pressure": {
+      "label": "Druk",
+      "title": "Druk omrekenen: PSI, bar, kPa, atm, inHg, torr",
+      "description": "Zet pascals, kilopascals, bar, atmosferen, PSI, inches kwik en torr gratis om.",
+      "h1": "Druk omrekenen",
+      "intro": "Zet pascals, kilopascals, bar, atmosferen, PSI, inches kwik en torr om.",
+      "how": "Tik op een eenheid en typ je waarde om de andere te zien. Het is handig voor bandenspanning, weermetingen en werkplaatsmeters."
+    },
+    "power": {
+      "label": "Vermogen",
+      "title": "Vermogen omrekenen: watt, kilowatt, pk, BTU per minuut",
+      "description": "Zet watt, kilowatt, paardenkracht en BTU per minuut gratis om.",
+      "h1": "Vermogen omrekenen",
+      "intro": "Zet watt, kilowatt, paardenkracht en BTU per minuut om.",
+      "how": "Tik op een eenheid en typ je waarde om de andere te zien. Het is handig voor het vergelijken van motoren, motoren en verwarmings- of koelapparatuur."
+    },
+    "temperature": {
+      "label": "Temp",
+      "title": "Temperatuur omrekenen: Celsius, Fahrenheit, Kelvin",
+      "description": "Zet Celsius, Fahrenheit en Kelvin direct om, gratis.",
+      "h1": "Temperatuur omrekenen",
+      "intro": "Zet Celsius, Fahrenheit en Kelvin om terwijl je typt.",
+      "how": "Tik op een schaal en typ je waarde om de andere te zien. Gebruik het voor weer, oveninstellingen en laboratoriumwerk."
+    },
+    "angle": {
+      "label": "Hoek",
+      "title": "Hoek omrekenen: graden, radialen, boogminuten, boogseconden",
+      "description": "Zet graden, radialen, boogminuten, boogseconden en kleinere hoekeenheden gratis om.",
+      "h1": "Hoek omrekenen",
+      "intro": "Zet graden, radialen, milliradialen, boogminuten, boogseconden en kleinere eenheden om.",
+      "how": "Tik op een eenheid en typ je waarde om de andere te zien. Het is handig voor trigonometrie huiswerk, optica en astronomie."
+    },
+    "energy": {
+      "label": "Energie",
+      "title": "Energie omrekenen: joules, calorieën, kWh, BTU",
+      "description": "Zet joules, kilojoules, calorieën, kilocalorieën, BTU, kilowattuur en meer gratis om.",
+      "h1": "Energie omrekenen",
+      "intro": "Zet joules, kilojoules, calorieën, kilocalorieën, BTU, kilowattuur, ergs en foot-pounds om.",
+      "how": "Tik op een eenheid en typ je waarde om de andere te zien. Het is handig voor voedseletiketten, elektriciteitsrekeningen en natuurkundeproblemen."
+    },
+    "force": {
+      "label": "Kracht",
+      "title": "Kracht omrekenen: newtons, kilogramkracht, pondkracht",
+      "description": "Zet newtons, kilogramkracht, pondkracht, poundals en dynes gratis om.",
+      "h1": "Kracht omrekenen",
+      "intro": "Zet newtons, kilogramkracht, pondkracht, poundals en dynes om.",
+      "how": "Tik op een eenheid en typ je waarde om de andere te zien. Het is handig voor technische specificaties en natuurkundeproblemen."
+    },
+    "fuel": {
+      "label": "Brandstof",
+      "title": "Brandstofverbruik omrekenen: mpg, L/100km, km/L",
+      "description": "Zet brandstofverbruik om tussen mijlen per gallon, liters per 100 km, kilometers per liter en gallons per 100 mijl, gratis.",
+      "h1": "Brandstofverbruik omrekenen",
+      "intro": "Zet mijlen per gallon, liters per 100 km, kilometers per liter en gallons per 100 mijl om.",
+      "how": "Tik op een eenheid en typ je waarde om de andere te zien. Voor liters per 100 km en gallons per 100 mijl betekent een lager getal een beter verbruik. De gallon hier is de Amerikaanse gallon."
+    },
+    "time": {
+      "label": "Tijd",
+      "title": "Tijd omrekenen: seconden, minuten, uren, dagen, weken, jaren",
+      "description": "Zet milliseconden, seconden, minuten, uren, dagen, weken en jaren gratis om.",
+      "h1": "Tijd omrekenen",
+      "intro": "Zet milliseconden, seconden, minuten, uren, dagen, weken en jaren om.",
+      "how": "Tik op een eenheid en typ je waarde om de andere te zien. Een jaar wordt geteld als gemiddeld 365,25 dagen."
+    },
+    "data": {
+      "label": "Data",
+      "title": "Data grootte omrekenen: bytes, KB, MB, GB, TB, PB",
+      "description": "Zet bytes, kilobytes, megabytes, gigabytes, terabytes en petabytes gratis om.",
+      "h1": "Data grootte omrekenen",
+      "intro": "Zet bytes, kilobytes, megabytes, gigabytes, terabytes en petabytes om.",
+      "how": "Tik op een eenheid en typ je waarde om de andere te zien. Elke stap is 1.024 van de onderliggende, wat de manier is waarop besturingssystemen vaak bestandsgroottes tellen. Opslagfabrikanten gebruiken vaak 1.000 in plaats daarvan."
+    },
+    "age": {
+      "label": "Leeftijd",
+      "title": "Leeftijd rekenmachine: vind je exacte leeftijd vanaf je geboortedatum",
+      "description": "Voer een geboortedatum in om een exacte leeftijd in jaren, maanden en dagen te zien. Gratis, zonder aanmelding.",
+      "h1": "Leeftijd rekenmachine",
+      "intro": "Voer een geboortedatum in en zie de exacte leeftijd in jaren, maanden en dagen.",
+      "how": "Tik op jaar, maand of dag en typ de waarde. Het resultaat gebruikt de huidige datum op je apparaat."
+    },
+    "bmi": {
+      "label": "BMI",
+      "title": "BMI rekenmachine: body mass index van lengte en gewicht",
+      "description": "Voer je lengte in centimeters en gewicht in kilogrammen in om je body mass index en de standaardcategorie te zien. Gratis.",
+      "h1": "BMI rekenmachine",
+      "intro": "Voer je lengte en gewicht in om je body mass index en de standaardcategorie te zien.",
+      "how": "BMI is je gewicht in kilogrammen gedeeld door je lengte in meters, in het kwadraat. De categorieën zijn ondergewicht onder 18,5, normaal tot 25, overgewicht tot 30 en zwaarlijvig daarboven. BMI is een ruwe screeningsmaat en vervangt geen medisch advies."
+    },
+    "date": {
+      "label": "Datum",
+      "title": "Datum rekenmachine: dagen tussen twee datums",
+      "description": "Vind het aantal dagen, weken, maanden en jaren tussen twee datums. Gratis, zonder aanmelding.",
+      "h1": "Datum rekenmachine",
+      "intro": "Voer twee datums in om het verschil in dagen, weken, maanden en jaren te zien.",
+      "how": "Tik op een veld en typ de waarde. Maanden en jaren in het resultaat zijn gemiddelden, 30,4375 en 365,25 dagen lang, dus ze verschijnen als decimalen."
+    },
+    "discount": {
+      "label": "Korting",
+      "title": "Korting rekenmachine: percentage korting en verkoopprijs",
+      "description": "Voer een prijs en een percentage in om te zien hoeveel je bespaart en wat je betaalt. Gratis percentage korting rekenmachine.",
+      "h1": "Korting rekenmachine",
+      "intro": "Voer een prijs en een percentage in om te zien hoeveel je bespaart en de uiteindelijke prijs.",
+      "how": "De besparing is de prijs vermenigvuldigd met het percentage, gedeeld door 100. Trek de besparing van de prijs af om te krijgen wat je betaalt. Omzetbelasting is niet inbegrepen."
+    },
+    "loan": {
+      "label": "Lening",
+      "title": "Lening rekenmachine: maandelijkse betaling en totale rente",
+      "description": "Voer een leningbedrag, jaarlijkse rente en looptijd in om de maandelijkse betaling, het totaal betaalde bedrag en de totale rente te zien. Gratis.",
+      "h1": "Lening rekenmachine",
+      "intro": "Voer het bedrag, de jaarlijkse rente en het aantal jaren in om de maandelijkse betaling, het totaal betaalde bedrag en de totale rente te zien.",
+      "how": "Het gaat uit van een vaste rente en gelijke maandelijkse betalingen, zonder kosten of verzekering. Beschouw het resultaat als een schatting en controleer de definitieve voorwaarden bij je kredietverstrekker."
+    }
+  },
+  "features": {
+    "scientific-calculator": {
+      "label": "Wetenschappelijke rekenmachine",
+      "title": "Gratis wetenschappelijke rekenmachine app voor iPhone",
+      "description": "Een gratis wetenschappelijke rekenmachine voor iPhone met goniometrische, inverse en hyperbolische functies, logaritmen, machten, faculteiten en constanten. Geen advertenties.",
+      "h1": "Een wetenschappelijke rekenmachine die er niet zo uitziet",
+      "intro": "Meestal hoef je alleen maar dingen op te tellen, dus ConvCalc begint eenvoudig. Eén tik op de hoektoets opent het volledige wetenschappelijke toetsenbord.",
+      "sections": [
+        {
+          "title": "Alle functies die je zou verwachten",
+          "text": "Sinus, cosinus en tangens, met inverse en hyperbolische versies. Natuurlijke en basis 10 logaritmen, machten, vierkantswortels, faculteiten, reciproken, pi, e en een willekeurige getaltoets."
+        },
+        {
+          "title": "Graden of radialen",
+          "text": "Schakel de hoekmodus met één toets. Het display toont de hele uitdrukking en een live resultaat, zodat je een fout kunt opvangen voordat je op is gelijk aan drukt."
+        },
+        {
+          "title": "Repareer het zonder opnieuw te beginnen",
+          "text": "Verwijder het laatste wat je hebt getypt, of ga terug naar een eerdere berekening in je geschiedenis en ga daar verder."
+        }
+      ],
+      "shot": "calculatorExpanded"
+    },
+    "calculator-with-history": {
+      "label": "Rekenmachine met geschiedenis",
+      "title": "Rekenmachine app met geschiedenis voor iPhone",
+      "description": "Een gratis iPhone rekenmachine die elke berekening opslaat. Open je geschiedenis, tik op een vorig resultaat en ga verder. Geen advertenties.",
+      "h1": "Een rekenmachine die onthoudt",
+      "intro": "ConvCalc slaat elke berekening die je voltooit op, zodat dat nummer van tien minuten geleden er nog steeds is wanneer je het nodig hebt.",
+      "sections": [
+        {
+          "title": "Je eerdere berekeningen, één tik verwijderd",
+          "text": "Tik op de klok in de rechterbovenhoek om elke uitdrukking en het resultaat te zien."
+        },
+        {
+          "title": "Hergebruik elk resultaat",
+          "text": "Tik op een eerdere berekening om deze terug te halen en ermee verder te rekenen."
+        },
+        {
+          "title": "Wis het wanneer je wilt",
+          "text": "Geschiedenis wordt op je iPhone opgeslagen en je kunt deze op elk moment wissen."
+        }
+      ],
+      "shot": "history"
+    },
+    "calculator-no-ads": {
+      "label": "Rekenmachine zonder advertenties",
+      "title": "Gratis rekenmachine app zonder advertenties voor iPhone",
+      "description": "ConvCalc is een gratis iPhone rekenmachine en converter zonder advertenties, banners en pop-ups. Wetenschappelijke toetsen, geschiedenis en 20 tools inbegrepen.",
+      "h1": "Een gratis rekenmachine zonder advertenties",
+      "intro": "Een rekenmachine is iets wat je tien seconden opent. Die tien seconden mogen geen banner of pop-up bevatten.",
+      "sections": [
+        {
+          "title": "Niets tussen jou en het antwoord",
+          "text": "ConvCalc heeft geen enkele vorm van advertenties en de app bevat geen advertentiecode."
+        },
+        {
+          "title": "Alles is vandaag gratis",
+          "text": "Het wetenschappelijke toetsenbord, geschiedenis, valuta, converters en rekenmachines zijn allemaal kosteloos inbegrepen."
+        },
+        {
+          "title": "Open source",
+          "text": "De code van de app is openbaar op GitHub, dus je kunt deze zelf lezen."
+        }
+      ],
+      "shot": "calculatorInput"
+    }
+  },
+  "featurePage": {
+    "tryTitle": "Probeer het hier"
+  },
+  "compareHub": {
+    "title": "Vergelijk iPhone rekenmachine apps",
+    "description": "Hoe ConvCalc zich verhoudt tot andere rekenmachine apps voor iPhone, met gedateerde App Store prijzen en beoordelingen.",
+    "h1": "Vergelijk rekenmachine apps",
+    "lede": "Wij maken ConvCalc, dus lees dit met dat in gedachten. Prijzen en beoordelingen komen uit de App Store en zijn gedateerd, en onze meningen zijn als meningen gelabeld."
+  },
+  "comparePage": {
+    "disclosure": "Wij maken ConvCalc, dus weeg onze keuze dienovereenkomstig af.",
+    "tableTitle": "Hoe ze vergelijken",
+    "app": "App",
+    "price": "Prijs",
+    "rating": "Beoordeling",
+    "take": "Onze mening",
+    "builtIn": "Ingebouwd",
+    "notListed": "Niet vermeld",
+    "dataNote": "Downloadprijzen en Amerikaanse App Store beoordelingen per {date}. In-app aankopen worden niet getoond, dus controleer elke vermelding voor wat is inbegrepen.",
+    "whyTitle": "Waarom wij ConvCalc kiezen",
+    "whyText": "Dit deel is onze mening: de meeste rekenmachines zijn ofwel eenvoudig ofwel overvol. ConvCalc plaatst alles achter schone, tactiele toetsen, met een wetenschappelijk toetsenbord dat met één tik opent, een geschiedenis die je kunt hergebruiken, en 20 tools voor eenheden, valuta en dagelijkse wiskunde. Het is ook jong, met slechts een handvol App Store beoordelingen tot nu toe, dus het heeft nog niet de staat van dienst van sommige apps op deze lijst verdiend."
+  },
+  "compare": {
+    "best-calculator-app-iphone": {
+      "label": "Beste rekenmachine apps voor iPhone",
+      "title": "De beste rekenmachine apps voor iPhone in 2027",
+      "description": "De beste rekenmachine apps voor iPhone in 2027 vergeleken: ConvCalc, Apple Rekenmachine, PCalc, Calcbot, Calculator₊ en Tydlig, met prijzen en beoordelingen.",
+      "h1": "De beste rekenmachine apps voor iPhone in 2027",
+      "intro": "We zochten naar een rekenmachine die prettig is om elke dag te gebruiken. Onze keuze is ConvCalc, en we moeten vooraf zeggen dat wij het hebben gebouwd."
+    },
+    "best-free-calculator-app-iphone": {
+      "label": "Beste gratis rekenmachine apps",
+      "title": "De beste gratis rekenmachine apps voor iPhone in 2027",
+      "description": "De beste gratis rekenmachine apps voor iPhone vergeleken: ConvCalc, Apple Rekenmachine, Calcbot, Rekenmachine met Geschiedenis, Calculator₊ en PCalc Lite.",
+      "h1": "De beste gratis rekenmachine apps voor iPhone in 2027",
+      "intro": "Je hoeft niet te betalen voor een goede iPhone rekenmachine. Deze zijn allemaal gratis te downloaden, en onze keuze is degene die we hebben gebouwd: ConvCalc."
+    },
+    "best-scientific-calculator-app-iphone": {
+      "label": "Beste wetenschappelijke rekenmachine apps",
+      "title": "De beste wetenschappelijke rekenmachine apps voor iPhone in 2027",
+      "description": "De beste wetenschappelijke rekenmachine apps voor iPhone vergeleken: ConvCalc, PCalc, Desmos, Calcbot en Apple Rekenmachine.",
+      "h1": "De beste wetenschappelijke rekenmachine apps voor iPhone in 2027",
+      "intro": "Als je goniometrie en logaritmen op je telefoon nodig hebt, zijn dit de opties die we zouden bekijken. Wij hebben ConvCalc gebouwd, en PCalc is degene die je moet hebben voor programmeren en RPN."
+    },
+    "convcalc-vs-apple-calculator": {
+      "label": "ConvCalc vs Apple Rekenmachine",
+      "title": "ConvCalc vs Apple Rekenmachine: welke moet je gebruiken op iPhone?",
+      "description": "Een eerlijke vergelijking van ConvCalc en de Rekenmachine app ingebouwd in iOS, van de mensen die ConvCalc maken.",
+      "h1": "ConvCalc vs Apple Rekenmachine",
+      "intro": "Apple's Rekenmachine is veel verbeterd, en het staat al op je telefoon. Hier is wanneer ConvCalc de moeite waard is om toe te voegen."
+    }
+  },
+  "takes": {
+    "convcalc": "Onze keuze voor design. Wetenschappelijke toetsen, herbruikbare geschiedenis, valuta en 19 andere tools, zonder advertenties.",
+    "apple": "Wordt geleverd met iOS. Sinds iOS 18 bevat het een geschiedenis, eenheden omrekenen en Math Notes, dus het is een goed startpunt.",
+    "pcalc": "De keuze van de power user. De vermelding omvat optionele RPN, een papieren tape, meerdere knopindelingen, hex, octaal en binair, en een Apple Watch app.",
+    "pcalclite": "Een gratis versie van PCalc met optionele RPN, ongedaan maken en opnieuw uitvoeren, en eenheden omrekenen. De vermelding reserveert de papieren tape en sommige thema's voor de volledige app.",
+    "calcbot": "Een langlopende rekenmachine van Tapbots. De vermelding omvat een geschiedenistape, een uitdrukkingweergave, wetenschappelijke functies, en eenheden- en valutaomrekening.",
+    "calculatorplus": "De meest beoordeelde app hier. De vermelding omvat wetenschappelijke, geschiedenis-, eenheden- en valuta tools, en adverteert een premium tier die vrij is van full-screen advertenties.",
+    "tydlig": "Een ander idee: een vrij canvas met gekoppelde nummers en live resultaten, plus grafieken. De laatste App Store update was in 2017.",
+    "calchistory": "Een eenvoudige optie waarvan de vermelding geen advertenties belooft, met geschiedenis, optionele wetenschappelijke functies en aanpasbare toetsenbordkleuren en -geluiden.",
+    "desmos": "Een gratis, gerichte wetenschappelijke rekenmachine van Desmos, met trigonometrie, statistiek, combinatoriek en je eigen functies.",
+    "convcalcSci": "Onze keuze voor dagelijks wetenschappelijk gebruik. Goniometrische, inverse en hyperbolische functies, logaritmen en faculteiten achter een toetsenbord dat je kunt verbergen, zonder advertenties.",
+    "appleSci": "Ingebouwd in iOS, met een wetenschappelijke modus en geschiedenis. Het proberen waard voordat je iets downloadt."
+  },
+  "versus": {
+    "feature": "Functie",
+    "rows": [
+      [
+        "Prijs",
+        "Gratis",
+        "Ingebouwd in iOS"
+      ],
+      [
+        "Wetenschappelijke functies",
+        "Ja",
+        "Ja"
+      ],
+      [
+        "Geschiedenis",
+        "Ja",
+        "Ja, sinds iOS 18"
+      ],
+      [
+        "Eenheden omrekenen",
+        "14 categorieën, elke eenheid tegelijk getoond",
+        "Ja, sinds iOS 18"
+      ],
+      [
+        "Valuta omrekenen",
+        "Ja",
+        "Ja, sinds iOS 18"
+      ],
+      [
+        "Leeftijd, BMI, datum, korting en lening rekenmachines",
+        "Ja",
+        "Geen speciale tools"
+      ],
+      [
+        "Handgeschreven en getypte wiskundenotities",
+        "Nee",
+        "Ja, met Math Notes"
+      ],
+      [
+        "Werkt op iPad",
+        "Nee, alleen iPhone",
+        "Ja, sinds iPadOS 18"
+      ]
+    ],
+    "verdictTitle": "Welke moet je gebruiken?",
+    "verdict": "Als je wiskundenotities wilt of een iPad gebruikt, blijf dan bij Apple's app. Als je dagelijkse tools zoals lening-, leeftijd- en datumrekenmachines op één plek wilt, of als je de look van ConvCalc prettiger vindt, is het de gratis download waard. Veel mensen zouden beide kunnen houden."
+  }
+}

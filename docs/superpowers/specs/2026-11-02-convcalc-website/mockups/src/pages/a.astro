@@ -1,0 +1,70 @@
+---
+import Base from "../components/Base.astro";
+import Keys from "../components/Keys.astro";
+import Phone from "../components/Phone.astro";
+import Tabs from "../components/Tabs.astro";
+import ToolTiles from "../components/ToolTiles.astro";
+import AppStore from "../components/AppStore.astro";
+const shots = [["calculatorExpanded","Scientific keys","Tap the corner key to open trig, logs, powers, factorials and constants. Tap again to put them away."],["history","History","Every result is saved. Tap one to bring it back into your calculation."],["currency","Currency","Type an amount and watch the other currencies follow."],["tool-loan","Loan","Principal, rate and years in. Monthly payment out."]];
+---
+<Base title="A: The keys are the page" class="A" fonts="family=Instrument+Sans:wght@400;500;600;700">
+<header class="top"><a href="/a" class="brand"><img src="/icon.png" alt="" width="30" height="30" />ConvCalc</a><nav><a href="#tools">Tools</a><a href="#">Compare</a><a href="#">Guides</a></nav></header>
+<section class="hero" data-calc data-autoplay='["3","6","5","*","2","4","eq"]'>
+  <div class="surface bigdisp"><div class="prev" data-preview></div><div class="line"><div class="expr" data-expr aria-live="polite">0</div></div></div>
+  <div class="split">
+    <div class="pitch">
+      <h1>Calculators on iOS look terrible. This one doesn't.</h1>
+      <p>ConvCalc is a free scientific calculator with 20 built-in tools for units, currency and everyday math. Native to iPhone, with no ads anywhere.</p>
+      <AppStore />
+      <small>The keys on this page work. Try them.</small>
+    </div>
+    <div class="surface herokeys"><Keys /></div>
+  </div>
+</section>
+<section class="tools" id="tools" data-demo data-initial="grid" data-scroll="1">
+  <div class="tools-copy">
+    <h2>One app instead of a folder of them</h2>
+    <p>Tap any tool to open it on the phone. These are the same tools, with the same math, as the app.</p>
+    <ToolTiles />
+  </div>
+  <div class="tools-phone"><Tabs /><Phone initial="grid" /></div>
+</section>
+<section class="shots">
+  {shots.map(([s,t,d]) => <figure><div class="phone"><div class="screen"><img src={`/shots/${s}.jpg`} alt={`ConvCalc ${t} screen`} loading="lazy" /></div></div><figcaption><b>{t}</b>{d}</figcaption></figure>)}
+</section>
+<section class="end"><h2>Free. No ads. Yours in ten seconds.</h2><AppStore /></section>
+<style is:global>
+.A{background:#000;color:#fff;font-family:"Instrument Sans",Inter,sans-serif}
+.A .top{display:flex;justify-content:space-between;align-items:center;padding:20px clamp(20px,4vw,56px)}
+.A .brand{display:flex;gap:10px;align-items:center;font-weight:600;font-size:18px;text-decoration:none}.A .brand img{border-radius:23%}
+.A nav{display:flex;gap:26px;font-size:15px;color:#a7a7a7}.A nav a{text-decoration:none}.A nav a:hover{color:#fff}
+.A .hero{min-height:calc(100svh - 70px);padding:0 clamp(20px,4vw,56px) 40px;display:flex;flex-direction:column}
+.A .bigdisp{flex:1;display:flex;flex-direction:column;justify-content:flex-end;min-height:clamp(120px,24vh,280px);padding-bottom:18px}
+.A .bigdisp .line{justify-content:flex-end;gap:28px}
+.A .bigdisp .expr,.A .bigdisp .expr[data-empty="1"]{flex:none;max-width:100%;text-align:right;font-weight:200;letter-spacing:-.03em;line-height:1;font-size:min(15vw,24vh,calc(170vw / var(--len,1)))}
+.A .bigdisp .prev{height:1.4em;font-size:clamp(20px,3vw,36px);padding:0}
+
+.A .split{display:grid;grid-template-columns:1fr minmax(320px,430px);gap:clamp(30px,6vw,110px);align-items:end}
+.A h1{font-size:clamp(38px,5.2vw,76px);line-height:1.02;letter-spacing:-.03em;font-weight:600;max-width:13em;text-wrap:balance}
+.A .pitch p{margin:22px 0 28px;font-size:clamp(17px,1.4vw,20px);line-height:1.5;color:#b4b4b4;max-width:34em}
+.A .pitch small{display:block;margin-top:16px;color:#7d7d7d;font-size:14px}
+.A .store{background:#cc7a00;color:#fff;box-shadow:inset 0 0 0 1px #ffc14d}.A .store:hover{background:#dc8703}
+.A .herokeys .keys{padding:0;--k:23.4cqw;--g:2.1cqw;--f:9.5cqw}
+.A .hero[data-expanded] .herokeys .keys{--k:18.6cqw;--g:1.75cqw;--f:6.6cqw}
+@media (min-width:861px){.A .hero[data-expanded] .herokeys .keys{--k:min(18.6cqw,10.2svh);--g:min(1.75cqw,1svh);justify-content:end}.A .hero[data-expanded] .bigdisp{min-height:90px}.A .hero[data-expanded] .bigdisp .expr{font-size:min(11vw,13vh,calc(170vw / var(--len,1)))}}
+.A .tools{display:grid;grid-template-columns:1fr minmax(300px,380px);gap:clamp(30px,6vw,110px);padding:clamp(70px,10vw,140px) clamp(20px,4vw,56px);max-width:1440px;margin:auto}
+.A h2{font-size:clamp(32px,3.8vw,56px);line-height:1.05;letter-spacing:-.025em;font-weight:600;text-wrap:balance}
+.A .tools-copy>p{margin:18px 0 38px;color:#b4b4b4;font-size:18px;line-height:1.5;max-width:32em}
+.bigtiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));max-width:640px;gap:12px}
+.bigtiles .tile{font-size:14px;gap:8px;aspect-ratio:1}.bigtiles .tile svg{width:30px;height:30px}.bigtiles .tile:hover{background:#3a3a3a}
+.A .tools-phone .phone{width:min(100%,40svh)}
+.A .tools-phone{display:flex;flex-direction:column;gap:18px;align-items:center;position:sticky;top:16px;align-self:start}
+.A .tabs{background:#1b1b1b;color:#9a9a9a}.A .tabs [aria-pressed=true]{background:#3b2401;color:#f59905}
+.A .tabs button{padding:8px 12px;font-size:13px}
+.A .shots{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(18px,3vw,44px);padding:0 clamp(20px,4vw,56px);max-width:1440px;margin:auto}
+.A .shots .screen img{width:100%;height:100%;object-fit:cover}
+.A figcaption{margin-top:20px;color:#a7a7a7;line-height:1.45;font-size:15.5px}.A figcaption b{display:block;color:#fff;font-size:18px;margin-bottom:4px;font-weight:600}
+.A .end{padding:clamp(90px,12vw,170px) 20px;text-align:center}.A .end h2{margin-bottom:30px}
+@media (max-width:860px){.bigtiles{grid-template-columns:repeat(4,minmax(0,1fr))!important}.A .tools-phone .phone{width:100%}.A .split,.A .tools{grid-template-columns:1fr}.A .herokeys{max-width:430px;width:100%;margin:auto}.A .shots{grid-template-columns:repeat(2,1fr)}.A .tools-phone{position:static;max-width:320px;margin:auto;width:100%}.A nav{display:none}}
+</style>
+</Base>

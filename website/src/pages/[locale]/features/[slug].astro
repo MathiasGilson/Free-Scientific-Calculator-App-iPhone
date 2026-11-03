@@ -1,0 +1,8 @@
+---
+import FeaturePage from "../../../components/FeaturePage.astro";
+import en from "../../../locales/en.json";
+import { nonDefaultLocales } from "../../../utils/i18n";
+export const getStaticPaths = () => nonDefaultLocales.flatMap((locale) => Object.keys(en.features).map((slug) => ({ params: { locale, slug }, props: { locale } })));
+const { locale } = Astro.props;
+---
+<FeaturePage locale={locale} slug={Astro.params.slug} />

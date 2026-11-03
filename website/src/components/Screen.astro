@@ -1,0 +1,37 @@
+---
+import Icon from "./Icon.astro";
+import Keys from "./Keys.astro";
+import { GRID } from "../lib/tools.js";
+import { getTranslations, type Locale } from "../utils/i18n";
+const { locale } = Astro.props as { locale: Locale };
+const t = getTranslations(locale);
+const tools = t.tools as Record<string, { label: string }>;
+---
+<div class="screen" dir="ltr">
+  <div class="status"><span>9:41</span><i class="island"></i><span class="st-r"><Icon name="wifi" /><Icon name="battery-full" /></span></div>
+  <div class="view calc" data-view="calc" data-calc>
+    <button type="button" class="round" data-history-toggle aria-label="History"><Icon name="clock" /></button>
+    <div class="disp">
+      <div class="line"><div class="expr" data-expr aria-live="polite">0</div><button type="button" class="bk" data-backspace hidden aria-label="Delete"><Icon name="delete" /></button></div>
+      <div class="prev" data-preview></div>
+    </div>
+    <Keys />
+    <div class="hist" data-history data-empty={t.demo.historyEmpty}></div>
+  </div>
+  <div class="view" data-view="grid" hidden>
+    <div class="grid">{GRID.map(([k, , i]) => <button type="button" class="tile" data-open={k}><Icon name={i} /><span>{tools[k].label}</span></button>)}</div>
+  </div>
+  <div class="view tool" data-view="tool" hidden>
+    <button type="button" class="round" data-back aria-label="All tools"><Icon name="chevron-left" /></button>
+    <div class="rows" data-rows></div>
+    <p class="note" data-rate-note></p>
+    <div class="num" data-numpad>
+      {["7", "8", "9"].map((n) => <button type="button" class="k n" data-n={n}>{n}</button>)}
+      <button type="button" class="k ac2" data-n="ac">AC</button>
+      {["4", "5", "6"].map((n) => <button type="button" class="k n" data-n={n}>{n}</button>)}
+      {["1", "2", "3"].map((n) => <button type="button" class="k n" data-n={n}>{n}</button>)}
+      <button type="button" class="k del" data-n="bk" aria-label="Delete"><Icon name="delete" /></button>
+      <button type="button" class="k n" data-n=".">.</button><button type="button" class="k n" data-n="0">0</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getTranslations, localizedPath, type Locale } from "../utils/i18n";
+const { locale } = Astro.props as { locale: Locale };
+const t = getTranslations(locale);
+const c = t.compare as Record<string, { label: string; intro: string; h1: string }>;
+---
+<Layout title={t.compareHub.title} description={t.compareHub.description} locale={locale} path="/compare" pageType="compare_hub">
+<main class="wrap">
+  <section class="first"><h1>{t.compareHub.h1}</h1><p class="lede">{t.compareHub.lede}</p></section>
+  <section><ul class="hub hub1">{Object.keys(c).map((k) => <li><a href={localizedPath(locale, `/compare/${k}`)}><span><b>{c[k].h1}</b>{c[k].intro}</span></a></li>)}</ul></section>
+</main>
+</Layout>

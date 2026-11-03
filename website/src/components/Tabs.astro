@@ -1,0 +1,11 @@
+---
+import Icon from "./Icon.astro";
+import { getTranslations, type Locale } from "../utils/i18n";
+const { locale } = Astro.props as { locale: Locale };
+const t = getTranslations(locale);
+---
+<div class="tabs" role="group">
+  <button type="button" data-tab="calc"><Icon name="calculator" /> {t.demo.tabs.calculator}</button>
+  <button type="button" data-tab="currency"><Icon name="dollar-sign" /> {t.demo.tabs.currency}</button>
+  <button type="button" data-tab="grid"><Icon name="grid-3x3" /> {t.demo.tabs.all}</button>
+</div>

@@ -1,0 +1,8 @@
+---
+import ToolPage from "../../../components/ToolPage.astro";
+import en from "../../../locales/en.json";
+import { nonDefaultLocales } from "../../../utils/i18n";
+export const getStaticPaths = () => nonDefaultLocales.flatMap((locale) => Object.keys(en.tools).map((slug) => ({ params: { locale, slug }, props: { locale } })));
+const { locale } = Astro.props;
+---
+<ToolPage locale={locale} slug={Astro.params.slug} />

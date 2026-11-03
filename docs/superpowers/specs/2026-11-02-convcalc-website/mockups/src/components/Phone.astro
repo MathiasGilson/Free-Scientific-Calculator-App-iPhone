@@ -1,0 +1,5 @@
+---
+import Screen from "./Screen.astro";
+const { class: c, ...rest } = Astro.props;
+---
+<div class:list={["phone", c]} data-phone><Screen {...rest} /></div>

@@ -1,0 +1,74 @@
+---
+import Base from "../components/Base.astro";
+import Screen from "../components/Screen.astro";
+import Phone from "../components/Phone.astro";
+import Tabs from "../components/Tabs.astro";
+import ToolTiles from "../components/ToolTiles.astro";
+import AppStore from "../components/AppStore.astro";
+const uglyKeys = ["MC","MR","M+","M-","C","±","%","÷","7","8","9","×","4","5","6","−","1","2","3","+","0","00",".","="];
+const pts = [["The usual calculator","A banner on top, an upgrade button beside the result, and a request for five stars before you've finished adding."],["ConvCalc","No ads, no upgrade, no pop-ups. Keys with weight, a display you can edit, and history one tap away."]];
+---
+<Base title="C: The comparison" class="C" fonts="family=Familjen+Grotesk:wght@400;500;600;700">
+<header class="top"><a href="/c" class="brand"><img src="/icon.png" alt="" width="30" height="30" />ConvCalc</a><nav><a href="#tools">Tools</a><a href="#">Compare</a><a href="#">Guides</a></nav></header>
+<section class="hero">
+  <div class="left">
+    <h1>You look at your calculator every day. It should look better than this.</h1>
+    <p>Drag the handle across the phone. ConvCalc is free, has no ads, and packs a scientific calculator and 20 tools into one beautiful app.</p>
+    <AppStore />
+  </div>
+  <div class="stage">
+    <div class="phone wipe" data-wipe style="--p:50%">
+      <div class="wrap"><Screen autoplay='["7","2","*","1","2"]' />
+      <div class="ugly" aria-hidden="true">
+        <div class="ad"><b>WIN A FREE PHONE!!!</b><span>Tap to claim. Ad</span></div>
+        <div class="udisp"><em>Remove ads $4.99</em><strong>864</strong></div>
+        <div class="ukeys">{uglyKeys.map(k => <i>{k}</i>)}</div>
+        <div class="rate"><b>Enjoying Calculator?</b><span>★★★★★ Rate us now!</span></div>
+        <div class="ad low"><b>Top 10 loan offers near you</b><span>Ad</span></div>
+      </div></div>
+      <button type="button" class="handle" data-handle aria-label="Compare the two calculators. Use the left and right arrow keys."><i></i></button>
+    </div>
+    <p class="cap">Left: our illustration of a typical ad-funded calculator, not a real app.</p>
+  </div>
+</section>
+<section class="pts">{pts.map(([t,d]) => <div><h3>{t}</h3><p>{d}</p></div>)}</section>
+<section class="tools" id="tools" data-demo data-initial="grid" data-scroll="1">
+  <div><h2>And it does much more than add.</h2><p class="lede">Tap a tool to open it on the phone.</p><ToolTiles /></div>
+  <div class="tp"><Tabs /><Phone initial="grid" /></div>
+</section>
+<section class="end"><h2>Replace your calculator today.</h2><AppStore /></section>
+<style is:global>
+.C{background:#e9eaec;color:#000;font-family:"Familjen Grotesk",Inter,sans-serif}
+.C .top{display:flex;justify-content:space-between;align-items:center;padding:20px clamp(20px,4vw,56px)}
+.C .brand{display:flex;gap:10px;align-items:center;font-weight:700;font-size:19px;text-decoration:none}.C .brand img{border-radius:23%}
+.C nav{display:flex;gap:26px;font-size:16px;font-weight:500}.C nav a{text-decoration:none}.C nav a:hover{text-decoration:underline}
+.C .hero{display:grid;grid-template-columns:1fr minmax(0,min(29vw,37svh));gap:clamp(30px,6vw,110px);padding:clamp(10px,3vw,40px) clamp(20px,4vw,56px) 60px;max-width:1440px;margin:auto;align-items:center}
+.C h1{font-weight:600;font-size:clamp(40px,5.6vw,86px);line-height:1.02;letter-spacing:-.03em;text-wrap:balance}
+.C .left p{margin:24px 0 30px;font-size:clamp(18px,1.5vw,22px);line-height:1.45;max-width:30em;color:#2d2d30}
+.C .store{background:#000;color:#fff}.C .store:hover{background:#3b2401}
+.wipe{touch-action:pan-y;cursor:ew-resize}
+.wrap{position:relative;width:100%;height:100%}
+.ugly{position:absolute;inset:0;border-radius:11.5%/5.3%;overflow:hidden;background:#f4f4f4;color:#222;display:flex;flex-direction:column;font-family:Arial,sans-serif;container-type:inline-size;clip-path:inset(0 calc(100% - var(--p)) 0 0);pointer-events:none}
+.ugly .ad{background:linear-gradient(#ffee00,#ff9d00);color:#b00;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:4.6cqw;height:17cqw;margin-top:12cqw;flex:none;gap:.4cqw}.ugly .ad span{font-size:2.7cqw;color:#333}
+.ugly .ad.low{margin:auto 0 0;background:#3a7bd5;color:#fff;font-size:3.8cqw;height:13cqw}.ugly .ad.low span{color:#def}
+.udisp{padding:2cqw 3cqw;text-align:left;background:#dde3d4;margin:2cqw;border:1px solid #aaa;flex:none}.udisp em{display:block;font:normal 3cqw Arial;color:#b00;text-align:left}.udisp strong{font:400 11cqw "Courier New",monospace}
+.ukeys{display:grid;grid-template-columns:repeat(4,1fr);gap:1cqw;padding:0 2cqw}.ukeys i{font:normal 5.4cqw Arial;background:linear-gradient(#fff,#ccc);border:1px solid #999;text-align:center;padding:3.5cqw 0;border-radius:1cqw}
+.rate{margin:3cqw 8cqw;padding:3cqw;background:#fff;box-shadow:0 1cqw 5cqw #0006;border-radius:2cqw;text-align:center;font-size:3.6cqw;display:flex;flex-direction:column;gap:1cqw}.rate span{color:#d18a00}
+.handle{position:absolute;top:0;bottom:0;left:var(--p);translate:-50% 0;width:44px;z-index:5;display:grid;place-items:center;touch-action:none}
+.handle::before{content:"";position:absolute;top:0;bottom:0;width:2px;background:#f59905}
+.handle i{width:40px;height:40px;border-radius:50%;background:#f59905;position:relative;box-shadow:0 2px 10px #0006}
+.handle i::before{content:"‹ ›";position:absolute;inset:0;display:grid;place-items:center;color:#000;font:700 17px Inter,sans-serif;font-style:normal}
+.cap{font-size:13.5px;color:#55555a;margin-top:18px;text-align:center}
+.C .pts{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,6vw,110px);max-width:1440px;margin:auto;padding:30px clamp(20px,4vw,56px) 40px}
+.C h3{font-size:24px;font-weight:600;margin-bottom:8px;letter-spacing:-.015em}.C .pts p{font-size:18px;line-height:1.45;max-width:30em;color:#2d2d30}
+.C .tools{display:grid;grid-template-columns:1fr minmax(300px,370px);gap:clamp(30px,6vw,110px);max-width:1440px;margin:auto;padding:clamp(70px,9vw,120px) clamp(20px,4vw,56px)}
+.C h2{font-weight:600;font-size:clamp(34px,4.4vw,66px);letter-spacing:-.03em;line-height:1.03;text-wrap:balance}.C .lede{margin:14px 0 34px;font-size:18px;color:#2d2d30}
+.bigtiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));max-width:640px;gap:12px;color:#fff}
+.bigtiles .tile{font-size:14px;gap:8px;aspect-ratio:1;background:#111}.bigtiles .tile svg{width:30px;height:30px}.bigtiles .tile:hover{background:#3b2401;color:#f59905}
+.C .tp .phone{width:min(100%,40svh)}
+.C .tp{display:flex;flex-direction:column;gap:18px;align-items:center;position:sticky;top:16px;align-self:start}
+.C .tabs{background:#d8d9dc}.C .tabs [aria-pressed=true]{background:#000;color:#fff}.C .tabs button{padding:8px 12px;font-size:13px}
+.C .end{background:#000;color:#fff;padding:clamp(80px,11vw,150px) 20px;text-align:center}.C .end h2{margin-bottom:30px}.C .end .store{background:#cc7a00}
+@media (max-width:860px){.bigtiles{grid-template-columns:repeat(4,minmax(0,1fr))!important}.C .tp .phone{width:100%}.C .hero,.C .tools,.C .pts{grid-template-columns:1fr}.C .stage{max-width:320px;margin:auto;width:100%}.C nav{display:none}.C .tp{position:static;max-width:320px;margin:auto;width:100%}}
+</style>
+</Base>

@@ -1,0 +1,56 @@
+---
+import Base from "../components/Base.astro";
+import Phone from "../components/Phone.astro";
+import Tabs from "../components/Tabs.astro";
+import ToolTiles from "../components/ToolTiles.astro";
+import AppStore from "../components/AppStore.astro";
+const list = [["Scientific","sin, cos, tan and their inverses, logs, powers, factorials, degrees and radians, all one tap away."],["History","Every result is saved, and any of them can go straight back into your calculation."],["Currency","Live rates for the currencies you pick, converting as you type."],["Units","Length, mass, volume, temperature and ten more, each one showing every unit at once."],["Everyday math","Age, BMI, date differences, discounts and loan payments, without the search."],["No ads","No banners, no pop-ups and no pleas for five stars. Just the calculator."]];
+---
+<Base title="B: Amber poster" class="B" fonts="family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800">
+<div class="amber">
+  <header class="top"><a href="/b" class="brand">ConvCalc</a><nav><a href="#tools">Tools</a><a href="#">Compare</a><a href="#">Guides</a></nav></header>
+  <section class="hero">
+    <div class="pitch">
+      <h1>A calculator you'd actually want to look at.</h1>
+      <p>Free for iPhone. Scientific math, 20 built-in tools, no ads.</p>
+      <AppStore />
+    </div>
+    <div class="ph" data-demo><Phone autoplay='["1","2","8","/","4","eq"]' /><small>This is live. Tap the keys.</small></div>
+  </section>
+</div>
+<section class="black" id="tools" data-demo data-initial="grid" data-scroll="1">
+  <div class="intro"><h2>Everything you'd otherwise download six apps for.</h2><Tabs /></div>
+  <div class="tl"><ToolTiles /><div class="sm"><Phone initial="grid" /></div></div>
+</section>
+<section class="does">
+  <h2>What's in it</h2>
+  <dl>{list.map(([t,d]) => <div><dt>{t}</dt><dd>{d}</dd></div>)}</dl>
+  <AppStore />
+</section>
+<style is:global>
+.B{background:#000;font-family:"Bricolage Grotesque",Inter,sans-serif}
+.B .amber{background:#f59905;color:#000;padding-bottom:0}
+.B .top{display:flex;justify-content:space-between;align-items:center;padding:22px clamp(20px,4vw,56px);font-weight:600}
+.B .brand{font-weight:800;font-size:24px;letter-spacing:-.02em;text-decoration:none}
+.B nav{display:flex;gap:24px;font-size:16px}.B nav a{text-decoration:none}.B nav a:hover{text-decoration:underline}
+.B .hero{display:grid;grid-template-columns:1fr minmax(0,min(27vw,38svh));gap:clamp(20px,4vw,70px);padding:clamp(10px,3vw,40px) clamp(20px,4vw,56px) 0;align-items:start;max-width:1560px;margin:auto}
+.B h1{font-weight:800;font-size:clamp(56px,9.6vw,172px);line-height:.9;letter-spacing:-.028em;text-wrap:balance}
+.B .pitch p{font-size:clamp(20px,2vw,30px);font-weight:600;line-height:1.2;margin:clamp(20px,3vw,38px) 0 26px}
+.B .store{background:#000;color:#fff}.B .store:hover{background:#2b1a00}
+.B .ph{margin-bottom:-90px;position:relative;z-index:2}.B .ph small{display:block;text-align:center;font-weight:600;font-size:15px;margin-bottom:8px;position:absolute;top:-28px;left:0;right:0;color:#000}
+.B .black{background:#000;color:#fff;padding:clamp(150px,14vw,200px) clamp(20px,4vw,56px) 80px}
+.B h2{font-weight:800;letter-spacing:-.035em;line-height:.98;font-size:clamp(36px,5.4vw,86px);max-width:14em;text-wrap:balance}
+.B .intro{display:flex;flex-direction:column;gap:26px;align-items:flex-start;margin-bottom:44px;max-width:1448px;margin-inline:auto}
+.B .tabs{background:#1b1b1b;color:#a8a8a8}.B .tabs [aria-pressed=true]{background:#f59905;color:#000}
+.B .sm .phone{width:min(100%,42svh)}
+.B .tl{display:grid;grid-template-columns:1fr clamp(280px,24vw,340px);gap:clamp(24px,5vw,80px);max-width:1448px;margin:auto;align-items:start}
+.bigtiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));max-width:760px;gap:12px}
+.bigtiles .tile{font-size:15px;gap:8px;aspect-ratio:1}.bigtiles .tile svg{width:34px;height:34px}.bigtiles .tile:hover{background:#3b2401;color:#f59905}
+.B .does{background:#f59905;color:#000;padding:clamp(60px,8vw,120px) clamp(20px,4vw,56px)}
+.B dl{margin:40px 0 44px;max-width:1448px;border-top:2px solid #000}
+.B dl>div{display:grid;grid-template-columns:minmax(200px,5fr) 7fr;gap:20px;padding:22px 0;border-bottom:2px solid #000;align-items:baseline}
+.B dt{font-weight:800;font-size:clamp(28px,3.4vw,54px);letter-spacing:-.03em;line-height:1}
+.B dd{margin:0;font-size:clamp(17px,1.5vw,22px);line-height:1.35;font-weight:400;max-width:36em}
+@media (max-width:860px){.B .sm .phone{width:100%}.B .hero,.B .tl{grid-template-columns:1fr}.B .ph{max-width:320px;margin:30px auto -90px;width:100%}.B dl>div{grid-template-columns:1fr}.B .sm{max-width:300px;margin:auto;width:100%}.B nav{display:none}.bigtiles{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+</style>
+</Base>

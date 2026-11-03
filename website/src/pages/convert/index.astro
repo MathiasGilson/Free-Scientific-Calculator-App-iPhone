@@ -1,0 +1,13 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { CONVERSIONS } from "../../utils/conversions.js";
+const groups: Record<string, any[]> = {};
+for (const c of CONVERSIONS as any[]) (groups[c.t] ||= []).push(c);
+const name = (t: string) => t[0].toUpperCase() + t.slice(1);
+---
+<Layout title="All unit and currency conversions" description="Free converters for the most searched length, weight, volume, temperature, time, data and currency conversions." locale="en" path="/convert" pageType="conversions_hub" englishOnly>
+<main class="wrap">
+  <section class="first"><h1>All conversions</h1><p class="lede">The conversions people look up most, each with a formula and a chart.</p></section>
+  {Object.keys(groups).map((t) => <section class="tight"><h2>{name(t)}</h2><div class="rel">{groups[t].map((c) => <a href={`/convert/${c.slug}`}>{c.name}</a>)}</div></section>)}
+</main>
+</Layout>

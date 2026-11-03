@@ -1,0 +1,219 @@
+{
+  "meta": {
+    "siteName": "ConvCalc",
+    "homeTitle": "ConvCalc: a beautiful free calculator app for iPhone, with no ads",
+    "homeDescription": "A free scientific calculator for iPhone with history, a currency converter, unit converters and everyday calculators. No ads. Try it right here."
+  },
+  "nav": { "tools": "Tools", "compare": "Compare", "features": "Features", "download": "Download" },
+  "cta": {
+    "download": "Download free on the App Store",
+    "try": "The keys on this page work. Try them.",
+    "bottomTitle": "Free. No ads. On your iPhone in ten seconds."
+  },
+  "footer": {
+    "tagline": "A free calculator and converter for iPhone.",
+    "tools": "Tools",
+    "features": "Features",
+    "compare": "Compare",
+    "more": "More",
+    "conversions": "All conversions",
+    "privacy": "Privacy",
+    "support": "Support",
+    "source": "Source code",
+    "language": "Language"
+  },
+  "home": {
+    "h1": "Calculators on iOS look terrible. This one doesn't.",
+    "lede": "ConvCalc is a free scientific calculator with 20 built-in tools for units, currency and everyday math. Native to iPhone, with no ads anywhere.",
+    "toolsTitle": "One app instead of a folder of them",
+    "toolsLede": "Tap any tool to open it on the phone. The tools and the math are the same as in the app.",
+    "shots": {
+      "scientific": { "title": "Scientific keys", "text": "Tap the corner key to open trig, logs, powers, factorials and constants. Tap again to put them away." },
+      "history": { "title": "History", "text": "Every result is saved. Tap one to bring it back into your calculation." },
+      "currency": { "title": "Currency", "text": "Type an amount and watch the other currencies follow." },
+      "loan": { "title": "Loan", "text": "Enter the amount, rate and years. See the monthly payment and total interest." }
+    }
+  },
+  "demo": {
+    "tabs": { "calculator": "Calculator", "currency": "Currency", "all": "All tools" },
+    "historyEmpty": "Your calculations will show up here.",
+    "rateNote": "Rates from {date}",
+    "labels": {
+      "year": "Year", "month": "Month", "day": "Day", "age": "Age",
+      "height": "Height (cm)", "weight": "Weight (kg)", "bmi": "BMI",
+      "underweight": "Underweight", "normal": "Normal", "overweight": "Overweight", "obese": "Obese",
+      "year1": "Start year", "month1": "Start month", "day1": "Start day", "year2": "End year", "month2": "End month", "day2": "End day",
+      "difference": "Difference", "yearsUnit": "years", "monthsUnit": "months", "weeksUnit": "weeks", "daysUnit": "days",
+      "price": "Price", "percent": "Discount (%)", "savings": "You save", "finalPrice": "Final price",
+      "principal": "Loan amount", "rate": "Annual rate (%)", "years": "Years", "monthly": "Monthly payment", "totalPaid": "Total paid", "totalInterest": "Total interest"
+    },
+    "currencies": { "USD": "US Dollar", "EUR": "Euro", "GBP": "British Pound", "JPY": "Japanese Yen" },
+    "units": {
+      "Millimeter": "Millimeter", "Centimeter": "Centimeter", "Meter": "Meter", "Kilometer": "Kilometer", "Inch": "Inch", "Foot": "Foot", "Yard": "Yard", "Mile": "Mile",
+      "Square Meter": "Square Meter", "Square Foot": "Square Foot", "Square Kilometer": "Square Kilometer", "Square Mile": "Square Mile", "Acre": "Acre", "Hectare": "Hectare",
+      "Milligram": "Milligram", "Gram": "Gram", "Kilogram": "Kilogram", "Dram": "Dram", "Ounce": "Ounce", "Pound": "Pound", "Stone": "Stone", "Slug": "Slug", "Short Ton": "Short Ton", "Long Ton": "Long Ton", "Metric Ton": "Metric Ton",
+      "Milliliter": "Milliliter", "Liter": "Liter", "Gallon": "Gallon", "Quart": "Quart", "Pint": "Pint", "Cup": "Cup", "Fluid Ounce": "Fluid Ounce",
+      "Meter per Second": "Meter per Second", "Kilometer per Hour": "Kilometer per Hour", "Mile per Hour": "Mile per Hour", "Knot": "Knot",
+      "Pascal": "Pascal", "Kilopascal": "Kilopascal", "Bar": "Bar", "Atmosphere": "Atmosphere", "Pound per Sq Inch": "Pound per Sq Inch", "Inch of Mercury": "Inch of Mercury", "Torr": "Torr",
+      "Watt": "Watt", "Kilowatt": "Kilowatt", "Horsepower": "Horsepower", "BTU per Minute": "BTU per Minute",
+      "Celsius": "Celsius", "Fahrenheit": "Fahrenheit", "Kelvin": "Kelvin",
+      "Radian": "Radian", "Milliradian": "Milliradian", "Microradian": "Microradian", "Degree": "Degree", "Arcminute": "Arcminute", "Arcsecond": "Arcsecond", "Milliarcsecond": "Milliarcsecond", "Microarcsecond": "Microarcsecond",
+      "Joule": "Joule", "Kilojoule": "Kilojoule", "Calorie": "Calorie", "Kilocalorie": "Kilocalorie", "British Thermal Unit": "British Thermal Unit", "Kilowatt-Hour": "Kilowatt-Hour", "Erg": "Erg", "Foot-Pound": "Foot-Pound", "Newton-Meter": "Newton-Meter",
+      "Newton": "Newton", "Kilogram-Force": "Kilogram-Force", "Pound-Force": "Pound-Force", "Poundal": "Poundal", "Dyne": "Dyne",
+      "Kilometer per Liter": "Kilometer per Liter", "Mile per Gallon": "Mile per Gallon", "Liter per 100km": "Liter per 100km", "Gallon per 100mi": "Gallon per 100mi",
+      "Millisecond": "Millisecond", "Second": "Second", "Minute": "Minute", "Hour": "Hour", "Day": "Day", "Week": "Week", "Year": "Year",
+      "Byte": "Byte", "Kilobyte": "Kilobyte", "Megabyte": "Megabyte", "Gigabyte": "Gigabyte", "Terabyte": "Terabyte", "Petabyte": "Petabyte"
+    }
+  },
+  "toolsHub": {
+    "title": "Unit converter and free calculators, on the web and on iPhone",
+    "description": "Free converters for currency, length, mass, volume, temperature and more, plus age, BMI, date, discount and loan calculators.",
+    "h1": "Unit converter and calculators",
+    "lede": "Try any of them here, then keep them all on your iPhone with the free app."
+  },
+  "toolPage": {
+    "tryLabel": "Try it on the phone",
+    "how": "How it works",
+    "inApp": "Keep it on your iPhone",
+    "inAppText": "This tool is one of 20 in ConvCalc, alongside a scientific calculator with history. The app is free and has no ads.",
+    "more": "More tools",
+    "popular": "Popular conversions"
+  },
+  "tools": {
+    "currency": { "label": "Currency", "title": "Currency converter: free exchange rate calculator", "description": "Convert US dollars, euros, pounds, yen and other currencies at a recent exchange rate, for free. Also available in the ConvCalc iPhone app.", "h1": "Currency converter", "intro": "Type an amount in one currency and see it in the others at once.", "how": "Tap a currency to make it the one you're typing in. The rates on this page are refreshed daily and are for reference only, because banks and card issuers usually add a margin. The ConvCalc app lets you choose your own list of currencies." },
+    "length": { "label": "Length", "title": "Length converter: mm, cm, meters, km, inches, feet, yards, miles", "description": "Convert between millimeters, centimeters, meters, kilometers, inches, feet, yards and miles. See every unit at once, for free.", "h1": "Length converter", "intro": "See millimeters, centimeters, meters, kilometers, inches, feet, yards and miles together as you type.", "how": "Tap a unit, then type your value. Every other unit updates immediately, so you don't need to choose a target unit first. It works for anything from a screw size to a road trip." },
+    "area": { "label": "Area", "title": "Area converter: square meters, square feet, acres, hectares", "description": "Convert between square meters, square feet, square kilometers, square miles, acres and hectares, for free.", "h1": "Area converter", "intro": "Convert square meters, square feet, square kilometers, square miles, acres and hectares in one place.", "how": "Tap a unit and type your value to see the others. It's useful for comparing apartment listings, land plots and floor plans that use different units." },
+    "mass": { "label": "Mass", "title": "Weight and mass converter: kg, lbs, ounces, grams, stone, tons", "description": "Convert between kilograms, pounds, ounces, grams, stone, tons and more. See every unit at once, for free.", "h1": "Weight and mass converter", "intro": "Convert milligrams, grams, kilograms, ounces, pounds, stone and tons, along with less common units such as drams and slugs.", "how": "Tap a unit and type your value to see all the others. It covers kitchen scales, body weight, luggage limits and freight. The tons are listed separately as short, long and metric, because they aren't the same." },
+    "volume": { "label": "Volume", "title": "Volume converter: liters, gallons, cups, quarts, pints, ml", "description": "Convert between milliliters, liters, US gallons, quarts, pints, cups and fluid ounces, for free.", "h1": "Volume converter", "intro": "Convert milliliters, liters, gallons, quarts, pints, cups and fluid ounces as you type.", "how": "Tap a unit and type your value. The gallon, quart, pint, cup and fluid ounce are US measures, so results for British recipes will be different." },
+    "speed": { "label": "Speed", "title": "Speed converter: km/h, mph, knots, m/s", "description": "Convert between kilometers per hour, miles per hour, knots and meters per second, for free.", "h1": "Speed converter", "intro": "Switch between kilometers per hour, miles per hour, knots and meters per second.", "how": "Tap a unit and type your value to see the others. It's handy for road signs abroad, wind forecasts and sailing or flying." },
+    "pressure": { "label": "Pressure", "title": "Pressure converter: PSI, bar, kPa, atm, inHg, torr", "description": "Convert between pascals, kilopascals, bar, atmospheres, PSI, inches of mercury and torr, for free.", "h1": "Pressure converter", "intro": "Convert pascals, kilopascals, bar, atmospheres, PSI, inches of mercury and torr.", "how": "Tap a unit and type your value to see the others. It's useful for tire pressure, weather readings and workshop gauges." },
+    "power": { "label": "Power", "title": "Power converter: watts, kilowatts, horsepower, BTU per minute", "description": "Convert between watts, kilowatts, horsepower and BTU per minute, for free.", "h1": "Power converter", "intro": "Convert watts, kilowatts, horsepower and BTU per minute.", "how": "Tap a unit and type your value to see the others. It's useful for comparing engines, motors and heating or cooling equipment." },
+    "temperature": { "label": "Temp", "title": "Temperature converter: temp conversion for °C, °F and K", "description": "Convert between Celsius, Fahrenheit and Kelvin instantly, for free.", "h1": "Temperature converter", "intro": "Convert Celsius, Fahrenheit and Kelvin as you type.", "how": "Tap a scale and type your value to see the others. Use it for weather, oven settings and lab work." },
+    "angle": { "label": "Angle", "title": "Angle converter: degrees, radians, arcminutes, arcseconds", "description": "Convert between degrees, radians, arcminutes, arcseconds and smaller angle units, for free.", "h1": "Angle converter", "intro": "Convert degrees, radians, milliradians, arcminutes, arcseconds and smaller units.", "how": "Tap a unit and type your value to see the others. It's useful for trigonometry homework, optics and astronomy." },
+    "energy": { "label": "Energy", "title": "Energy converter: joules, calories, kWh, BTU", "description": "Convert between joules, kilojoules, calories, kilocalories, BTU, kilowatt-hours and more, for free.", "h1": "Energy converter", "intro": "Convert joules, kilojoules, calories, kilocalories, BTU, kilowatt-hours, ergs and foot-pounds.", "how": "Tap a unit and type your value to see the others. It's useful for food labels, electricity bills and physics problems." },
+    "force": { "label": "Force", "title": "Force converter: newtons, kilogram-force, pound-force", "description": "Convert between newtons, kilogram-force, pound-force, poundals and dynes, for free.", "h1": "Force converter", "intro": "Convert newtons, kilogram-force, pound-force, poundals and dynes.", "how": "Tap a unit and type your value to see the others. It's useful for engineering specifications and physics problems." },
+    "fuel": { "label": "Fuel", "title": "Fuel economy converter: mpg, L/100km, km/L", "description": "Convert fuel economy between miles per gallon, liters per 100 km, kilometers per liter and gallons per 100 miles, for free.", "h1": "Fuel economy converter", "intro": "Convert miles per gallon, liters per 100 km, kilometers per liter and gallons per 100 miles.", "how": "Tap a unit and type your value to see the others. For liters per 100 km and gallons per 100 miles, a lower number means better economy. The gallon here is the US gallon." },
+    "time": { "label": "Time", "title": "Time converter: seconds, minutes, hours, days, weeks, years", "description": "Convert between milliseconds, seconds, minutes, hours, days, weeks and years, for free.", "h1": "Time converter", "intro": "Convert milliseconds, seconds, minutes, hours, days, weeks and years.", "how": "Tap a unit and type your value to see the others. A year is counted as the average 365.25 days." },
+    "data": { "label": "Data", "title": "Data size converter: bytes, KB, MB, GB, TB, PB", "description": "Convert between bytes, kilobytes, megabytes, gigabytes, terabytes and petabytes, for free.", "h1": "Data size converter", "intro": "Convert bytes, kilobytes, megabytes, gigabytes, terabytes and petabytes.", "how": "Tap a unit and type your value to see the others. Each step is 1,024 of the one below it, which is the way operating systems often count file sizes. Storage makers often use 1,000 instead." },
+    "age": { "label": "Age", "title": "Age calculator: find your exact age from your date of birth", "description": "Calculate your age from a date of birth, in exact years, months and days. Free, with no sign-up.", "h1": "Age calculator", "intro": "Enter a date of birth and see the exact age in years, months and days.", "how": "Tap year, month or day and type the value. The result uses today's date on your device." },
+    "bmi": { "label": "BMI", "title": "BMI calculator: body mass index from height and weight", "description": "Enter your height in centimeters and weight in kilograms to see your body mass index and its standard category. Free.", "h1": "BMI calculator", "intro": "Enter your height and weight to see your body mass index and its standard category.", "how": "BMI is your weight in kilograms divided by your height in meters, squared. The categories are underweight below 18.5, normal up to 25, overweight up to 30 and obese above that. BMI is a rough screening measure and doesn't replace medical advice." },
+    "date": { "label": "Date", "title": "Date calculator: days between two dates", "description": "A days calculator and day counter: find the days, weeks, months and years between dates. Free, with no sign-up.", "h1": "Date calculator", "intro": "Enter two dates to see the days between dates, plus the difference in weeks, months and years.", "how": "Tap a field and type the value. Months and years in the result are averages, 30.4375 and 365.25 days long, so they appear as decimals." },
+    "discount": { "label": "Discount", "title": "Discount calculator: percent off and sale price", "description": "Enter a price and a percentage to see how much you save and what you'll pay. Free percent off calculator.", "h1": "Discount calculator", "intro": "Enter a price and a percentage to see how much you save and the final price.", "how": "The saving is the price multiplied by the percentage, divided by 100. Subtract the saving from the price to get what you'll pay. Sales tax isn't included." },
+    "loan": { "label": "Loan", "title": "Loan calculator: monthly payment and total interest", "description": "Enter a loan amount, annual interest rate and term to see the monthly payment, total paid and total interest. Free.", "h1": "Loan calculator", "intro": "Enter the amount, annual rate and number of years to see the monthly payment, total paid and total interest.", "how": "It assumes a fixed rate and equal monthly payments, without fees or insurance. Treat the result as an estimate and check the final terms with your lender." }
+  },
+  "features": {
+    "scientific-calculator": {
+      "label": "Scientific calculator",
+      "title": "Free scientific calculator app for iPhone",
+      "description": "A free scientific calculator for iPhone with trig, inverse and hyperbolic functions, logs, powers, factorials and constants. No ads.",
+      "h1": "A scientific calculator that doesn't look like one",
+      "intro": "Most of the time you just need to add things up, so ConvCalc starts simple. One tap on the corner key opens the full scientific keypad.",
+      "sections": [
+        { "title": "All the functions you'd expect", "text": "Sine, cosine and tangent, with inverse and hyperbolic versions. Natural and base 10 logs, powers, square roots, factorials, reciprocals, pi, e and a random number key." },
+        { "title": "Degrees or radians", "text": "Switch angle mode with one key. The display shows the whole expression and a live result, so you can catch a mistake before pressing equals." },
+        { "title": "Fix it without starting over", "text": "Delete the last thing you typed, or go back to a previous calculation in your history and carry on from there." }
+      ],
+      "shot": "calculatorExpanded"
+    },
+    "calculator-with-history": {
+      "label": "Calculator with history",
+      "title": "Calculator app with history for iPhone",
+      "description": "A free iPhone calculator that saves every calculation. Open your history, tap a past result and keep going. No ads.",
+      "h1": "A calculator that remembers",
+      "intro": "ConvCalc saves each calculation you finish, so that number from ten minutes ago is still there when you need it.",
+      "sections": [
+        { "title": "Your past calculations, one tap away", "text": "Tap the clock in the top corner to see each expression and its result." },
+        { "title": "Reuse any result", "text": "Tap a past calculation to bring it back and keep calculating from it." },
+        { "title": "Clear it when you like", "text": "History is stored on your iPhone, and you can clear it at any time." }
+      ],
+      "shot": "history"
+    },
+    "calculator-no-ads": {
+      "label": "Calculator with no ads",
+      "title": "Free calculator app with no ads for iPhone",
+      "description": "ConvCalc is a free iPhone calculator and converter with no ads, no banners and no pop-ups. Scientific keys, history and 20 tools included.",
+      "h1": "A free calculator with no ads",
+      "intro": "A calculator is something you open for ten seconds. Those ten seconds shouldn't include a banner or a pop-up.",
+      "sections": [
+        { "title": "Nothing between you and the answer", "text": "ConvCalc has no ads of any kind, and the app contains no advertising code." },
+        { "title": "Everything is free today", "text": "The scientific keypad, history, currency, converters and calculators are all included at no cost." },
+        { "title": "Open source", "text": "The app's code is public on GitHub, so you can read it yourself." }
+      ],
+      "shot": "calculatorInput"
+    }
+  },
+  "featurePage": { "tryTitle": "Try it right here" },
+  "compareHub": {
+    "title": "Compare iPhone calculator apps",
+    "description": "How ConvCalc compares with other calculator apps for iPhone, using dated App Store prices and ratings.",
+    "h1": "Compare calculator apps",
+    "lede": "We make ConvCalc, so read these with that in mind. Prices and ratings come from the App Store and are dated, and our opinions are labeled as opinions."
+  },
+  "comparePage": {
+    "disclosure": "We make ConvCalc, so weigh our pick accordingly.",
+    "tableTitle": "How they compare",
+    "app": "App", "price": "Price", "rating": "Rating", "take": "Our take",
+    "builtIn": "Built in", "notListed": "Not listed",
+    "dataNote": "Download prices and US App Store ratings as of {date}. In-app purchases aren't shown, so check each listing for what's included.",
+    "whyTitle": "Why we pick ConvCalc",
+    "whyText": "This part is our opinion: most calculators are either plain or crowded. ConvCalc puts everything behind clean, tactile keys, with a scientific keypad that opens with one tap, a history you can reuse, and 20 tools for units, currency and everyday math. It's also young, with only a handful of App Store ratings so far, so it hasn't earned the track record of some apps on this list."
+  },
+  "compare": {
+    "best-calculator-app-iphone": {
+      "label": "Best calculator apps for iPhone",
+      "title": "The best calculator apps for iPhone in 2027",
+      "description": "The best calculator apps for iPhone in 2027 compared: ConvCalc, Apple Calculator, PCalc, Calcbot, Calculator₊ and Tydlig, with prices and ratings.",
+      "h1": "The best calculator apps for iPhone in 2027",
+      "intro": "We looked for a calculator that's pleasant to use every day. Our pick is ConvCalc, and we should say up front that we built it."
+    },
+    "best-free-calculator-app-iphone": {
+      "label": "Best free calculator apps",
+      "title": "The best free calculator apps for iPhone in 2027",
+      "description": "The best free calculator apps for iPhone compared: ConvCalc, Apple Calculator, Calcbot, Calculator with History, Calculator₊ and PCalc Lite.",
+      "h1": "The best free calculator apps for iPhone in 2027",
+      "intro": "You don't have to pay for a good iPhone calculator. These are all free to download, and our pick is the one we built: ConvCalc."
+    },
+    "best-scientific-calculator-app-iphone": {
+      "label": "Best scientific calculator apps",
+      "title": "The best scientific calculator apps for iPhone in 2027",
+      "description": "The best scientific calculator apps for iPhone compared: ConvCalc, PCalc, Desmos, Calcbot and Apple Calculator.",
+      "h1": "The best scientific calculator apps for iPhone in 2027",
+      "intro": "If you need trig and logs on your phone, these are the options we'd look at. We built ConvCalc, and PCalc is the one to get for programming and RPN."
+    },
+    "convcalc-vs-apple-calculator": {
+      "label": "ConvCalc vs Apple Calculator",
+      "title": "ConvCalc vs Apple Calculator: which should you use on iPhone?",
+      "description": "An honest comparison of ConvCalc and the Calculator app built into iOS, from the people who make ConvCalc.",
+      "h1": "ConvCalc vs Apple Calculator",
+      "intro": "Apple's Calculator has improved a lot, and it's already on your phone. Here's when ConvCalc is worth adding."
+    }
+  },
+  "takes": {
+    "convcalc": "Our pick for design. Scientific keys, reusable history, currency and 19 more tools, with no ads.",
+    "apple": "Comes with iOS. Since iOS 18 it includes a history, unit conversion and Math Notes, so it's a good place to start.",
+    "pcalc": "The power user's choice. Its listing includes optional RPN, a paper tape, multiple button layouts, hex, octal and binary, and an Apple Watch app.",
+    "pcalclite": "A free version of PCalc with optional RPN, undo and redo, and unit conversions. The listing reserves the paper tape and some themes for the full app.",
+    "calcbot": "A long-running calculator from Tapbots. Its listing includes a history tape, an expression view, scientific functions, and unit and currency conversion.",
+    "calculatorplus": "The most rated app here. Its listing covers scientific, history, unit and currency tools, and advertises a premium tier that's free of full-screen ads.",
+    "tydlig": "A different idea: a freeform canvas with linked numbers and live results, plus graphing. Its last App Store update was in 2017.",
+    "calchistory": "A simple option whose listing promises no ads, with history, optional scientific functions and customizable keyboard colors and sounds.",
+    "desmos": "A free, focused scientific calculator from Desmos, with trigonometry, statistics, combinatorics and your own functions.",
+    "convcalcSci": "Our pick for everyday scientific use. Trig, inverse and hyperbolic functions, logs and factorials behind a keypad you can hide, with no ads.",
+    "appleSci": "Built into iOS, with a scientific mode and history. Worth trying before you download anything."
+  },
+  "versus": {
+    "feature": "Feature",
+    "rows": [
+      ["Price", "Free", "Built into iOS"],
+      ["Scientific functions", "Yes", "Yes"],
+      ["History", "Yes", "Yes, since iOS 18"],
+      ["Unit conversion", "14 categories, every unit shown at once", "Yes, since iOS 18"],
+      ["Currency conversion", "Yes", "Yes, since iOS 18"],
+      ["Age, BMI, date, discount and loan calculators", "Yes", "No dedicated tools"],
+      ["Handwritten and typed math notes", "No", "Yes, with Math Notes"],
+      ["Works on iPad", "No, iPhone only", "Yes, since iPadOS 18"]
+    ],
+    "verdictTitle": "Which should you use?",
+    "verdict": "If you want math notes or use an iPad, stay with Apple's app. If you want everyday tools like loan, age and date calculators in one place, or you prefer how ConvCalc looks, it's worth the free download. Plenty of people could keep both."
+  }
+}
