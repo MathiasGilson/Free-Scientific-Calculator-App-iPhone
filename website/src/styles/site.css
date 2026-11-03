@@ -79,6 +79,9 @@ figcaption{margin-top:20px;color:#a7a7a7;line-height:1.45;font-size:15.5px}figca
 @media (max-width:860px){
   .K .top nav{display:none}
   .K .wrap>.two,.K .two,.split,.tools{grid-template-columns:1fr}
+  /* The display has to sit on top of the keys, so the pitch moves above both. */
+  .hero{min-height:0}.split{display:contents}.pitch{order:-1;padding:12px 0 8px}
+  .bigdisp{flex:none;min-height:clamp(96px,14svh,130px);width:100%;max-width:430px;margin-inline:auto;padding-bottom:12px}
   .herokeys{max-width:430px;width:100%;margin:auto}
   .bigtiles{grid-template-columns:repeat(4,minmax(0,1fr))}
   .shots{grid-template-columns:repeat(2,1fr)}
