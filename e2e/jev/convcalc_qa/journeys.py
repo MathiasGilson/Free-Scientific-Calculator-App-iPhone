@@ -123,7 +123,7 @@ CALCULATOR = [
     Journey("calc-parentheses", "Calculate (2+3) times 4: press Parentheses, 2, Plus, 3, Parentheses, Multiply, 4, Equals.", ["The result 20 is shown"], [r"(?m)^20$"]),
     Journey("calc-decimal", "Press 1, the decimal point, 5, Plus, 2, the decimal point, 2, 5, then Equals.", ["The result 3.75 is shown"], [r"(?m)^3\.75$"]),
     Journey("calc-percent-of-left-operand", script=keys("1", "0", "0", "Plus", "1", "0", "%", "Equals"), expect=[r"(?m)^110$"]),
-    Journey("calc-divide-by-zero", "Press 5, Divide, 0, Equals. The app should say the input is invalid.", ["The display says Invalid input"], ["Invalid input"], expects_error=True),
+    Journey("calc-divide-by-zero", script=keys("5", "Divide", "0", "Equals"), expect=["Invalid input"]),
     Journey("calc-recovers-after-error", script=recovers_after_error_script, expect=[r"(?m)^7$"], forbid=[r"Invalid input"]),
     Journey("calc-backspace", "Press 1, 2, 3, then Delete once.", ["The expression on the display is 12"], [r"(?m)^12$"], [r"(?m)^123$"]),
     Journey("calc-all-clear", script=keys("4", "5", "Plus", "6", "All clear"), expect=[r"(?m)^0$"], forbid=[r"(?m)^45$"]),
@@ -152,7 +152,7 @@ SCIENTIFIC = [
     Journey("sci-euler", "Press Expand keypad, Natural logarithm, e, Parentheses, Equals.", ["The result 1 is shown"], [r"(?m)^1$"]),
     Journey("sci-log10", "Press Expand keypad, Logarithm base 10, 1, 0, 0, Parentheses, Equals.", ["The result 2 is shown"], [r"(?m)^2$"]),
     Journey("sci-rand", "Press Expand keypad, then Rand.", [], [r"(?m)^0\.\d{5}$"]),
-    Journey("sci-huge-result-scientific", "Press Expand keypad, 1, 0, Power, 2, 0, Equals.", ["A result in scientific notation is shown"], [r"(?m)^1E20$"]),
+    Journey("sci-huge-result-scientific", script=keys("Expand keypad", "1", "0", "Power", "2", "0", "Equals"), expect=[r"(?m)^1E20$"]),
 ]
 
 HISTORY = [
@@ -235,6 +235,7 @@ def pin_length_script(device):
     device.swipe(200, 830, 210, 835, duration=0.05)
     device.tap(200, 800)  # empty background exits rearranging
     assert not any(e["value"] == "Not pinned" for e in device.settled()), "Still rearranging"
+    device.find("Loan", exact=True)  # still on the grid, not the pinned tool's page
 
 
 def pinned_page_script(device):

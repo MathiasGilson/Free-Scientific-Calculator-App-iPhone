@@ -348,7 +348,8 @@ struct RootView: View {
     @EnvironmentObject private var historyStore: CalculationHistoryStore
     @EnvironmentObject private var appState: ConvCalcAppState
     @StateObject private var calculatorModel = CalculatorViewModel()
-    @State private var pageIndex = 0
+    // Selected by key: pinning shifts every page's index, which must not move the user.
+    @State private var selectedPage = "_calculator"
     @State private var historyVisible = false
     @State private var toolbarVisibleDuringSwipe = false
     @State private var toolbarHideToken = 0
@@ -370,14 +371,14 @@ struct RootView: View {
         ZStack(alignment: .top) {
             AppColor.background.ignoresSafeArea()
 
-            TabView(selection: $pageIndex) {
-                ForEach(Array(appState.screenOrder.enumerated()), id: \.element) { offset, key in
+            TabView(selection: $selectedPage) {
+                ForEach(appState.screenOrder, id: \.self) { key in
                     pagerScreen(for: key)
-                        .tag(offset)
+                        .tag(key)
                 }
 
                 ConverterGridScreen(onOpenTool: openGridTool)
-                    .tag(appState.screenOrder.count)
+                    .tag(Self.converterPage)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .ignoresSafeArea(edges: .bottom)
@@ -393,23 +394,19 @@ struct RootView: View {
                         hideToolbarAfterPagingDelay()
                     }
             )
-            .onChange(of: pageIndex) { _ in
-                if pageIndex != converterPageIndex, !appState.isRearrangingTools {
+            .onChange(of: selectedPage) { _ in
+                if selectedPage != Self.converterPage, !appState.isRearrangingTools {
                     appState.draggedToolKey = nil
                     activeGridTool = nil
-                } else if pageIndex != converterPageIndex {
+                } else if selectedPage != Self.converterPage {
                     appState.draggedToolKey = nil
                     appState.endRearrangingTools()
                 }
                 showToolbarBriefly()
             }
-            // The grid is the last tab, so its index == screenOrder.count.
-            // Pinning/unpinning while editing mutates screenOrder and shifts
-            // that index; without re-syncing, the selection would land on the
-            // newly pinned tool's page. Keep the user on the grid while editing.
-            .onChange(of: appState.screenOrder) { _ in
-                if appState.isRearrangingTools {
-                    pageIndex = converterPageIndex
+            .onChange(of: appState.screenOrder) { order in
+                if selectedPage != Self.converterPage, !order.contains(selectedPage) {
+                    selectedPage = Self.converterPage
                 }
             }
 
@@ -426,20 +423,23 @@ struct RootView: View {
                     .zIndex(20)
             }
         }
-        .onAppear {
-            pageIndex = appState.screenOrder.firstIndex(of: "_calculator") ?? 0
-        }
         .sheet(isPresented: $historyVisible) {
             HistorySheet(
                 onSelect: { expression in
                     calculatorModel.setExpression(expression)
                     historyVisible = false
-                    pageIndex = appState.screenOrder.firstIndex(of: "_calculator") ?? 0
+                    selectedPage = "_calculator"
                 },
                 onClose: { historyVisible = false }
             )
             .environmentObject(historyStore)
         }
+    }
+
+    private static let converterPage = "_converter"
+
+    private var pageIndex: Int {
+        appState.screenOrder.firstIndex(of: selectedPage) ?? converterPageIndex
     }
 
     private var converterPageIndex: Int {
@@ -1657,8 +1657,7 @@ struct ConverterGridScreen: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {
-            // Pinning retags this page, which makes the TabView rebuild it, so appearing
-            // says nothing about rearranging. RootView ends it when the user pages away.
+            // RootView ends rearranging when the user pages away.
             if initialRearranging {
                 appState.isRearrangingTools = true
             }

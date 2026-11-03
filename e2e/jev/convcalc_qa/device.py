@@ -135,7 +135,16 @@ class Simulator:
     def press_keys(self, text):
         keys = {e["label"]: e for e in self.settled() if e["button"] and not e["chunk"]}
         for character in text:
-            label = {".": "Decimal point" if "Decimal point" in keys else "."}.get(character, character)
+            label = {
+                ".": "Decimal point" if "Decimal point" in keys else ".",
+                "+": "Plus",
+                "-": "Minus",
+                "*": "Multiply",
+                "/": "Divide",
+                "=": "Equals",
+                "(": "Parentheses",
+                ")": "Parentheses",
+            }.get(character, character)
             if label not in keys:
                 raise AssertionError(f"Jev asked for key {character!r} in {text!r}, which is not on this keypad")
             self.tap(keys[label]["x"], keys[label]["y"])
