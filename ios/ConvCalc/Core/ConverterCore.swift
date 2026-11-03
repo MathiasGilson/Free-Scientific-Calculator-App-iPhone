@@ -343,7 +343,7 @@ extension ConverterTool {
             unit("inHg", "Inch of Mercury", factor: 3_386.389),
             unit("Torr", "Torr", factor: 133.3223684211)
         ], fields: []),
-        ConverterTool(key: "power", label: "Power", symbolName: "bolt", kind: .unit, units: [
+        ConverterTool(key: "power", label: "Power", symbolName: "zap", kind: .unit, units: [
             unit("W", "Watt", factor: 1),
             unit("kW", "Kilowatt", factor: 1_000),
             unit("hp", "Horsepower", factor: 745.69987158),

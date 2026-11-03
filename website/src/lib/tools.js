@@ -18,7 +18,7 @@ export const TOOLS = {
 };
 export const GRID = [
   ["currency","Currency","dollar-sign"],["length","Length","ruler"],["area","Area","grid-2x2"],["mass","Mass","scale"],
-  ["volume","Volume","test-tubes"],["speed","Speed","gauge"],["pressure","Pressure","arrow-down-to-line"],["power","Power","nut"],
+  ["volume","Volume","test-tubes"],["speed","Speed","gauge"],["pressure","Pressure","arrow-down-to-line"],["power","Power","zap"],
   ["temperature","Temp","thermometer"],["angle","Angle","triangle"],["energy","Energy","flame"],["force","Force","arrow-down-up"],
   ["fuel","Fuel","fuel"],["time","Time","clock"],["data","Data","hard-drive"],["age","Age","cake"],
   ["bmi","BMI","heart"],["date","Date","calendar"],["discount","Discount","tag"],["loan","Loan","landmark"],
