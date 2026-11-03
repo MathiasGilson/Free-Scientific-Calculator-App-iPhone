@@ -381,6 +381,7 @@ struct RootView: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .ignoresSafeArea(edges: .bottom)
+            .accessibilityHidden(activeGridTool != nil)
             .simultaneousGesture(
                 DragGesture(minimumDistance: 12)
                     .onChanged { value in
@@ -725,12 +726,21 @@ struct PinnedTabBar: View {
         )
         .frame(width: Self.iconWidth, height: Self.barHeight)
         .contentShape(Rectangle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityName(for: key))
+        .accessibilityValue(index == pageIndex ? "Selected" : "")
     }
 
     private func symbolName(for key: String) -> String {
         if key == "_calculator" { return "calculator" }
         if key == "_converter" { return "grid3X3" }
         return ConverterTool.all.first(where: { $0.key == key })?.symbolName ?? "bookmark"
+    }
+
+    private func accessibilityName(for key: String) -> String {
+        if key == "_calculator" { return "Calculator tab" }
+        if key == "_converter" { return "All tools tab" }
+        return "\(ConverterTool.all.first(where: { $0.key == key })?.label ?? key) tab"
     }
 
     private func canDrag(_ key: String) -> Bool {
@@ -1283,6 +1293,9 @@ struct CalculatorScreen: View {
                                     .background(model.selectedChunkIndex == index ? Color(red: 0.16, green: 0.31, blue: 0.78).opacity(0.55) : Color.clear)
                                     .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                                     .onTapGesture { model.selectChunk(index) }
+                                    .accessibilityAddTraits(.isButton)
+                                    .accessibilityValue(model.selectedChunkIndex == index ? "Selected" : "")
+                                    .accessibilityIdentifier("expressionChunk")
                                     .contextMenu {
                                         Button("Copy") { model.copyChunk(chunk) }
                                     }
@@ -1776,6 +1789,17 @@ private struct ReorderableConverterToolGrid: View {
             .zIndex(isActive ? 10 : 0)
             .position(positionPoint(for: index, isActive: isActive))
             .animation(isActive ? nil : .interactiveSpring(response: 0.24, dampingFraction: 0.82), value: tools.map(\.key))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(tool.label)
+            .accessibilityValue(appState.isRearrangingTools ? (appState.isToolPinned(tool.key) ? "Pinned" : "Not pinned") : "")
+            .accessibilityAddTraits(.isButton)
+            .accessibilityAction {
+                if appState.isRearrangingTools {
+                    handlePinTap(tool)
+                } else {
+                    onSelect(tool)
+                }
+            }
     }
 
     @ViewBuilder
@@ -2194,6 +2218,7 @@ struct UnitConverterScreen: View {
                                 .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
+                            .accessibilityValue(index == fromIndex ? "Active" : "")
                         }
                     }
                     .padding(.horizontal, 16)
@@ -2307,6 +2332,7 @@ struct UtilityCalculatorScreen: View {
                                 .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
+                            .accessibilityValue(activeField == field.key ? "Active" : "")
                         }
 
                         if let result = resultView {
@@ -2572,6 +2598,7 @@ struct CurrencyScreen: View {
                     .foregroundColor(.white)
                     .frame(width: 88, alignment: .leading)
             }
+            .accessibilityLabel("Change currency \(code)")
 
             Spacer(minLength: 8)
 
@@ -2592,6 +2619,7 @@ struct CurrencyScreen: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
             }
+            .accessibilityValue(isActive ? "Active" : "")
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 12)
@@ -2970,6 +2998,8 @@ struct HistorySheet: View {
                                 .appGlass(cornerRadius: 14, tint: Color.white.opacity(0.04), interactive: true, fallbackOpacity: 0.08)
                                 .padding(.horizontal, 20)
                                 .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                                .accessibilityElement(children: .combine)
+                                .accessibilityAddTraits(.isButton)
                                 .onTapGesture {
                                     guard copiedEntryID != entry.id else {
                                         copiedEntryID = nil

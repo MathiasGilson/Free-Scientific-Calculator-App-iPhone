@@ -1,0 +1,11 @@
+[project]
+name = "convcalc-qa"
+version = "0.1.0"
+description = "ConvCalc user-journey suite: Jev drives the iOS simulator through idb"
+requires-python = ">=3.12"
+dependencies = [
+  "jev-ultrafast @ git+https://github.com/browser-use/jev-ultrafast@1231850a0bf1a0c0341fe408ef1668dbbfdfac46",
+]
+
+[tool.uv]
+package = false
