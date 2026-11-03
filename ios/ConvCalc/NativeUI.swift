@@ -399,6 +399,7 @@ struct RootView: View {
                     activeGridTool = nil
                 } else if pageIndex != converterPageIndex {
                     appState.draggedToolKey = nil
+                    appState.endRearrangingTools()
                 }
                 showToolbarBriefly()
             }
@@ -1018,8 +1019,11 @@ final class CalculatorViewModel: ObservableObject {
 
     func pasteClipboard() {
         guard let string = UIPasteboard.general.string else { return }
+        let pasted = CalculatorNumberFormat.normalizedPaste(string)
+        // The clipboard can hold anything; only an expression belongs on the display.
+        guard (try? CalculatorEngine().evaluate(pasted)) != nil else { return }
         error = ""
-        reducer.replace(with: CalculatorNumberFormat.normalizedPaste(string))
+        reducer.replace(with: pasted)
         syncExpression()
     }
 
@@ -1653,10 +1657,11 @@ struct ConverterGridScreen: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .onAppear {
-            appState.isRearrangingTools = initialRearranging
-        }
-        .onDisappear {
-            exitRearrange()
+            // Pinning retags this page, which makes the TabView rebuild it, so appearing
+            // says nothing about rearranging. RootView ends it when the user pages away.
+            if initialRearranging {
+                appState.isRearrangingTools = true
+            }
         }
     }
 
@@ -1712,6 +1717,7 @@ private struct ReorderableConverterToolGrid: View {
     let onSetPinned: (String, Bool) -> Void
 
     @State private var activeToolKey: String?
+    @State private var heldToolKey: String?
     @GestureState private var pressedToolKey: String?
     @State private var dragLocation = CGPoint.zero
     @State private var fingerOffset = CGSize.zero
@@ -1765,7 +1771,7 @@ private struct ReorderableConverterToolGrid: View {
     @ViewBuilder
     private func toolInteraction(for tool: ConverterTool, at index: Int) -> some View {
         let isActive = activeToolKey == tool.key
-        let isPressed = pressedToolKey == tool.key
+        let isPressed = pressedToolKey == tool.key || heldToolKey == tool.key
         let card = ConverterToolCard(
             tool: tool,
             rearranging: appState.isRearrangingTools && !isActive,
@@ -1817,34 +1823,26 @@ private struct ReorderableConverterToolGrid: View {
                         }
                 )
         } else {
-            // ExclusiveGesture gives the long press precedence: a held press
-            // enters rearrange mode, while a quick press fails the long press
-            // and falls through to the tap, which opens the tool. Two separate
-            // tap/longPress modifiers don't disambiguate reliably — the tap wins
-            // even on a long hold.
-            card
-                .gesture(
-                    ExclusiveGesture(
-                        LongPressGesture(
-                            minimumDuration: Self.longPressDuration,
-                            maximumDistance: Self.longPressMaxDistance
-                        )
-                        .onEnded { _ in
-                            impact(.heavy)
-                            appState.beginRearrangingTools()
-                        },
-                        TapGesture()
-                            .onEnded {
-                                onSelect(tool)
-                            }
-                    )
+            // A Button, unlike a custom tap gesture, lets a swipe that starts on the card reach
+            // the pager. Rearrange mode replaces this Button, so a hold never also opens the tool.
+            Button {
+                onSelect(tool)
+            } label: {
+                card
+            }
+            .buttonStyle(PressReportingButtonStyle { pressing in
+                heldToolKey = pressing ? tool.key : nil
+            })
+            .simultaneousGesture(
+                LongPressGesture(
+                    minimumDuration: Self.longPressDuration,
+                    maximumDistance: Self.longPressMaxDistance
                 )
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 0)
-                        .updating($pressedToolKey) { _, state, _ in
-                            state = tool.key
-                        }
-                )
+                .onEnded { _ in
+                    impact(.heavy)
+                    appState.beginRearrangingTools()
+                }
+            )
         }
     }
 
@@ -1970,6 +1968,14 @@ private struct ReorderableConverterToolGrid: View {
         withAnimation(.interactiveSpring(response: 0.22, dampingFraction: 0.84)) {
             _ = appState.reorderToolbarTab(sourceKey, before: tabs[targetIndex])
         }
+    }
+}
+
+private struct PressReportingButtonStyle: ButtonStyle {
+    let onPressChanged: (Bool) -> Void
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label.onChange(of: configuration.isPressed, perform: onPressChanged)
     }
 }
 

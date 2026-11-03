@@ -57,35 +57,95 @@ def tool_order(device):
     return [e["label"] for e in sorted(tools, key=lambda e: (round(e["y"]), e["x"]))]
 
 
+def expand_collapse_script(device):
+    device.tap_label("Expand keypad", exact=True)
+    device.find("sin", exact=True)
+    device.tap_label("Collapse keypad", exact=True)
+
+
+def keys(*labels):
+    return lambda device: press(device, *labels)
+
+
+def recovers_after_error_script(device):
+    press(device, "5", "Divide", "0", "Equals")
+    device.find("Invalid input")
+    press(device, "All clear", "7")
+
+
+def edit_chunk_script(device):
+    press(device, "1", "2", "Plus", "3", "4")
+    device.tap_label("12", exact=True)
+    assert device.find("12", exact=True)["value"] == "Selected"
+    press(device, "9", "Equals")
+
+
+def hold_display(device, label):
+    element = next(e for e in device.settled() if e["label"] == label and (e["chunk"] or not e["button"]))
+    device.tap(element["x"], element["y"], duration=1.0)
+    time.sleep(0.5)
+
+
+def choose_paste(device):
+    hold_display(device, "0")
+    device.tap_label("Paste", exact=True)
+    time.sleep(1)
+    if any(e["label"] == "Allow Paste" for e in device.settled()):
+        device.tap_label("Allow Paste", exact=True)
+    time.sleep(0.5)
+
+
+def paste_script(device):
+    press(device, "1", "0", "0", "0")
+    hold_display(device, "1,000")
+    device.tap_label("Copy", exact=True)
+    time.sleep(0.5)
+    press(device, "All clear")
+    choose_paste(device)
+
+
+def temp_negative_script(device):
+    device.tap_label("Celsius")
+    press(device, "4", "0", "+/-")
+
+
+def loan_zero_script(device):
+    press(device, "1", "2", "0", "0")
+    device.tap_label("Rate")
+    press(device, "0")
+    device.tap_label("Duration")
+    press(device, "1")
+
+
 CALCULATOR = [
     Journey("calc-arithmetic", "On the calculator keypad press 1, 2, Plus, 3, 0, then Equals.", ["The expression 12 + 30 is on the display", "The result 42 is shown"], [r"(?m)^42$"]),
     Journey("calc-precedence", "Calculate 2 plus 3 times 4 by pressing 2, Plus, 3, Multiply, 4, Equals.", ["A live result of 14 is previewed", "The final result 14 is shown"], [r"(?m)^14$"]),
     Journey("calc-parentheses", "Calculate (2+3) times 4: press Parentheses, 2, Plus, 3, Parentheses, Multiply, 4, Equals.", ["The result 20 is shown"], [r"(?m)^20$"]),
     Journey("calc-decimal", "Press 1, the decimal point, 5, Plus, 2, the decimal point, 2, 5, then Equals.", ["The result 3.75 is shown"], [r"(?m)^3\.75$"]),
-    Journey("calc-percent-of-left-operand", "Press 1, 0, 0, Plus, 1, 0, %, then Equals.", ["The result 110 is shown"], [r"(?m)^110$"]),
+    Journey("calc-percent-of-left-operand", script=keys("1", "0", "0", "Plus", "1", "0", "%", "Equals"), expect=[r"(?m)^110$"]),
     Journey("calc-divide-by-zero", "Press 5, Divide, 0, Equals. The app should say the input is invalid.", ["The display says Invalid input"], ["Invalid input"], expects_error=True),
-    Journey("calc-recovers-after-error", "Press 5, Divide, 0, Equals, which shows Invalid input. Then press All clear, then 7.", ["The display says Invalid input", "The display shows 7 with no error"], [r"(?m)^7$"], [r"Invalid input"], expects_error=True),
+    Journey("calc-recovers-after-error", script=recovers_after_error_script, expect=[r"(?m)^7$"], forbid=[r"Invalid input"]),
     Journey("calc-backspace", "Press 1, 2, 3, then Delete once.", ["The expression on the display is 12"], [r"(?m)^12$"], [r"(?m)^123$"]),
-    Journey("calc-all-clear", "Press 4, 5, Plus, 6, then All clear.", ["The display is back to 0"], [r"(?m)^0$"], [r"(?m)^45$"]),
+    Journey("calc-all-clear", script=keys("4", "5", "Plus", "6", "All clear"), expect=[r"(?m)^0$"], forbid=[r"(?m)^45$"]),
     Journey("calc-continue-from-result", "Press 2, Plus, 3, Equals. Then press Multiply, 4, Equals.", ["A result of 5 is shown", "A result of 20 is shown"], [r"(?m)^20$"]),
     Journey("calc-repeat-equals", "Press 2, Plus, 3, Equals, then press Equals two more times.", ["The result 5 is shown"], [r"(?m)^5$"], verify=lambda d: None),
-    Journey("calc-empty-equals", "Press Equals on the empty calculator.", [], [r"(?m)^0$"], [r"Invalid input"]),
-    Journey("calc-edit-number-chunk", "Press 1, 2, Plus, 3, 4. Tap the number 12 on the display to select it, then press 9. Then press Equals.", ["The first number is selected", "The result 43 is shown"], [r"(?m)^43$"]),
+    Journey("calc-empty-equals", script=keys("Equals"), expect=[r"(?m)^0$"], forbid=[r"Invalid input"]),
+    Journey("calc-edit-number-chunk", script=edit_chunk_script, expect=[r"(?m)^43$"]),
     Journey("calc-replace-operator-chunk", "Press 6, Plus, 2. Tap the plus sign on the display to select it, then press Multiply. Then press Equals.", ["The result 12 is shown"], [r"(?m)^12$"]),
-    Journey("calc-paste", "Long-press the 0 on the display, choose Paste from the menu.", ["The display shows the pasted number"], [r"(?m)^1,000$"], before=lambda d: d.set_pasteboard("1,000"), gestures=True),
+    Journey("calc-paste", script=paste_script, expect=[r"(?m)^1,000$"]),
     Journey("calc-copy-chunk", "Press 4, 2. Long-press the 42 on the display, then choose Copy from the menu.", [], [r"(?m)^42$"], gestures=True, verify=lambda d: None if d.pasteboard().strip() == "42" else f"Pasteboard is {d.pasteboard()!r}"),
     Journey("locale-french-decimals", "Press 1, Divide, 4, Equals.", ["The result 0,25 is shown"], [r"(?m)^0,25$"], locale="fr-FR"),
 ]
 
 SCIENTIFIC = [
-    Journey("sci-expand-collapse", "Press Expand keypad. Check that sin and cos keys appear, then press Collapse keypad.", ["Scientific keys such as sin, cos and tan are visible", "The scientific keys are gone"], ["Expand keypad"], [r"(?m)^sin$"]),
+    Journey("sci-expand-collapse", script=expand_collapse_script, expect=["Expand keypad"], forbid=[r"(?m)^sin$"]),
     Journey("sci-sine-degrees", "Press Expand keypad, sin, 9, 0, Parentheses, Equals.", ["The result 1 is shown"], [r"(?m)^1$"]),
     Journey("sci-radians", "Press Expand keypad, press Degrees to switch to radians, then press sin, Pi, Divide, 2, Parentheses, Equals.", ["The angle key shows Radians", "The result 1 is shown"], [r"(?m)^1$", "Radians"]),
     Journey("sci-inverse", "Press Expand keypad, Inverse off, then the sine key, 1, Parentheses, Equals.", ["The result 90 is shown"], [r"(?m)^90$"]),
     Journey("sci-hyperbolic", "Press Expand keypad, Hyperbolic off, then the sine key, 0, Parentheses, Equals.", ["The result 0 is shown"], [r"(?m)^0$"]),
     Journey("sci-power", "Press Expand keypad, 2, Power, 1, 0, Equals.", ["The result 1,024 is shown"], [r"(?m)^1,024$"]),
     Journey("sci-square-root", "Press Expand keypad, Square root, 8, 1, Parentheses, Equals.", ["The result 9 is shown"], [r"(?m)^9$"]),
-    Journey("sci-factorial", "Press Expand keypad, 5, Factorial, Equals.", ["The result 120 is shown"], [r"(?m)^120$"]),
+    Journey("sci-factorial", script=keys("Expand keypad", "5", "Factorial", "Equals"), expect=[r"(?m)^120$"]),
     Journey("sci-reciprocal", "Press Expand keypad, Reciprocal, 4, Equals.", ["The result 0.25 is shown"], [r"(?m)^0\.25$"]),
     Journey("sci-reciprocal-after-number", "Press Expand keypad, 5, Reciprocal, 2, Equals. The reciprocal key multiplies, so this is 5 times one half.", ["The result 2.5 is shown"], [r"(?m)^2\.5$"]),
     Journey("sci-implicit-pi", "Press Expand keypad, 2, Pi, Equals.", ["The result 6.28318530718 is shown"], [r"(?m)^6\.28318530718$"]),
@@ -98,7 +158,7 @@ SCIENTIFIC = [
 HISTORY = [
     Journey("history-empty", "Press History.", ["The history sheet says No calculations yet"], ["No calculations yet"]),
     Journey("history-records-and-loads-expression", "Press 2, Plus, 3, Equals. Press History. Tap the entry 2+3 to load it. The history sheet should close and the calculator should show that expression.", ["The history sheet lists 2+3 = 5 under Today", "The calculator shows the expression 2 + 3"], [r"(?m)^\+$", "= 5"], ["Clear History"]),
-    Journey("history-close", "Press 2, Plus, 3, Equals. Press History, then press Close.", ["The history sheet is open", "The calculator is back"], ["All clear"], ["Clear History"]),
+    Journey("history-close", "Press 2, Plus, 3, Equals. Press History, then press Close.", ["The history sheet is open", "The calculator keypad is showing the result 5"], ["All clear"], ["Clear History"]),
     Journey("history-clear-cancel", "Press 2, Plus, 3, Equals. Press History, press Clear History, then press Cancel in the dialog.", ["A dialog asks to remove all calculation history", "The entry 2+3 is still listed"], [r"2\+3"]),
     Journey("history-clear-confirm", "Press 2, Plus, 3, Equals. Press History, press Clear History, then press Clear in the dialog.", ["A dialog asks to remove all calculation history", "The sheet says No calculations yet"], ["No calculations yet"]),
     Journey("history-session-entry-loads", "Press 2, Plus, 3, Equals, then 9, Plus, 1, Equals, then tap the older line '2+3 = 5' above the display.", ["Earlier calculations are listed above the display"], ["= 5"], before=None),
@@ -109,12 +169,12 @@ CURRENCY = [
     Journey("currency-decimal-entry", "Press 1, the decimal point, 0, 5.", ["The active amount is 1.05"], [r"1\.05, US Dollar \(Active\)"], before=to_currency),
     Journey("currency-decimal-limit", "Press 1, the decimal point, 2, 3, 4, 5. US dollars only keep two decimals.", [], [r"1\.23, US Dollar \(Active\)"], before=to_currency),
     Journey("currency-no-decimals-for-yen", "Tap the amount row for Japanese Yen to make it active. Press 5, the decimal point, 2.", ["Japanese Yen is the active row"], [r"52, Japanese Yen \(Active\)"], before=to_currency),
-    Journey("currency-switch-active-row", "Press 5, 0. Then tap the amount row for Euro.", ["Euro is the active row"], [r"1, Euro \(Active\)"], before=to_currency),
+    Journey("currency-switch-active-row", "Press 5, 0. Then tap the amount row for Euro once, and finish when Euro is Active.", ["Euro is the active row"], [r"1, Euro \(Active\)"], before=to_currency),
     Journey("currency-tap-active-row-keeps-amount", "Press 5, 0. Then tap the amount row for US Dollar, which is already active.", [], [r"50, US Dollar \(Active\)"], before=to_currency),
     Journey("currency-backspace-and-clear", "Press 1, 2, 3, then Delete, then AC.", [], [r"1, US Dollar \(Active\)"], before=to_currency),
     Journey("currency-picker-search-select", "Press Change currency EUR. Type Swiss in the search field, then choose CHF, the Swiss Franc.", ["A currency list with a search field is open", "The currency screen shows CHF"], ["Change currency CHF"], ["Change currency EUR"], before=to_currency),
     Journey("currency-picker-keeps-active-amount", "Press 1, 0, 0. Press Change currency EUR, type Swiss in the search field, then choose CHF.", ["The currency screen shows CHF"], [r"100, US Dollar \(Active\)", "Change currency CHF"], before=to_currency),
-    Journey("currency-picker-duplicate-swaps", "Press Change currency EUR. Type JPY in the search field, then choose JPY.", ["The currency screen shows JPY in place of EUR"], ["Change currency JPY", "Change currency EUR"], before=to_currency),
+    Journey("currency-picker-duplicate-swaps", "Press Change currency EUR. Type JPY in the search field, then choose JPY.", ["The currency screen lists both JPY and EUR"], ["Change currency JPY", "Change currency EUR"], before=to_currency),
     Journey("currency-btc-live-rate", "Press Change currency EUR. Type Bitcoin in the search field, then choose BTC.", ["The currency screen shows BTC"], ["Change currency BTC", r"0\.0000\d+, Bitcoin"], ["—"], before=to_currency),
     Journey("currency-refresh", "Tap the line that says when rates were updated.", ["The status line says rates were updated"], [r"Updated (just now|\d+ seconds? ago)"], ["Update failed"], before=to_currency),
 ]
@@ -146,18 +206,18 @@ TOOLS = [
     unit("time", "Time", "Hour", "2", [r"Minute, 120, min", r"Second, 7,200, s"]),
     unit("data", "Data", "Gigabyte", "1", [r"Megabyte, 1,024, MB", r"Byte, 1,073,741,824, B"]),
     Journey("tool-temp-fahrenheit", "Tap the Fahrenheit row to make it active, then press 2, 1, 2.", ["Fahrenheit is the active row"], [r"Celsius, 100, °C", r"Kelvin, 373\.15, K"], before=open_tool("Temp")),
-    Journey("tool-temp-negative", "Tap the Celsius row, press 4, 0, then press +/- to make it negative.", ["Celsius shows -40"], [r"Celsius, -40, °C \(Active\)", r"Fahrenheit, -40, °F"], before=open_tool("Temp")),
+    Journey("tool-temp-negative", script=temp_negative_script, expect=[r"Celsius, -40, °C \(Active\)", r"Fahrenheit, -40, °F"], before=open_tool("Temp")),
     Journey("tool-unit-fractional-entry", "Tap the Meter row to make it active. Press 1, the decimal point, 0, 5.", ["Meter shows 1.05"], [r"Meter, 1\.05, m \(Active\)", r"Centimeter, 105, cm"], before=open_tool("Length")),
     Journey("tool-unit-backspace-clear", "Press 1, 2, 3, then Delete, then AC.", [], [r"Millimeter, 0, mm \(Active\)"], before=open_tool("Length")),
-    Journey("tool-age", "Tap Year and enter 2000, tap Month and enter 6, tap Day and enter 15.", ["An age result is shown"], [r"Year, 2000", r"26 years, 4 months, \d+ days"], forbid=[r"Year, 2,000"], before=open_tool("Age")),
+    Journey("tool-age", "Year is active: use the Keypad to enter 2000. Then tap Month and use the Keypad to enter 6. Then tap Day and use the Keypad to enter 15.", ["An age result is shown"], [r"Year, 2000", r"26 years, 4 months, \d+ days"], forbid=[r"Year, 2,000"], before=open_tool("Age")),
     Journey("tool-age-future-birthday", "Tap Year and enter 2999.", [], [r"Year, 2999"], forbid=[r"\d+ years, \d+ months"], before=open_tool("Age")),
     Journey("tool-bmi", "Tap Height and enter 180, then tap Weight and enter 81.", ["A BMI of 25 is shown"], [r"25 - Overweight"], before=open_tool("BMI")),
-    Journey("tool-date", "Tap Year 2 and enter 2026.", ["A difference result is shown"], [r"731 days", r"104 weeks"], before=open_tool("Date")),
+    Journey("tool-date", "Tap Year 2 once to make it active, then use the Keypad to enter 2026.", ["A difference result is shown"], [r"731 days", r"104 weeks"], before=open_tool("Date")),
     Journey("tool-discount", "Tap Price and enter 250, then tap % and enter 10.", ["The result shows savings and a final price"], [r"Savings: 25", r"Final price: 225"], before=open_tool("Discount")),
     Journey("tool-discount-over-100", "Tap % and enter 150.", [], forbid=[r"Final price"], before=open_tool("Discount")),
     Journey("tool-loan", "Do not change anything: this shows the default loan. Finish.", ["A loan summary is shown"], [r"Monthly: 1,073\.64", r"Total interest: 186,511\.57"], before=open_tool("Loan")),
-    Journey("tool-loan-zero-interest", "Tap Amount and enter 1200. Tap Rate and enter 0. Tap Duration and enter 1.", ["A loan summary is shown"], [r"Monthly: 100", r"Total interest: 0"], before=open_tool("Loan")),
-    Journey("tool-open-currency-from-grid", "Tap Currency in the tools grid, then press 5.", ["The currency screen is open"], [r"5, US Dollar \(Active\)", "Back"], before=to_grid),
+    Journey("tool-loan-zero-interest", script=loan_zero_script, expect=[r"Monthly: 100", r"Total interest: 0"], before=open_tool("Loan")),
+    Journey("tool-open-currency-from-grid", script=lambda d: (d.tap_label("Currency", exact=True), press(d, "5")), expect=[r"5, US Dollar \(Active\)", "Back"], before=to_grid),
     Journey("tool-back-button", "Tap Length in the tools grid, then press Back.", ["Length units are listed", "The tools grid is showing again"], ["Discount", "Loan"], ["Millimeter"], before=to_grid),
     Journey("tool-swipe-back", "Tap Length in the tools grid. Then swipe right to go back.", ["Length units are listed", "The tools grid is showing again"], ["Discount", "Loan"], ["Millimeter"], before=to_grid),
 ]
@@ -197,6 +257,35 @@ def unpin_script(device):
     enter_rearrange(device)
     device.tap_label("Currency", exact=True)
     assert tab_order(device) == ["Calculator", "All tools"], tab_order(device)
+    assert device.find("Currency", exact=True)["value"] == "Not pinned", "Unpinning ended rearranging"
+    device.next_page()  # already on the last page
+    device.tap_label("Length", exact=True)
+    assert device.find("Length", exact=True)["value"] == "Pinned", "Tap did not pin"
+    time.sleep(0.4)
+    device.tap_label("Length", exact=True)
+    assert device.find("Length", exact=True)["value"] == "Not pinned", "Tap did not unpin"
+
+
+def page_away_ends_rearrange_script(device):
+    enter_rearrange(device)
+    device.swipe(60, 700, 370, 700)
+    device.find("Change currency USD", exact=True)
+    device.next_page()
+    assert device.find("Length", exact=True)["value"] == "", "Still rearranging after leaving the grid"
+    device.tap_label("Length", exact=True)
+    device.find("Millimeter")
+
+
+def swipe_from_card_script(device):
+    assert device.find("Area", exact=True)
+    area = device.find("Area", exact=True)
+    device.swipe(area["x"], area["y"], area["x"] + 200, area["y"], duration=0.15)
+    device.find("Change currency USD", exact=True)
+
+
+def hold_does_not_open_script(device):
+    enter_rearrange(device)
+    assert not any("Millimeter" in e["label"] for e in device.settled()), "Hold opened the tool"
 
 
 def reorder_grid_script(device):
@@ -222,6 +311,7 @@ def reorder_tabbar_script(device):
     assert tab_order(device) == ["Calculator", "Length", "Currency", "All tools"], tab_order(device)
     device.launch()
     to_grid(device)
+    device.next_page()  # the pinned tool added a page
     assert tab_order(device) == ["Calculator", "Length", "Currency", "All tools"], "Tab order was not persisted"
 
 
@@ -312,11 +402,14 @@ NAVIGATION = [
     Journey("grid-pinned-tool-is-a-page", script=pinned_page_script, before=to_grid),
     Journey("grid-toolbar-full", script=toolbar_full_script, before=to_grid),
     Journey("grid-unpin", script=unpin_script, before=to_grid),
+    Journey("grid-page-away-ends-rearrange", script=page_away_ends_rearrange_script, before=to_grid),
+    Journey("grid-swipe-from-card", script=swipe_from_card_script, before=to_grid),
+    Journey("grid-hold-does-not-open", script=hold_does_not_open_script, before=to_grid),
     Journey("grid-drag-reorder", script=reorder_grid_script, before=to_grid),
     Journey("grid-drag-tool-to-tabbar", script=drag_tool_to_tabbar_script, before=to_grid),
     Journey("tabbar-drag-reorder", script=reorder_tabbar_script, before=to_grid),
     Journey("tabbar-drag-calculator", script=drag_calculator_tab_script, before=to_grid),
-    Journey("grid-rearrange-with-jev", "Long-press Volume to start rearranging. Then tap Volume to pin it.", ["Tools show whether they are pinned", "Volume is pinned"], [r"Volume \(Pinned\)", "Volume tab"], before=to_grid, gestures=True),
+    Journey("grid-rearrange-with-jev", "Long-press Volume to start rearranging. Finish as soon as tools show whether they are pinned.", ["Tools show whether they are pinned"], [r"Volume \(Not pinned\)"], before=to_grid, gestures=True),
     Journey("persist-currencies", script=currency_persist_script),
     Journey("persist-history", script=history_persist_script),
     Journey("rates-survive-background", script=refresh_on_open_script),

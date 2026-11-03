@@ -50,9 +50,6 @@ class Simulator:
     def pasteboard(self):
         return run("xcrun", "simctl", "pbpaste", self.udid)
 
-    def set_pasteboard(self, text):
-        subprocess.run(["xcrun", "simctl", "pbcopy", self.udid], input=text, text=True, check=True, timeout=30)
-
     # ---- reading
     def elements(self):
         raw = json.loads(run("idb", "ui", "describe-all", "--udid", self.udid))
@@ -131,6 +128,18 @@ class Simulator:
                 return element
         raise AssertionError(f"No element labelled {label!r}. Screen:\n{self.text()}")
 
+    @staticmethod
+    def is_key(element):
+        return element["button"] and not element["chunk"] and element["label"].isdigit()
+
+    def press_keys(self, text):
+        keys = {e["label"]: e for e in self.settled() if e["button"] and not e["chunk"]}
+        for character in text:
+            label = {".": "Decimal point" if "Decimal point" in keys else "."}.get(character, character)
+            if label not in keys:
+                raise AssertionError(f"Jev asked for key {character!r} in {text!r}, which is not on this keypad")
+            self.tap(keys[label]["x"], keys[label]["y"])
+
     def page_text(self, elements):
         lines = [self.display(e) for e in elements]
         chunks = [e["label"] for e in elements if e["chunk"]]
@@ -146,12 +155,28 @@ class Simulator:
             label = f"Expression part {element['label']}" if element["chunk"] else self.display(element)
             if element["type"] in TEXT_TYPES:
                 actions.append({"id": f"fill_{node}", "kind": "fill", "node": node, "role": "textbox", "label": label, "value": element["value"]})
+            elif self.is_key(element):
+                continue  # pressed through the keypad action below
             elif element["button"]:
                 actions.append({"id": f"tap_{node}", "kind": "click", "node": node, "role": "button", "label": label})
             display_zero = element["label"] == "0" and not element["button"]
-            if self.gestures and (display_zero or (element["button"] and (element["chunk"] or not element["label"].isdigit()))):
+            menu_open = any(e["label"] == "Dismiss context menu" for e in elements)
+            if self.gestures and not menu_open and (display_zero or element["button"]):
                 actions.append({"id": f"hold_{node}", "kind": "click", "node": 1000 + node, "role": "button", "label": f"Long-press: {label}"})
                 self.centers[1000 + node] = (element["x"], element["y"])
+        if any(self.is_key(e) for e in elements):
+            # Jev drops repeated digits and swaps neighbours when it picks keys one at a time, so
+            # the text helper writes the sequence and every key is still a real tap.
+            actions.append(
+                {
+                    "id": "press_keys",
+                    "kind": "fill",
+                    "node": 9001,
+                    "role": "textbox",
+                    "label": "Keypad: the digits and decimal point to press next, in order, for example 12 or 1.05",
+                    "value": "",
+                }
+            )
         if self.keyboard:
             # iOS 26 keeps the focused search field out of the accessibility tree; the keyboard proves it exists.
             actions.append({"id": "type_search", "kind": "fill", "node": 9000, "role": "textbox", "label": "Search field", "value": ""})
@@ -222,6 +247,8 @@ class Simulator:
             self.swipe(200, 360, 200, 160)
         elif ident == "wait":
             time.sleep(1)
+        elif ident == "press_keys":
+            self.press_keys(text)
         elif ident == "type_search":
             run("idb", "ui", "text", "--udid", self.udid, text)
             time.sleep(0.8)

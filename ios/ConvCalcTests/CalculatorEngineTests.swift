@@ -5,6 +5,9 @@
 #endif
 import Foundation
 import XCTest
+#if canImport(UIKit)
+import UIKit
+#endif
 
 final class CalculatorEngineTests: XCTestCase {
     func testArithmeticPrecedenceParenthesesAndPowers() throws {
@@ -168,6 +171,12 @@ final class CalculatorEngineTests: XCTestCase {
         XCTAssertEqual(CalculatorNumberFormat.normalizedPaste("1,5", locale: germany), "1.5")
         XCTAssertEqual(CalculatorNumberFormat.normalizedPaste("1.234", locale: germany), "1234")
         XCTAssertEqual(CalculatorNumberFormat.normalizedPaste("2+3", locale: us), "2+3")
+    }
+
+    func testPastedProseIsNotAnExpression() {
+        XCTAssertThrowsError(try CalculatorEngine().evaluate("Two words"))
+        XCTAssertThrowsError(try CalculatorEngine().evaluate("hello"))
+        XCTAssertEqual(try CalculatorEngine().evaluate("1000"), 1000)
     }
 
     func testTypedNumberKeepsTrailingZerosAndGroupsIntegerPart() {
@@ -479,6 +488,20 @@ final class CurrencyRatesModelTests: XCTestCase {
 }
 
 #if !canImport(ConvCalcCore)
+final class CalculatorPasteTests: XCTestCase {
+    func testPasteIgnoresProseAndAcceptsNumbers() {
+        let model = CalculatorViewModel()
+
+        UIPasteboard.general.string = "Two words"
+        model.pasteClipboard()
+        XCTAssertEqual(model.expression, "")
+
+        UIPasteboard.general.string = "42"
+        model.pasteClipboard()
+        XCTAssertEqual(model.expression, "42")
+    }
+}
+
 final class CalculatorViewModelTests: XCTestCase {
     func testSelectedOperatorIsReplacedAndDigitsNeverMergeNumbers() {
         let model = CalculatorViewModel()
