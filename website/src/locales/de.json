@@ -1,0 +1,550 @@
+{
+  "meta": {
+    "siteName": "ConvCalc",
+    "homeTitle": "ConvCalc: Eine schöne kostenlose Taschenrechner App für iPhone, ohne Werbung",
+    "homeDescription": "Ein kostenloser wissenschaftlicher Taschenrechner für iPhone mit Verlauf, Währungsrechner, Einheitenumrechnern und Alltagsrechnern. Keine Werbung. Probieren Sie ihn gleich hier aus."
+  },
+  "nav": {
+    "tools": "Tools",
+    "compare": "Vergleich",
+    "features": "Funktionen",
+    "download": "Download"
+  },
+  "cta": {
+    "download": "Kostenlos im App Store herunterladen",
+    "try": "Die Tasten auf dieser Seite funktionieren. Probieren Sie sie aus.",
+    "bottomTitle": "Kostenlos. Keine Werbung. In zehn Sekunden auf Ihrem iPhone."
+  },
+  "footer": {
+    "tagline": "Ein kostenloser Taschenrechner und Umrechner für iPhone.",
+    "tools": "Tools",
+    "features": "Funktionen",
+    "compare": "Vergleich",
+    "more": "Mehr",
+    "conversions": "Alle Umrechnungen",
+    "privacy": "Datenschutz",
+    "support": "Support",
+    "source": "Quellcode",
+    "language": "Sprache"
+  },
+  "home": {
+    "h1": "Taschenrechner auf iOS sehen furchtbar aus. Dieser nicht.",
+    "lede": "ConvCalc ist ein kostenloser wissenschaftlicher Taschenrechner mit 20 integrierten Tools für Einheiten, Währungen und Alltagsmathematik. Nativ für iPhone, ohne jegliche Werbung.",
+    "toolsTitle": "Eine App statt eines Ordners voller Apps",
+    "toolsLede": "Tippen Sie auf ein beliebiges Tool, um es auf dem Telefon zu öffnen. Die Tools und die Mathematik sind die gleichen wie in der App.",
+    "shots": {
+      "scientific": {
+        "title": "Wissenschaftliche Tasten",
+        "text": "Tippen Sie auf die Ecktaste, um Trigonometrie, Logarithmen, Potenzen, Fakultäten und Konstanten zu öffnen. Tippen Sie erneut, um sie wieder zu schließen."
+      },
+      "history": {
+        "title": "Verlauf",
+        "text": "Jedes Ergebnis wird gespeichert. Tippen Sie auf eines, um es in Ihre Berechnung zurückzuholen."
+      },
+      "currency": {
+        "title": "Währung",
+        "text": "Geben Sie einen Betrag ein und beobachten Sie, wie die anderen Währungen folgen."
+      },
+      "loan": {
+        "title": "Darlehen",
+        "text": "Geben Sie den Betrag, den Zinssatz und die Jahre ein. Sehen Sie die monatliche Zahlung und die Gesamtzinsen."
+      }
+    }
+  },
+  "demo": {
+    "tabs": {
+      "calculator": "Taschenrechner",
+      "currency": "Währung",
+      "all": "Alle Tools"
+    },
+    "historyEmpty": "Ihre Berechnungen werden hier angezeigt.",
+    "rateNote": "Kurse vom {date}",
+    "labels": {
+      "year": "Jahr",
+      "month": "Monat",
+      "day": "Tag",
+      "age": "Alter",
+      "height": "Größe (cm)",
+      "weight": "Gewicht (kg)",
+      "bmi": "BMI",
+      "underweight": "Untergewichtig",
+      "normal": "Normal",
+      "overweight": "Übergewichtig",
+      "obese": "Fettleibig",
+      "year1": "Startjahr",
+      "month1": "Startmonat",
+      "day1": "Starttag",
+      "year2": "Endjahr",
+      "month2": "Endmonat",
+      "day2": "Endtag",
+      "difference": "Differenz",
+      "yearsUnit": "Jahre",
+      "monthsUnit": "Monate",
+      "weeksUnit": "Wochen",
+      "daysUnit": "Tage",
+      "price": "Preis",
+      "percent": "Rabatt (%)",
+      "savings": "Sie sparen",
+      "finalPrice": "Endpreis",
+      "principal": "Darlehensbetrag",
+      "rate": "Jahreszins (%)",
+      "years": "Jahre",
+      "monthly": "Monatliche Zahlung",
+      "totalPaid": "Gesamt gezahlt",
+      "totalInterest": "Gesamtzinsen"
+    },
+    "currencies": {
+      "USD": "US-Dollar",
+      "EUR": "Euro",
+      "GBP": "Britisches Pfund",
+      "JPY": "Japanischer Yen"
+    },
+    "units": {
+      "Millimeter": "Millimeter",
+      "Centimeter": "Zentimeter",
+      "Meter": "Meter",
+      "Kilometer": "Kilometer",
+      "Inch": "Zoll",
+      "Foot": "Fuß",
+      "Yard": "Yard",
+      "Mile": "Meile",
+      "Square Meter": "Quadratmeter",
+      "Square Foot": "Quadratfuß",
+      "Square Kilometer": "Quadratkilometer",
+      "Square Mile": "Quadratmeile",
+      "Acre": "Acre",
+      "Hectare": "Hektar",
+      "Milligram": "Milligramm",
+      "Gram": "Gramm",
+      "Kilogram": "Kilogramm",
+      "Dram": "Dram",
+      "Ounce": "Unze",
+      "Pound": "Pfund",
+      "Stone": "Stone",
+      "Slug": "Slug",
+      "Short Ton": "Short Tonne",
+      "Long Ton": "Long Tonne",
+      "Metric Ton": "Metrische Tonne",
+      "Milliliter": "Milliliter",
+      "Liter": "Liter",
+      "Gallon": "Gallone",
+      "Quart": "Quart",
+      "Pint": "Pint",
+      "Cup": "Tasse",
+      "Fluid Ounce": "Fluidunze",
+      "Meter per Second": "Meter pro Sekunde",
+      "Kilometer per Hour": "Kilometer pro Stunde",
+      "Mile per Hour": "Meile pro Stunde",
+      "Knot": "Knoten",
+      "Pascal": "Pascal",
+      "Kilopascal": "Kilopascal",
+      "Bar": "Bar",
+      "Atmosphere": "Atmosphäre",
+      "Pound per Sq Inch": "Pfund pro Quadratzoll",
+      "Inch of Mercury": "Zoll Quecksilbersäule",
+      "Torr": "Torr",
+      "Watt": "Watt",
+      "Kilowatt": "Kilowatt",
+      "Horsepower": "Pferdestärke",
+      "BTU per Minute": "BTU pro Minute",
+      "Celsius": "Celsius",
+      "Fahrenheit": "Fahrenheit",
+      "Kelvin": "Kelvin",
+      "Radian": "Radiant",
+      "Milliradian": "Milliradiant",
+      "Microradian": "Mikroradiant",
+      "Degree": "Grad",
+      "Arcminute": "Bogenminute",
+      "Arcsecond": "Bogensekunde",
+      "Milliarcsecond": "Milli-Bogensekunde",
+      "Microarcsecond": "Mikro-Bogensekunde",
+      "Joule": "Joule",
+      "Kilojoule": "Kilojoule",
+      "Calorie": "Kalorie",
+      "Kilocalorie": "Kilokalorie",
+      "British Thermal Unit": "British Thermal Unit",
+      "Kilowatt-Hour": "Kilowattstunde",
+      "Erg": "Erg",
+      "Foot-Pound": "Foot-Pound",
+      "Newton-Meter": "Newtonmeter",
+      "Newton": "Newton",
+      "Kilogram-Force": "Kilogramm-Kraft",
+      "Pound-Force": "Pfund-Kraft",
+      "Poundal": "Poundal",
+      "Dyne": "Dyne",
+      "Kilometer per Liter": "Kilometer pro Liter",
+      "Mile per Gallon": "Meile pro Gallone",
+      "Liter per 100km": "Liter pro 100km",
+      "Gallon per 100mi": "Gallone pro 100 Meilen",
+      "Millisecond": "Millisekunde",
+      "Second": "Sekunde",
+      "Minute": "Minute",
+      "Hour": "Stunde",
+      "Day": "Tag",
+      "Week": "Woche",
+      "Year": "Jahr",
+      "Byte": "Byte",
+      "Kilobyte": "Kilobyte",
+      "Megabyte": "Megabyte",
+      "Gigabyte": "Gigabyte",
+      "Terabyte": "Terabyte",
+      "Petabyte": "Petabyte"
+    }
+  },
+  "toolsHub": {
+    "title": "20 kostenlose Taschenrechner und Umrechner, im Web und auf dem iPhone",
+    "description": "Kostenlose Umrechner für Währung, Länge, Masse, Volumen, Temperatur und mehr, plus Alters-, BMI-, Datums-, Rabatt- und Darlehensrechner.",
+    "h1": "Jedes Tool in ConvCalc",
+    "lede": "Probieren Sie jedes davon hier aus und behalten Sie sie dann alle auf Ihrem iPhone mit der kostenlosen App."
+  },
+  "toolPage": {
+    "tryLabel": "Auf dem Telefon ausprobieren",
+    "how": "So funktioniert es",
+    "inApp": "Auf Ihrem iPhone behalten",
+    "inAppText": "Dieses Tool ist eines von 20 in ConvCalc, zusammen mit einem wissenschaftlichen Taschenrechner mit Verlauf. Die App ist kostenlos und werbefrei.",
+    "more": "Weitere Tools",
+    "popular": "Beliebte Umrechnungen"
+  },
+  "tools": {
+    "currency": {
+      "label": "Währung",
+      "title": "Währungsrechner: kostenloser Wechselkursrechner",
+      "description": "Wandeln Sie US-Dollar, Euro, Pfund, Yen und andere Währungen zu einem aktuellen Wechselkurs um, kostenlos. Auch in der ConvCalc iPhone App verfügbar.",
+      "h1": "Währungsrechner",
+      "intro": "Geben Sie einen Betrag in einer Währung ein und sehen Sie ihn sofort in den anderen Währungen.",
+      "how": "Tippen Sie auf eine Währung, um sie zur Eingabewährung zu machen. Die Kurse auf dieser Seite werden täglich aktualisiert und dienen nur als Referenz, da Banken und Kartenaussteller in der Regel einen Aufschlag berechnen. Die ConvCalc App ermöglicht es Ihnen, Ihre eigene Liste von Währungen zu wählen."
+    },
+    "length": {
+      "label": "Länge",
+      "title": "Längenumrechner: mm, cm, Meter, km, Zoll, Fuß, Yards, Meilen",
+      "description": "Wandeln Sie zwischen Millimetern, Zentimetern, Metern, Kilometern, Zoll, Fuß, Yards und Meilen um. Sehen Sie jede Einheit sofort, kostenlos.",
+      "h1": "Längenumrechner",
+      "intro": "Sehen Sie Millimeter, Zentimeter, Meter, Kilometer, Zoll, Fuß, Yards und Meilen zusammen, während Sie tippen.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein. Jede andere Einheit wird sofort aktualisiert, sodass Sie nicht zuerst eine Zieleinheit auswählen müssen. Es funktioniert für alles, von einer Schraubengröße bis zu einer Autofahrt."
+    },
+    "area": {
+      "label": "Fläche",
+      "title": "Flächenumrechner: Quadratmeter, Quadratfuß, Acres, Hektar",
+      "description": "Wandeln Sie kostenlos zwischen Quadratmetern, Quadratfuß, Quadratkilometern, Quadratmeilen, Acres und Hektar um.",
+      "h1": "Flächenumrechner",
+      "intro": "Wandeln Sie Quadratmeter, Quadratfuß, Quadratkilometer, Quadratmeilen, Acres und Hektar an einem Ort um.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein, um die anderen zu sehen. Es ist nützlich, um Wohnungsangebote, Grundstücke und Grundrisse zu vergleichen, die verschiedene Einheiten verwenden."
+    },
+    "mass": {
+      "label": "Masse",
+      "title": "Gewichts- und Massenumrechner: kg, lbs, Unzen, Gramm, Stone, Tonnen",
+      "description": "Wandeln Sie zwischen Kilogramm, Pfund, Unzen, Gramm, Stone, Tonnen und mehr um. Sehen Sie jede Einheit sofort, kostenlos.",
+      "h1": "Gewichts- und Massenumrechner",
+      "intro": "Wandeln Sie Milligramm, Gramm, Kilogramm, Unzen, Pfund, Stone und Tonnen um, zusammen mit weniger gebräuchlichen Einheiten wie Dram und Slug.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein, um alle anderen zu sehen. Es deckt Küchenwaagen, Körpergewicht, Gepäckbeschränkungen und Fracht ab. Die Tonnen sind separat als Short, Long und Metrisch aufgeführt, da sie nicht gleich sind."
+    },
+    "volume": {
+      "label": "Volumen",
+      "title": "Volumenumrechner: Liter, Gallonen, Tassen, Quarts, Pints, ml",
+      "description": "Wandeln Sie kostenlos zwischen Millilitern, Litern, US-Gallonen, Quarts, Pints, Tassen und Fluidunzen um.",
+      "h1": "Volumenumrechner",
+      "intro": "Wandeln Sie Milliliter, Liter, Gallonen, Quarts, Pints, Tassen und Fluidunzen um, während Sie tippen.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein. Die Gallone, Quart, Pint, Tasse und Fluidunze sind US-Maße, daher werden die Ergebnisse für britische Rezepte unterschiedlich sein."
+    },
+    "speed": {
+      "label": "Geschwindigkeit",
+      "title": "Geschwindigkeitsumrechner: km/h, mph, Knoten, m/s",
+      "description": "Wandeln Sie kostenlos zwischen Kilometern pro Stunde, Meilen pro Stunde, Knoten und Metern pro Sekunde um.",
+      "h1": "Geschwindigkeitsumrechner",
+      "intro": "Wechseln Sie zwischen Kilometern pro Stunde, Meilen pro Stunde, Knoten und Metern pro Sekunde.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein, um die anderen zu sehen. Es ist praktisch für Verkehrsschilder im Ausland, Windvorhersagen und Segeln oder Fliegen."
+    },
+    "pressure": {
+      "label": "Druck",
+      "title": "Druckumrechner: PSI, Bar, kPa, atm, inHg, Torr",
+      "description": "Wandeln Sie kostenlos zwischen Pascal, Kilopascal, Bar, Atmosphären, PSI, Zoll Quecksilbersäule und Torr um.",
+      "h1": "Druckumrechner",
+      "intro": "Wandeln Sie Pascal, Kilopascal, Bar, Atmosphären, PSI, Zoll Quecksilbersäule und Torr um.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein, um die anderen zu sehen. Es ist nützlich für Reifendruck, Wetteranzeigen und Werkstattmanometer."
+    },
+    "power": {
+      "label": "Leistung",
+      "title": "Leistungsumrechner: Watt, Kilowatt, PS, BTU pro Minute",
+      "description": "Wandeln Sie kostenlos zwischen Watt, Kilowatt, Pferdestärken und BTU pro Minute um.",
+      "h1": "Leistungsumrechner",
+      "intro": "Wandeln Sie Watt, Kilowatt, Pferdestärken und BTU pro Minute um.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein, um die anderen zu sehen. Es ist nützlich, um Motoren, Motoren und Heiz- oder Kühlanlagen zu vergleichen."
+    },
+    "temperature": {
+      "label": "Temp",
+      "title": "Temperaturumrechner: Celsius, Fahrenheit, Kelvin",
+      "description": "Wandeln Sie sofort und kostenlos zwischen Celsius, Fahrenheit und Kelvin um.",
+      "h1": "Temperaturumrechner",
+      "intro": "Wandeln Sie Celsius, Fahrenheit und Kelvin um, während Sie tippen.",
+      "how": "Tippen Sie auf eine Skala und geben Sie Ihren Wert ein, um die anderen zu sehen. Verwenden Sie es für Wetter, Ofeneinstellungen und Laborarbeiten."
+    },
+    "angle": {
+      "label": "Winkel",
+      "title": "Winkelumrechner: Grad, Radiant, Bogenminuten, Bogensekunden",
+      "description": "Wandeln Sie kostenlos zwischen Grad, Radiant, Bogenminuten, Bogensekunden und kleineren Winkeleinheiten um.",
+      "h1": "Winkelumrechner",
+      "intro": "Wandeln Sie Grad, Radiant, Milliradiant, Bogenminuten, Bogensekunden und kleinere Einheiten um.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein, um die anderen zu sehen. Es ist nützlich für Trigonometrie-Hausaufgaben, Optik und Astronomie."
+    },
+    "energy": {
+      "label": "Energie",
+      "title": "Energieumrechner: Joule, Kalorien, kWh, BTU",
+      "description": "Wandeln Sie kostenlos zwischen Joule, Kilojoule, Kalorien, Kilokalorien, BTU, Kilowattstunden und mehr um.",
+      "h1": "Energieumrechner",
+      "intro": "Wandeln Sie Joule, Kilojoule, Kalorien, Kilokalorien, BTU, Kilowattstunden, Erg und Foot-Pound um.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein, um die anderen zu sehen. Es ist nützlich für Lebensmitteletiketten, Stromrechnungen und Physikaufgaben."
+    },
+    "force": {
+      "label": "Kraft",
+      "title": "Kraftumrechner: Newton, Kilogramm-Kraft, Pfund-Kraft",
+      "description": "Wandeln Sie kostenlos zwischen Newton, Kilogramm-Kraft, Pfund-Kraft, Poundal und Dyn um.",
+      "h1": "Kraftumrechner",
+      "intro": "Wandeln Sie Newton, Kilogramm-Kraft, Pfund-Kraft, Poundal und Dyn um.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein, um die anderen zu sehen. Es ist nützlich für technische Spezifikationen und Physikaufgaben."
+    },
+    "fuel": {
+      "label": "Kraftstoff",
+      "title": "Kraftstoffverbrauch-Umrechner: mpg, L/100km, km/L",
+      "description": "Wandeln Sie den Kraftstoffverbrauch kostenlos zwischen Meilen pro Gallone, Litern pro 100 km, Kilometern pro Liter und Gallonen pro 100 Meilen um.",
+      "h1": "Kraftstoffverbrauch-Umrechner",
+      "intro": "Wandeln Sie Meilen pro Gallone, Liter pro 100 km, Kilometer pro Liter und Gallonen pro 100 Meilen um.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein, um die anderen zu sehen. Bei Litern pro 100 km und Gallonen pro 100 Meilen bedeutet eine niedrigere Zahl einen besseren Verbrauch. Die Gallone hier ist die US-Gallone."
+    },
+    "time": {
+      "label": "Zeit",
+      "title": "Zeitumrechner: Sekunden, Minuten, Stunden, Tage, Wochen, Jahre",
+      "description": "Wandeln Sie kostenlos zwischen Millisekunden, Sekunden, Minuten, Stunden, Tagen, Wochen und Jahren um.",
+      "h1": "Zeitumrechner",
+      "intro": "Wandeln Sie Millisekunden, Sekunden, Minuten, Stunden, Tage, Wochen und Jahre um.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein, um die anderen zu sehen. Ein Jahr wird als durchschnittlich 365,25 Tage gezählt."
+    },
+    "data": {
+      "label": "Daten",
+      "title": "Datengrößenumrechner: Bytes, KB, MB, GB, TB, PB",
+      "description": "Wandeln Sie kostenlos zwischen Bytes, Kilobytes, Megabytes, Gigabytes, Terabytes und Petabytes um.",
+      "h1": "Datengrößenumrechner",
+      "intro": "Wandeln Sie Bytes, Kilobytes, Megabytes, Gigabytes, Terabytes und Petabytes um.",
+      "how": "Tippen Sie auf eine Einheit und geben Sie Ihren Wert ein, um die anderen zu sehen. Jeder Schritt entspricht 1.024 der darunter liegenden Einheit, was der Art und Weise entspricht, wie Betriebssysteme oft Dateigrößen zählen. Speicherhersteller verwenden oft 1.000 stattdessen."
+    },
+    "age": {
+      "label": "Alter",
+      "title": "Altersrechner: Finden Sie Ihr genaues Alter anhand Ihres Geburtsdatums",
+      "description": "Geben Sie ein Geburtsdatum ein, um ein genaues Alter in Jahren, Monaten und Tagen zu sehen. Kostenlos, ohne Registrierung.",
+      "h1": "Altersrechner",
+      "intro": "Geben Sie ein Geburtsdatum ein und sehen Sie das genaue Alter in Jahren, Monaten und Tagen.",
+      "how": "Tippen Sie auf Jahr, Monat oder Tag und geben Sie den Wert ein. Das Ergebnis verwendet das heutige Datum auf Ihrem Gerät."
+    },
+    "bmi": {
+      "label": "BMI",
+      "title": "BMI-Rechner: Body-Mass-Index aus Größe und Gewicht",
+      "description": "Geben Sie Ihre Größe in Zentimetern und Ihr Gewicht in Kilogramm ein, um Ihren Body-Mass-Index und seine Standardkategorie zu sehen. Kostenlos.",
+      "h1": "BMI-Rechner",
+      "intro": "Geben Sie Ihre Größe und Ihr Gewicht ein, um Ihren Body-Mass-Index und seine Standardkategorie zu sehen.",
+      "how": "Der BMI ist Ihr Gewicht in Kilogramm geteilt durch Ihre Größe in Metern, quadriert. Die Kategorien sind untergewichtig unter 18,5, normal bis 25, übergewichtig bis 30 und fettleibig darüber. Der BMI ist ein grobes Screening-Maß und ersetzt keine medizinische Beratung."
+    },
+    "date": {
+      "label": "Datum",
+      "title": "Datumsrechner: Tage zwischen zwei Daten",
+      "description": "Finden Sie die Anzahl der Tage, Wochen, Monate und Jahre zwischen zwei Daten. Kostenlos, ohne Registrierung.",
+      "h1": "Datumsrechner",
+      "intro": "Geben Sie zwei Daten ein, um die Differenz in Tagen, Wochen, Monaten und Jahren zu sehen.",
+      "how": "Tippen Sie auf ein Feld und geben Sie den Wert ein. Monate und Jahre im Ergebnis sind Durchschnittswerte, 30,4375 und 365,25 Tage lang, daher erscheinen sie als Dezimalzahlen."
+    },
+    "discount": {
+      "label": "Rabatt",
+      "title": "Rabattrechner: Prozent Rabatt und Verkaufspreis",
+      "description": "Geben Sie einen Preis und einen Prozentsatz ein, um zu sehen, wie viel Sie sparen und was Sie bezahlen werden. Kostenloser Prozent-Rabatt-Rechner.",
+      "h1": "Rabattrechner",
+      "intro": "Geben Sie einen Preis und einen Prozentsatz ein, um zu sehen, wie viel Sie sparen und den Endpreis.",
+      "how": "Die Ersparnis ist der Preis multipliziert mit dem Prozentsatz, geteilt durch 100. Ziehen Sie die Ersparnis vom Preis ab, um zu erhalten, was Sie bezahlen werden. Die Mehrwertsteuer ist nicht enthalten."
+    },
+    "loan": {
+      "label": "Darlehen",
+      "title": "Darlehensrechner: monatliche Zahlung und Gesamtzinsen",
+      "description": "Geben Sie einen Darlehensbetrag, den jährlichen Zinssatz und die Laufzeit ein, um die monatliche Zahlung, den Gesamtbetrag und die Gesamtzinsen zu sehen. Kostenlos.",
+      "h1": "Darlehensrechner",
+      "intro": "Geben Sie den Betrag, den jährlichen Zinssatz und die Anzahl der Jahre ein, um die monatliche Zahlung, den Gesamtbetrag und die Gesamtzinsen zu sehen.",
+      "how": "Es wird von einem festen Zinssatz und gleichen monatlichen Zahlungen ausgegangen, ohne Gebühren oder Versicherungen. Behandeln Sie das Ergebnis als Schätzung und überprüfen Sie die endgültigen Bedingungen mit Ihrem Kreditgeber."
+    }
+  },
+  "features": {
+    "scientific-calculator": {
+      "label": "Wissenschaftlicher Taschenrechner",
+      "title": "Kostenlose wissenschaftliche Taschenrechner App für iPhone",
+      "description": "Ein kostenloser wissenschaftlicher Taschenrechner für iPhone mit trigonometrischen, inversen und hyperbolischen Funktionen, Logarithmen, Potenzen, Fakultäten und Konstanten. Keine Werbung.",
+      "h1": "Ein wissenschaftlicher Taschenrechner, der nicht so aussieht",
+      "intro": "Meistens müssen Sie nur Dinge addieren, daher beginnt ConvCalc einfach. Ein Tipp auf die Ecktaste öffnet die vollständige wissenschaftliche Tastatur.",
+      "sections": [
+        {
+          "title": "Alle Funktionen, die Sie erwarten",
+          "text": "Sinus, Kosinus und Tangens, mit inversen und hyperbolischen Versionen. Natürliche und Basis-10-Logarithmen, Potenzen, Quadratwurzeln, Fakultäten, Kehrwerte, Pi, e und eine Zufallszahlentaste."
+        },
+        {
+          "title": "Grad oder Radiant",
+          "text": "Wechseln Sie den Winkelmodus mit einer Taste. Das Display zeigt den gesamten Ausdruck und ein Live-Ergebnis, sodass Sie einen Fehler erkennen können, bevor Sie die Gleichheitstaste drücken."
+        },
+        {
+          "title": "Beheben Sie es, ohne von vorne anzufangen",
+          "text": "Löschen Sie das zuletzt Eingegebene oder kehren Sie zu einer früheren Berechnung in Ihrem Verlauf zurück und fahren Sie von dort fort."
+        }
+      ],
+      "shot": "calculatorExpanded"
+    },
+    "calculator-with-history": {
+      "label": "Taschenrechner mit Verlauf",
+      "title": "Taschenrechner App mit Verlauf für iPhone",
+      "description": "Ein kostenloser iPhone-Taschenrechner, der jede Berechnung speichert. Öffnen Sie Ihren Verlauf, tippen Sie auf ein vergangenes Ergebnis und fahren Sie fort. Keine Werbung.",
+      "h1": "Ein Taschenrechner, der sich erinnert",
+      "intro": "ConvCalc speichert jede abgeschlossene Berechnung, sodass die Zahl von vor zehn Minuten immer noch da ist, wenn Sie sie brauchen.",
+      "sections": [
+        {
+          "title": "Ihre vergangenen Berechnungen, nur einen Tipp entfernt",
+          "text": "Tippen Sie auf die Uhr in der oberen Ecke, um jeden Ausdruck und sein Ergebnis zu sehen."
+        },
+        {
+          "title": "Jedes Ergebnis wiederverwenden",
+          "text": "Tippen Sie auf eine vergangene Berechnung, um sie zurückzuholen und von dort aus weiterzurechnen."
+        },
+        {
+          "title": "Löschen Sie es, wann immer Sie möchten",
+          "text": "Der Verlauf wird auf Ihrem iPhone gespeichert, und Sie können ihn jederzeit löschen."
+        }
+      ],
+      "shot": "history"
+    },
+    "calculator-no-ads": {
+      "label": "Taschenrechner ohne Werbung",
+      "title": "Kostenlose Taschenrechner App ohne Werbung für iPhone",
+      "description": "ConvCalc ist ein kostenloser iPhone-Taschenrechner und -Konverter ohne Werbung, Banner und Pop-ups. Wissenschaftliche Tasten, Verlauf und 20 Tools inklusive.",
+      "h1": "Ein kostenloser Taschenrechner ohne Werbung",
+      "intro": "Ein Taschenrechner ist etwas, das man für zehn Sekunden öffnet. Diese zehn Sekunden sollten kein Banner oder Pop-up enthalten.",
+      "sections": [
+        {
+          "title": "Nichts zwischen Ihnen und der Antwort",
+          "text": "ConvCalc enthält keinerlei Werbung, und die App enthält keinen Werbecode."
+        },
+        {
+          "title": "Alles ist heute kostenlos",
+          "text": "Die wissenschaftliche Tastatur, der Verlauf, die Währung, die Umrechner und die Taschenrechner sind alle kostenlos enthalten."
+        },
+        {
+          "title": "Open Source",
+          "text": "Der Code der App ist auf GitHub öffentlich, sodass Sie ihn selbst lesen können."
+        }
+      ],
+      "shot": "calculatorInput"
+    }
+  },
+  "featurePage": {
+    "tryTitle": "Probieren Sie es gleich hier aus"
+  },
+  "compareHub": {
+    "title": "iPhone Taschenrechner Apps vergleichen",
+    "description": "Wie ConvCalc im Vergleich zu anderen Taschenrechner-Apps für das iPhone abschneidet, basierend auf datierten App Store-Preisen und -Bewertungen.",
+    "h1": "Taschenrechner Apps vergleichen",
+    "lede": "Wir entwickeln ConvCalc, also lesen Sie dies unter diesem Gesichtspunkt. Preise und Bewertungen stammen aus dem App Store und sind datiert, und unsere Meinungen sind als Meinungen gekennzeichnet."
+  },
+  "comparePage": {
+    "disclosure": "Wir entwickeln ConvCalc, daher bewerten Sie unsere Wahl entsprechend.",
+    "tableTitle": "Wie sie sich vergleichen",
+    "app": "App",
+    "price": "Preis",
+    "rating": "Bewertung",
+    "take": "Unsere Meinung",
+    "builtIn": "Integriert",
+    "notListed": "Nicht aufgeführt",
+    "dataNote": "Download-Preise und US App Store-Bewertungen vom {date}. In-App-Käufe werden nicht angezeigt, überprüfen Sie daher jede Auflistung, um zu sehen, was enthalten ist.",
+    "whyTitle": "Warum wir ConvCalc wählen",
+    "whyText": "Dieser Teil ist unsere Meinung: Die meisten Taschenrechner sind entweder schlicht oder überladen. ConvCalc platziert alles hinter sauberen, taktilen Tasten, mit einer wissenschaftlichen Tastatur, die sich mit einem Tipp öffnet, einem Verlauf, den Sie wiederverwenden können, und 20 Tools für Einheiten, Währungen und Alltagsmathematik. Es ist auch jung, mit bisher nur einer Handvoll App Store-Bewertungen, daher hat es noch nicht die Erfolgsbilanz einiger Apps auf dieser Liste erreicht."
+  },
+  "compare": {
+    "best-calculator-app-iphone": {
+      "label": "Beste Taschenrechner Apps für iPhone",
+      "title": "Die besten Taschenrechner Apps für iPhone im Jahr 2027",
+      "description": "Die besten Taschenrechner Apps für iPhone im Jahr 2027 im Vergleich: ConvCalc, Apple Taschenrechner, PCalc, Calcbot, Calculator₊ und Tydlig, mit Preisen und Bewertungen.",
+      "h1": "Die besten Taschenrechner Apps für iPhone im Jahr 2027",
+      "intro": "Wir haben nach einem Taschenrechner gesucht, der jeden Tag angenehm zu bedienen ist. Unsere Wahl ist ConvCalc, und wir sollten gleich zu Beginn sagen, dass wir ihn entwickelt haben."
+    },
+    "best-free-calculator-app-iphone": {
+      "label": "Beste kostenlose Taschenrechner Apps",
+      "title": "Die besten kostenlosen Taschenrechner Apps für iPhone im Jahr 2027",
+      "description": "Die besten kostenlosen Taschenrechner Apps für iPhone im Vergleich: ConvCalc, Apple Taschenrechner, Calcbot, Calculator with History, Calculator₊ und PCalc Lite.",
+      "h1": "Die besten kostenlosen Taschenrechner Apps für iPhone im Jahr 2027",
+      "intro": "Sie müssen nicht für einen guten iPhone-Taschenrechner bezahlen. Diese sind alle kostenlos herunterzuladen, und unsere Wahl ist die, die wir entwickelt haben: ConvCalc."
+    },
+    "best-scientific-calculator-app-iphone": {
+      "label": "Beste wissenschaftliche Taschenrechner Apps",
+      "title": "Die besten wissenschaftlichen Taschenrechner Apps für iPhone im Jahr 2027",
+      "description": "Die besten wissenschaftlichen Taschenrechner Apps für iPhone im Vergleich: ConvCalc, PCalc, Desmos, Calcbot und Apple Taschenrechner.",
+      "h1": "Die besten wissenschaftlichen Taschenrechner Apps für iPhone im Jahr 2027",
+      "intro": "Wenn Sie Trigonometrie und Logarithmen auf Ihrem Telefon benötigen, sind dies die Optionen, die wir uns ansehen würden. Wir haben ConvCalc entwickelt, und PCalc ist die richtige Wahl für Programmierung und RPN."
+    },
+    "convcalc-vs-apple-calculator": {
+      "label": "ConvCalc vs Apple Taschenrechner",
+      "title": "ConvCalc vs Apple Taschenrechner: Welchen sollten Sie auf dem iPhone verwenden?",
+      "description": "Ein ehrlicher Vergleich von ConvCalc und der in iOS integrierten Taschenrechner-App, von den Entwicklern von ConvCalc.",
+      "h1": "ConvCalc vs Apple Taschenrechner",
+      "intro": "Apples Taschenrechner hat sich stark verbessert, und er ist bereits auf Ihrem Telefon. Hier erfahren Sie, wann es sich lohnt, ConvCalc hinzuzufügen."
+    }
+  },
+  "takes": {
+    "convcalc": "Unsere Wahl für das Design. Wissenschaftliche Tasten, wiederverwendbarer Verlauf, Währung und 19 weitere Tools, ohne Werbung.",
+    "apple": "Kommt mit iOS. Seit iOS 18 enthält es einen Verlauf, Einheitenumrechnung und Math Notes, daher ist es ein guter Ausgangspunkt.",
+    "pcalc": "Die Wahl des Power-Users. Die Auflistung umfasst optional RPN, ein Papierband, mehrere Tastenlayouts, Hex, Oktal und Binär sowie eine Apple Watch App.",
+    "pcalclite": "Eine kostenlose Version von PCalc mit optionalem RPN, Rückgängigmachen und Wiederherstellen sowie Einheitenumrechnungen. Die Auflistung behält das Papierband und einige Themen für die Vollversion der App vor.",
+    "calcbot": "Ein langjähriger Taschenrechner von Tapbots. Die Auflistung umfasst ein Verlaufsprotokoll, eine Ausdrucksansicht, wissenschaftliche Funktionen sowie Einheiten- und Währungsumrechnung.",
+    "calculatorplus": "Die am häufigsten bewertete App hier. Die Auflistung umfasst wissenschaftliche, Verlaufs-, Einheiten- und Währungstools und bewirbt eine Premium-Stufe, die frei von Vollbildanzeigen ist.",
+    "tydlig": "Eine andere Idee: eine freie Arbeitsfläche mit verknüpften Zahlen und Live-Ergebnissen, plus Diagramme. Das letzte App Store-Update war im Jahr 2017.",
+    "calchistory": "Eine einfache Option, deren Auflistung keine Werbung verspricht, mit Verlauf, optionalen wissenschaftlichen Funktionen und anpassbaren Tastaturfarben und -tönen.",
+    "desmos": "Ein kostenloser, fokussierter wissenschaftlicher Taschenrechner von Desmos, mit Trigonometrie, Statistik, Kombinatorik und eigenen Funktionen.",
+    "convcalcSci": "Unsere Wahl für den täglichen wissenschaftlichen Gebrauch. Trigonometrische, inverse und hyperbolische Funktionen, Logarithmen und Fakultäten hinter einer ausblendbaren Tastatur, ohne Werbung.",
+    "appleSci": "In iOS integriert, mit einem wissenschaftlichen Modus und Verlauf. Es lohnt sich, es auszuprobieren, bevor Sie etwas herunterladen."
+  },
+  "versus": {
+    "feature": "Funktion",
+    "rows": [
+      [
+        "Preis",
+        "Kostenlos",
+        "In iOS integriert"
+      ],
+      [
+        "Wissenschaftliche Funktionen",
+        "Ja",
+        "Ja"
+      ],
+      [
+        "Verlauf",
+        "Ja",
+        "Ja, seit iOS 18"
+      ],
+      [
+        "Einheitenumrechnung",
+        "14 Kategorien, jede Einheit wird gleichzeitig angezeigt",
+        "Ja, seit iOS 18"
+      ],
+      [
+        "Währungsumrechnung",
+        "Ja",
+        "Ja, seit iOS 18"
+      ],
+      [
+        "Alters-, BMI-, Datums-, Rabatt- und Darlehensrechner",
+        "Ja",
+        "Keine speziellen Tools"
+      ],
+      [
+        "Handschriftliche und getippte mathematische Notizen",
+        "Nein",
+        "Ja, mit Math Notes"
+      ],
+      [
+        "Funktioniert auf dem iPad",
+        "Nein, nur iPhone",
+        "Ja, seit iPadOS 18"
+      ]
+    ],
+    "verdictTitle": "Welchen sollten Sie verwenden?",
+    "verdict": "Wenn Sie mathematische Notizen wünschen oder ein iPad verwenden, bleiben Sie bei Apples App. Wenn Sie alltägliche Tools wie Darlehens-, Alters- und Datumsrechner an einem Ort wünschen oder Ihnen das Aussehen von ConvCalc besser gefällt, lohnt sich der kostenlose Download. Viele Leute könnten beide behalten."
+  }
+}

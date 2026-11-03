@@ -1,0 +1,11 @@
+{
+    "name": "convcalc-website",
+    "account_id": "4e58baf2fc785a7d928f35b2433e86f8",
+    "compatibility_date": "2026-01-05",
+    "assets": {
+        "directory": "./dist",
+        "not_found_handling": "404-page",
+        "html_handling": "drop-trailing-slash"
+    },
+    "routes": [{ "pattern": "convcalc.app", "custom_domain": true }]
+}

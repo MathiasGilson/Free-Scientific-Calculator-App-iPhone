@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-02",
+  "apps": {
+    "convcalc": { "name": "ConvCalc", "price": "Free", "rating": 4.8, "count": 5 },
+    "apple": { "name": "Apple Calculator", "builtIn": true },
+    "pcalc": { "name": "PCalc", "price": "$9.99", "rating": 4.7, "count": 779 },
+    "pcalclite": { "name": "PCalc Lite", "price": "Free", "rating": 4.4, "count": 214 },
+    "calcbot": { "name": "Calcbot 2", "price": "Free", "rating": 4.7, "count": 11107 },
+    "calculatorplus": { "name": "Calculator₊", "price": "Free", "rating": 4.7, "count": 1736358 },
+    "tydlig": { "name": "Tydlig", "price": "$1.99", "rating": 4.8, "count": 2631 },
+    "calchistory": { "name": "Calculator with History +", "price": "Free", "rating": 4.7, "count": 25391 },
+    "desmos": { "name": "Desmos Scientific Calculator", "price": "Free", "rating": 4.3, "count": 336 }
+  },
+  "pages": {
+    "best-calculator-app-iphone": [["convcalc", "convcalc"], ["apple", "apple"], ["pcalc", "pcalc"], ["calcbot", "calcbot"], ["calculatorplus", "calculatorplus"], ["tydlig", "tydlig"]],
+    "best-free-calculator-app-iphone": [["convcalc", "convcalc"], ["apple", "apple"], ["calcbot", "calcbot"], ["calchistory", "calchistory"], ["calculatorplus", "calculatorplus"], ["pcalclite", "pcalclite"]],
+    "best-scientific-calculator-app-iphone": [["convcalc", "convcalcSci"], ["pcalc", "pcalc"], ["desmos", "desmos"], ["calcbot", "calcbot"], ["apple", "appleSci"]]
+  }
+}

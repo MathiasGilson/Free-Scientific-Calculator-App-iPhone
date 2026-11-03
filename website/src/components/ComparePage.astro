@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Shot from "./Shot.astro";
+import AppStore from "./AppStore.astro";
+import data from "../data/apps.json";
+import { getTranslations, type Locale } from "../utils/i18n";
+const { locale, slug } = Astro.props as { locale: Locale; slug: string };
+const t = getTranslations(locale);
+const page = (t.compare as Record<string, any>)[slug];
+const p = t.comparePage;
+const rows = (data.pages as Record<string, string[][]> )[slug] ?? null;
+const apps = data.apps as Record<string, any>;
+const takes = t.takes as Record<string, string>;
+const count = (n: number) => (n >= 1e6 ? `${(n / 1e6).toFixed(1)}M` : n.toLocaleString("en-US"));
+const v = t.versus;
+const versus = slug === "convcalc-vs-apple-calculator";
+---
+<Layout title={page.title} description={page.description} locale={locale} path={`/compare/${slug}`} pageType="compare">
+<main class="wrap">
+  <section class="first">
+    <h1>{page.h1}</h1>
+    <p class="lede">{page.intro}</p>
+    <AppStore locale={locale} placement="hero" />
+  </section>
+  {rows && <section>
+    <h2>{p.tableTitle}</h2>
+    <div class="tw"><table>
+      <thead><tr><th>{p.app}</th><th>{p.price}</th><th class="rt">{p.rating}</th><th class="tk">{p.take}</th></tr></thead>
+      <tbody>{rows.map(([a, k]) => <tr><td class="nw">{apps[a].name}</td><td>{apps[a].builtIn ? p.builtIn : apps[a].price === "Free" ? t.versus.rows[0][1] : apps[a].price}</td><td class="rt nw">{apps[a].rating ? `${apps[a].rating} (${count(apps[a].count)})` : p.notListed}</td><td class="tk">{takes[k]}</td></tr>)}</tbody>
+    </table></div>
+    <small class="sm">{p.dataNote.replace("{date}", data.date)} {p.disclosure}</small>
+  </section>}
+  {versus && <section>
+    <div class="tw"><table>
+      <thead><tr><th>{v.feature}</th><th>ConvCalc</th><th>Apple Calculator</th></tr></thead>
+      <tbody>{v.rows.map(([a, b, c]) => <tr><td>{a}</td><td>{b}</td><td>{c}</td></tr>)}</tbody>
+    </table></div>
+    <small class="sm">{p.disclosure}</small>
+  </section>}
+  {versus && <section><h2>{v.verdictTitle}</h2><p>{v.verdict}</p></section>}
+  <section class="two">
+    <div><h2>{p.whyTitle}</h2><p>{p.whyText}</p></div>
+    <div class="side-phone"><Shot name="calculatorExpanded" alt="ConvCalc" /></div>
+  </section>
+</main>
+</Layout>

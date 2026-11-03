@@ -1,0 +1,21 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { REPO } from "../utils/i18n";
+---
+<Layout title="Privacy policy" description="What the ConvCalc app and website collect, and what they don't." locale="en" path="/privacy" pageType="legal" englishOnly>
+<main class="wrap prose">
+  <section class="first">
+    <h1>Privacy policy</h1>
+    <p class="lede">The ConvCalc app doesn't collect your data. This website uses privacy-minded analytics to understand which pages are useful.</p>
+    <h2 class="h3 sect">The app</h2>
+    <p>ConvCalc has no accounts, ads or analytics. Your calculation history and settings stay on your iPhone. To show exchange rates, the app downloads them from a rates service, which can see your device's IP address like any web server.</p>
+    <h2 class="h3 sect">This website</h2>
+    <p>We use PostHog, on a server we run ourselves, to count page views and clicks on App Store links. It uses a cookie and local storage to tell visits apart, and stores the first page you landed on and the site that sent you. Session recording is off, and IP addresses are dropped when events are processed. We don't sell this data or use it for advertising.</p>
+    <p>The calculators on this site run in your browser. What you type into them isn't sent to us.</p>
+    <h2 class="h3 sect">Who runs ConvCalc</h2>
+    <p>ConvCalc is published on the App Store by Gilson GmbH.</p>
+    <h2 class="h3 sect">Questions</h2>
+    <p>Ask us by <a href={`${REPO}/issues`}>opening an issue on GitHub</a>.</p>
+  </section>
+</main>
+</Layout>

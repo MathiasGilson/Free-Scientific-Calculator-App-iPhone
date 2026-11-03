@@ -1,59 +1,94 @@
 ---
+import "@fontsource-variable/instrument-sans";
+import "@fontsource-variable/inter";
+import "../styles/base.css";
+import "../styles/site.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE, APP_STORE, locales, defaultLocale, isRtl, localizedPath, type Locale } from "../utils/i18n";
+
 interface Props {
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
+  locale: Locale;
+  path: string;
+  pageType: string;
+  englishOnly?: boolean;
+  appSchema?: boolean;
 }
-
-const {
-  title = "ConvCalc - Free Scientific Calculator & Converter for iPhone",
-  description = "A free, open-source scientific calculator and universal unit converter app for iPhone. No ads, offline capable, with 15+ converters and 5 specialized calculators.",
-} = Astro.props;
-
-const ogImage = "https://github.com/user-attachments/assets/e9b81f2a-250b-456e-9daa-3f8f9d93990f";
-const siteUrl = "https://convcalc.com";
+const { title, description, locale, path, pageType, englishOnly = false, appSchema = false } = Astro.props;
+const canonical = `${SITE}${localizedPath(locale, path)}`.replace(/\/$/, "");
+const alternates = englishOnly ? [] : locales.map((l) => ({ l, href: `${SITE}${localizedPath(l, path)}`.replace(/\/$/, "") }));
+const xDefault = `${SITE}${path === "/" ? "" : path}`;
+const schema = appSchema
+  ? JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "ConvCalc",
+      operatingSystem: "iOS",
+      applicationCategory: "UtilitiesApplication",
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      downloadUrl: APP_STORE,
+      url: SITE,
+    })
+  : null;
+const posthogKey = "phc_xrZjMXDsWwS68gCwtj3ccnZy7rQGszNbZUiLRBxMJK6Y";
+const pageInfo = { pageType, slug: path, locale };
 ---
-
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
-    <meta property="og:url" content={siteUrl} />
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
-
-    <!-- Apple Smart App Banner -->
-    <meta name="apple-itunes-app" content="app-id=6472445974" />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href={ogImage} />
-
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-
-    <title>{title}</title>
-  </head>
-  <body>
-    <slot />
-  </body>
+<html lang={locale} dir={isRtl(locale) ? "rtl" : "ltr"}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  {alternates.map((a) => <link rel="alternate" hreflang={a.l} href={a.href} />)}
+  {!englishOnly && <link rel="alternate" hreflang="x-default" href={xDefault} />}
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/icon.png" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-itunes-app" content="app-id=6472445974" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="ConvCalc" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={`${SITE}/og.png`} />
+  <meta name="twitter:card" content="summary_large_image" />
+  {schema && <script type="application/ld+json" set:html={schema} />}
+  <script is:inline define:vars={{ posthogKey, pageInfo, defaultLocale }}>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init(posthogKey, {
+      api_host: "https://analytics.qualtir.com",
+      person_profiles: "identified_only",
+      persistence: "localStorage+cookie",
+      cross_subdomain_cookie: true,
+      autocapture: false,
+      capture_pageview: true,
+      capture_pageleave: true,
+      capture_performance: { web_vitals: false },
+      disable_session_recording: true,
+      before_send: ["localhost", "127.0.0.1"].includes(location.hostname) ? function () { return null } : undefined
+    });
+    posthog.register({ source: "website", page_type: pageInfo.pageType, locale: pageInfo.locale });
+    try {
+      if (!localStorage.getItem("cc_first_touch")) {
+        var q = new URLSearchParams(location.search);
+        localStorage.setItem("cc_first_touch", JSON.stringify({ at: Date.now(), landing: location.pathname, referrer: document.referrer || null, utm_source: q.get("utm_source"), utm_medium: q.get("utm_medium"), utm_campaign: q.get("utm_campaign"), utm_term: q.get("utm_term") }));
+      }
+      posthog.register({ first_touch_landing: JSON.parse(localStorage.getItem("cc_first_touch")).landing });
+    } catch (e) {}
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest('a[href*="apps.apple.com"]');
+      if (a) posthog.capture("app_store_clicked", { page_type: pageInfo.pageType, page_slug: pageInfo.slug, locale: pageInfo.locale, placement: a.dataset.placement || null });
+    });
+  </script>
+</head>
+<body class="K">
+  <Header locale={locale} />
+  <slot />
+  <Footer locale={locale} path={path} englishOnly={englishOnly} />
+  <script>import "../lib/demo.js";</script>
+</body>
 </html>
-
-<style is:global>
-  @import "../styles/global.css";
-</style>

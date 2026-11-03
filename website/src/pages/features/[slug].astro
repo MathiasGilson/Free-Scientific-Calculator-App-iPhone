@@ -1,0 +1,6 @@
+---
+import FeaturePage from "../../components/FeaturePage.astro";
+import en from "../../locales/en.json";
+export const getStaticPaths = () => Object.keys(en.features).map((slug) => ({ params: { slug } }));
+---
+<FeaturePage locale="en" slug={Astro.params.slug} />

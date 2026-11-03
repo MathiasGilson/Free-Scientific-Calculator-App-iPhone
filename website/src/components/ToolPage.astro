@@ -1,0 +1,33 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Phone from "./Phone.astro";
+import Demo from "./Demo.astro";
+import AppStore from "./AppStore.astro";
+import { GRID } from "../lib/tools.js";
+import { byTool } from "../utils/conversions.js";
+import { getTranslations, localizedPath, type Locale } from "../utils/i18n";
+const { locale, slug } = Astro.props as { locale: Locale; slug: string };
+const t = getTranslations(locale);
+const tools = t.tools as Record<string, { title: string; description: string; h1: string; intro: string; how: string }>;
+const tool = tools[slug];
+const popular = locale === "en" ? byTool(slug).slice(0, 12) : [];
+const more = GRID.map(([k]) => k).filter((k) => k !== slug);
+---
+<Layout title={tool.title} description={tool.description} locale={locale} path={`/tools/${slug}`} pageType="tool" appSchema>
+<main class="wrap">
+  <Demo locale={locale} tool={slug} class="two first">
+    <div>
+      <h1>{tool.h1}</h1>
+      <p class="lede">{tool.intro}</p>
+      <h2 class="h3">{t.toolPage.how}</h2>
+      <p>{tool.how}</p>
+      <h2 class="h3">{t.toolPage.inApp}</h2>
+      <p>{t.toolPage.inAppText}</p>
+      <div class="mt-cta"><AppStore locale={locale} placement="tool" /></div>
+    </div>
+    <div class="side-phone"><Phone locale={locale} /></div>
+  </Demo>
+  {popular.length > 0 && <section><h2>{t.toolPage.popular}</h2><div class="rel">{popular.map((c: any) => <a href={`/convert/${c.slug}`}>{c.h1}</a>)}</div></section>}
+  <section><h2>{t.toolPage.more}</h2><div class="rel">{more.map((k) => <a href={localizedPath(locale, `/tools/${k}`)}>{tools[k].h1}</a>)}</div></section>
+</main>
+</Layout>

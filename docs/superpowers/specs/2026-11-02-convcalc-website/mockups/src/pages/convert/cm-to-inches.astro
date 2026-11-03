@@ -1,0 +1,51 @@
+---
+import Base from "../../components/Base.astro";
+import KHead from "../../components/KHead.astro";
+import AppStore from "../../components/AppStore.astro";
+import "../../lib/k.css";
+const rows = [1,2,5,10,15,20,25,30,40,50,60,70,75,80,90,100,150,170,180,200];
+const f = (n) => String(+(n/2.54).toFixed(3));
+const ftin = (cm) => { const t = cm/2.54; const ft = Math.floor(t/12); return `${ft} ft ${(t-ft*12).toFixed(1)} in`; };
+const rel = ["Inches to cm","mm to inches","cm to feet","meters to feet","km to miles","feet to meters"];
+---
+<Base title="Centimeters to inches converter" class="K" fonts="family=Instrument+Sans:wght@400;500;600;700">
+<KHead />
+<main class="wrap">
+  <section style="padding-top:clamp(24px,4vw,56px)">
+    <h1>Centimeters to inches</h1>
+    <div class="conv surface">
+      <label><input id="in" inputmode="decimal" value="10" aria-label="Centimeters" /><span>cm</span></label>
+      <div class="eq">=</div>
+      <div class="res"><output id="out">3.937</output><span>in</span></div>
+    </div>
+    <p>To convert centimeters to inches, <b>divide by 2.54</b>. One inch is exactly 2.54 centimeters.</p>
+  </section>
+  <section><h2>Centimeters to inches chart</h2>
+    <div class="chart">{rows.map(n => <div><span>{n} cm</span><b>{f(n)} in</b></div>)}</div>
+  </section>
+  <section><h2>Worked example</h2><p>A person who is 170 cm tall is 170 ÷ 2.54 = <b>{f(170)} inches</b>, or {ftin(170)}.</p></section>
+  <section class="cta">
+    <div><h2>Every length unit at once, on your iPhone</h2><p>ConvCalc shows millimeters, centimeters, meters, kilometers, inches, feet, yards and miles together as you type, alongside a scientific calculator and 19 other tools. Free, with no ads.</p><div style="margin-top:24px"><AppStore /></div></div>
+    <div class="phone"><div class="screen"><img src="/shots/tool-length.jpg" alt="ConvCalc length converter" style="width:100%;height:100%;object-fit:cover" /></div></div>
+  </section>
+  <section><h2>Related conversions</h2><div class="rel">{rel.map(r => <a href="#">{r}</a>)}</div></section>
+</main>
+<style is:global>
+.conv{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 clamp(14px,2vw,30px);margin:clamp(24px,4vw,44px) 0 26px;font-weight:200;letter-spacing:-.03em}
+.conv label,.res{display:flex;align-items:baseline;gap:12px}
+.conv input{width:3.2ch;min-width:1ch;background:none;border:0;color:#f59905;font:inherit;font-size:clamp(56px,10vw,136px);font-family:inherit;font-weight:200;letter-spacing:-.03em;outline:0;border-bottom:2px solid #333;text-align:right}
+.conv input:focus{border-color:#f59905}
+.conv span{font-size:clamp(20px,2.5vw,32px);color:#8a8a8a;letter-spacing:0;font-weight:400}
+.conv output{font-size:clamp(56px,10vw,136px)}.eq{font-size:clamp(36px,5vw,72px);color:#6d6d6d}
+.chart{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));column-gap:clamp(24px,4vw,56px)}
+.chart div{display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #262626;color:#9a9a9a;font-variant-numeric:tabular-nums}.chart b{font-weight:500;color:#fff}
+.cta{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,300px);gap:clamp(28px,6vw,90px);align-items:center}
+.rel{display:flex;flex-wrap:wrap;gap:10px}.rel a{padding:11px 16px;background:#2b2b2b;border:1px solid #fff2;border-radius:16px;text-decoration:none;font-size:15px}.rel a:hover{background:#3b2401;color:#f59905}
+@media (max-width:860px){.cta{grid-template-columns:1fr}.cta .phone{max-width:280px;margin:auto}}
+</style>
+<script>
+const i=document.getElementById("in"),o=document.getElementById("out");
+const up=()=>{const v=parseFloat(i.value);i.style.width=Math.max(i.value.length,1)+0.3+"ch";o.textContent=isFinite(v)?String(+(v/2.54).toFixed(4)):"0";};
+i.addEventListener("input",up);up();
+</script>
+</Base>

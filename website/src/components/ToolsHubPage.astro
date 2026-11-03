@@ -1,0 +1,16 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Icon from "./Icon.astro";
+import AppStore from "./AppStore.astro";
+import { GRID } from "../lib/tools.js";
+import { getTranslations, localizedPath, type Locale } from "../utils/i18n";
+const { locale } = Astro.props as { locale: Locale };
+const t = getTranslations(locale);
+const tools = t.tools as Record<string, { h1: string; intro: string }>;
+---
+<Layout title={t.toolsHub.title} description={t.toolsHub.description} locale={locale} path="/tools" pageType="tools_hub" appSchema>
+<main class="wrap">
+  <section class="first"><h1>{t.toolsHub.h1}</h1><p class="lede">{t.toolsHub.lede}</p><AppStore locale={locale} placement="hero" /></section>
+  <section><ul class="hub">{GRID.map(([k, , i]) => <li><a href={localizedPath(locale, `/tools/${k}`)}><span class="hub-i"><Icon name={i} size="26" /></span><span><b>{tools[k].h1}</b>{tools[k].intro}</span></a></li>)}</ul></section>
+</main>
+</Layout>

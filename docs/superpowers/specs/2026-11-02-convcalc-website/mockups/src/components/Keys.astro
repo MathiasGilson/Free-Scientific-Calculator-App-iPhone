@@ -1,0 +1,19 @@
+---
+import Icon from "./Icon.astro";
+const K = [
+ ["HYP","", "s x","hyp"],["INV","", "s x","inv"],["sin","sin","s x","fn"],["cos","cos","s x","fn"],["tan","tan","s x","fn"],
+ ["x^y","^","s x"],["lg","log(","s x"],["lg10","log10(","s x"],["Rand","","s x","rand"],["DEG","","s x","deg"],
+ ["√x","sqrt(","s x"],["AC","","s ac","clear"],["( )","","s","paren"],["%","%","s"],["÷","/","o"],
+ ["x!","!","s x"],["7","7","n"],["8","8","n"],["9","9","n"],["×","*","o"],
+ ["1/x","1/","s x"],["4","4","n"],["5","5","n"],["6","6","n"],["−","-","o"],
+ ["π","pi","s x"],["1","1","n"],["2","2","n"],["3","3","n"],["+","+","o"],
+ ["expand","","g","expand"],["e","e","n x"],["0","0","n"],[".",".","n"],["=","","e","eq"],
+];
+---
+<div class="keys" data-keys>
+  {K.map(([l,v,c,a]) => (
+    <button type="button" class={`k ${c}`} data-v={v || undefined} data-a={a} aria-label={a==="expand" ? "Show scientific keys" : undefined}>
+      {a === "expand" ? <><Icon name="maximize-2" class="exp-a" /><Icon name="minimize-2" class="exp-b" /></> : l}
+    </button>
+  ))}
+</div>
