@@ -17,13 +17,14 @@ const shot = c.currency ? "currency" : c.t === "length" ? "tool-length" : c.t ==
     <div class="conv" data-conv data-tool={c.t} data-from={c.fromLabel} data-to={c.toLabel}>
       <label><input data-in inputmode="decimal" value={c.currency ? "100" : "10"} aria-label={c.fromName} /><span>{c.fromLabel}</span></label>
       <div class="eq">=</div>
-      <div class="res"><output data-out></output><span>{c.toLabel}</span></div>
+      <div class="res"><output data-out>{c.out}</output><span>{c.toLabel}</span></div>
     </div>
     <p><b>{c.formula}</b></p>
+    <div class="mt-cta"><AppStore locale="en" placement="conversion_top" /></div>
     {c.defs.length > 0 && <p>{c.defs.join(" ")}</p>}
     {c.currency && <small class="sm">Rate from {rates.date}, for reference only, from <a href="https://www.exchangerate-api.com">Rates By Exchange Rate API</a>. Your bank or card issuer will use its own rate.</small>}
   </section>
-  <section><h2>{c.h1} chart</h2>
+  <section><h2>{c.name} chart</h2>
     <div class="chart">{c.rows.map(([a, b]: string[]) => <div><span>{a}</span><b>{b}</b></div>)}</div>
   </section>
   <section><h2>Worked example</h2><p>{c.example}</p></section>
@@ -31,7 +32,7 @@ const shot = c.currency ? "currency" : c.t === "length" ? "tool-length" : c.t ==
     <div><h2>{c.currency ? "Convert currency on your iPhone" : `Every ${c.t} unit at once, on your iPhone`}</h2><p>ConvCalc shows all the {toolName.toLowerCase()} units together as you type, alongside a scientific calculator and 19 other tools. Free, with no ads.</p><div class="mt-cta"><AppStore locale="en" placement="conversion" /></div></div>
     <div class="side-phone"><Shot name={shot} alt={`ConvCalc ${toolName.toLowerCase()} screen`} /></div>
   </section>
-  <section><h2>Related conversions</h2><div class="rel">{related.map((r: any) => <a href={`/convert/${r.slug}`}>{r.h1}</a>)}<a href={`/tools/${c.t}`}>{toolName} converter</a></div></section>
+  <section><h2>Related conversions</h2><div class="rel">{related.map((r: any) => <a href={`/convert/${r.slug}`}>{r.name}</a>)}<a href={`/tools/${c.t}`}>{toolName} converter</a></div></section>
 </main>
 <script>
   import { TOOLS } from "../../lib/tools.js";

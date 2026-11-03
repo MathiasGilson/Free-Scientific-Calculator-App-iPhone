@@ -194,3 +194,7 @@ Mathias asked to ship on 2026-11-03, ahead of the App Store release. Differences
 - App Store links aren't campaign tagged, because no provider token was provided. PostHog records App Store clicks only.
 
 Still open: the Impressum and contact details, and campaign tagging.
+
+## Keyword audit, 2026-11-03
+
+About 27.9M monthly US searches map to pages the app can honestly serve (excluding `calculator+`, competitor brands and missing features), and 40 pages hold 80% of that. Every conversion page's title and h1 must contain the searched phrase, and `npm run verify` enforces this along with a result that shows without JavaScript. The Celsius and Fahrenheit pages hold the searched readings in one chart each instead of one thin page per value.

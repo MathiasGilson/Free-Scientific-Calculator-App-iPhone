@@ -32,6 +32,14 @@ for (const f of pages) {
   if (!["/privacy", "/404"].includes(rel) && !rel.endsWith("/compare") && !rel.endsWith("/convert") && !html.includes("apps.apple.com/app/convcalc-calculator-converter/id6472445974")) err("no App Store link");
   for (const m of html.matchAll(/<a\b[^>]*href="(\/[^"]*)"/g)) if (!exists(m[1])) err(`broken link ${m[1]}`);
 }
+const clean = (s) => decode(s).toLowerCase().replace(/°/g, "");
+for (const { k } of JSON.parse(readFileSync(new URL("../src/data/conversions.json", import.meta.url), "utf8"))) {
+  const rel = `/convert/${k.replace(/\//g, "-per-").replace(/\s+/g, "-")}`;
+  const html = readFileSync(join(dist, existsSync(join(dist, rel + ".html")) ? rel + ".html" : rel + "/index.html"), "utf8");
+  if (!clean(/<title>([^<]*)/.exec(html)[1]).includes(k)) errors.push(`${rel}: title lacks "${k}"`);
+  if (!clean(/<h1[^>]*>([^<]*)/.exec(html)[1]).includes(k)) errors.push(`${rel}: h1 lacks "${k}"`);
+  if (!/<output data-out[^>]*>[^<]+</.test(html)) errors.push(`${rel}: no result without JavaScript`);
+}
 const sm = readFileSync(join(dist, "sitemap.xml"), "utf8");
 const locs = [...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
 for (const u of locs) if (!exists(u.replace("https://convcalc.app", "") || "/")) errors.push(`sitemap target missing ${u}`);
