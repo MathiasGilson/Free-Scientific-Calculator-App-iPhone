@@ -1,0 +1,36 @@
+---
+import Base from "../components/Base.astro";
+import KHead from "../components/KHead.astro";
+import AppStore from "../components/AppStore.astro";
+import "../lib/k.css";
+const apps = [
+ ["ConvCalc","Free","4.8 (5)","Best looking, and the most built in for free. Scientific keys, history, currency and 19 more tools, with no ads. We make it, so weigh this pick accordingly."],
+ ["Apple Calculator","Built in","Not listed","Comes with iOS. Since iOS 18 it has history and unit conversion, so it's a much better starting point than it used to be."],
+ ["PCalc","$9.99","4.7 (779)","The power user's choice, with RPN and deep customization. It costs money, and it looks like a serious tool rather than a beautiful one."],
+ ["Calcbot 2","Free","4.7 (11,107)","A well-known, tidy calculator from Tapbots, with a tape-style history of your calculations."],
+ ["Calculator₊","Free","4.7 (1.7M)","The most reviewed option on the App Store, and a good fit if you want a simple, familiar layout."],
+ ["Tydlig","$1.99","4.8 (2,631)","A notebook-style calculator with live, linked results. Its last App Store update was in 2017."],
+];
+---
+<Base title="The best calculator apps for iPhone in 2027" class="K" fonts="family=Instrument+Sans:wght@400;500;600;700">
+<KHead />
+<main class="wrap">
+  <section style="padding-top:clamp(24px,4vw,56px)">
+    <h1>The best calculator apps for iPhone in 2027</h1>
+    <p style="margin:22px 0 28px">We looked for a calculator that's pleasant to use every day. If you want the short answer, ConvCalc is our pick, and we should say up front that we built it.</p>
+    <AppStore />
+  </section>
+  <section>
+    <h2>How they compare</h2>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th>App</th><th>Price</th><th class="rt">Rating</th><th style="padding-left:24px">Our take</th></tr></thead>
+      <tbody>{apps.map(([a,p,r,t]) => <tr><td style="white-space:nowrap">{a}</td><td>{p}</td><td class="rt" style="white-space:nowrap">{r}</td><td style="padding-left:24px;min-width:300px">{t}</td></tr>)}</tbody>
+    </table></div>
+    <small style="margin-top:16px">Prices and US App Store ratings as of November 2, 2026. Download prices only; in-app purchases are not shown.</small>
+  </section>
+  <section style="display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,300px);gap:clamp(28px,6vw,90px);align-items:center">
+    <div><h2>Why we rank ConvCalc first</h2><p>Most calculators are either plain or crowded. ConvCalc puts everything behind clean, tactile keys: a scientific keypad that opens with one tap, a history you can reuse, and 20 tools for units, currency and everyday math.</p></div>
+    <div class="phone"><div class="screen"><img src="/shots/calculatorExpanded.jpg" alt="ConvCalc scientific keypad" style="width:100%;height:100%;object-fit:cover" /></div></div>
+  </section>
+</main>
+</Base>

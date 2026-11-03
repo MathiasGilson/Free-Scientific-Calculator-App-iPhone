@@ -1,0 +1,47 @@
+name: Deploy website to Cloudflare Workers
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'website/**'
+      - '.github/workflows/deploy-website.yml'
+  pull_request:
+    paths:
+      - 'website/**'
+      - '.github/workflows/deploy-website.yml'
+  # Rebuilds daily so the currency pages carry a fresh rate snapshot.
+  schedule:
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-website-${{ github.event_name == 'pull_request' && github.ref || 'production' }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    # Blacksmith doesn't support personal accounts, and this repo is on one.
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: website
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npm run verify
+      - name: Deploy
+        if: github.event_name != 'pull_request'
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - name: Notify IndexNow
+        if: github.event_name == 'push'
+        run: node scripts/indexnow.mjs --dist dist --host convcalc.app --all

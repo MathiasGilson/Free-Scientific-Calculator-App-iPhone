@@ -1,0 +1,14 @@
+---
+import { getTranslations, localizedPath, type Locale } from "../utils/i18n";
+const { locale } = Astro.props as { locale: Locale };
+const t = getTranslations(locale);
+const p = (x: string) => localizedPath(locale, x);
+---
+<header class="top">
+  <a href={p("/")} class="brand"><img src="/icon.png" alt="" width="30" height="30" />ConvCalc</a>
+  <nav aria-label="Main">
+    <a href={p("/tools")}>{t.nav.tools}</a>
+    <a href={p("/features/scientific-calculator")}>{t.nav.features}</a>
+    <a href={p("/compare")}>{t.nav.compare}</a>
+  </nav>
+</header>

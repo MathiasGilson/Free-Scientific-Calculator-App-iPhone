@@ -1,0 +1,550 @@
+{
+  "meta": {
+    "siteName": "ConvCalc",
+    "homeTitle": "ConvCalc: en flott gratis kalkulator app for iPhone, uten annonser",
+    "homeDescription": "En gratis vitenskapelig kalkulator for iPhone med historikk, en valutakalkulator, enhetskonverterere og hverdagskalkulatorer. Ingen annonser. Prøv den her."
+  },
+  "nav": {
+    "tools": "Verktøy",
+    "compare": "Sammenlign",
+    "features": "Funksjoner",
+    "download": "Last ned"
+  },
+  "cta": {
+    "download": "Last ned gratis fra App Store",
+    "try": "Tastene på denne siden fungerer. Prøv dem.",
+    "bottomTitle": "Gratis. Ingen annonser. På din iPhone på ti sekunder."
+  },
+  "footer": {
+    "tagline": "En gratis kalkulator og konverterer for iPhone.",
+    "tools": "Verktøy",
+    "features": "Funksjoner",
+    "compare": "Sammenlign",
+    "more": "Mer",
+    "conversions": "Alle konverteringer",
+    "privacy": "Personvern",
+    "support": "Kundestøtte",
+    "source": "Kildekode",
+    "language": "Språk"
+  },
+  "home": {
+    "h1": "Kalkulatorer på iOS ser forferdelige ut. Denne gjør ikke det.",
+    "lede": "ConvCalc er en gratis vitenskapelig kalkulator med 20 innebygde verktøy for enheter, valuta og hverdagsmatematikk. Native for iPhone, uten annonser noe sted.",
+    "toolsTitle": "Én app i stedet for en mappe med dem",
+    "toolsLede": "Trykk på et verktøy for å åpne det på telefonen. Verktøyene og matematikken er de samme som i appen.",
+    "shots": {
+      "scientific": {
+        "title": "Vitenskapelige taster",
+        "text": "Trykk på hjørnetasten for å åpne trig, logaritmer, potenser, fakulteter og konstanter. Trykk igjen for å legge dem bort."
+      },
+      "history": {
+        "title": "Historikk",
+        "text": "Hvert resultat lagres. Trykk på ett for å hente det tilbake i beregningen din."
+      },
+      "currency": {
+        "title": "Valuta",
+        "text": "Skriv inn et beløp og se de andre valutaene følge etter."
+      },
+      "loan": {
+        "title": "Lån",
+        "text": "Skriv inn beløp, rente og år. Se månedlig betaling og total rente."
+      }
+    }
+  },
+  "demo": {
+    "tabs": {
+      "calculator": "Kalkulator",
+      "currency": "Valuta",
+      "all": "Alle verktøy"
+    },
+    "historyEmpty": "Dine beregninger vil vises her.",
+    "rateNote": "Kurser fra {date}",
+    "labels": {
+      "year": "År",
+      "month": "Måned",
+      "day": "Dag",
+      "age": "Alder",
+      "height": "Høyde (cm)",
+      "weight": "Vekt (kg)",
+      "bmi": "BMI",
+      "underweight": "Undervektig",
+      "normal": "Normal",
+      "overweight": "Overvektig",
+      "obese": "Fedme",
+      "year1": "Startår",
+      "month1": "Startmåned",
+      "day1": "Startdag",
+      "year2": "Sluttår",
+      "month2": "Sluttmåned",
+      "day2": "Sluttdag",
+      "difference": "Forskjell",
+      "yearsUnit": "år",
+      "monthsUnit": "måneder",
+      "weeksUnit": "uker",
+      "daysUnit": "dager",
+      "price": "Pris",
+      "percent": "Rabatt (%)",
+      "savings": "Du sparer",
+      "finalPrice": "Sluttpris",
+      "principal": "Lånebeløp",
+      "rate": "Årlig rente (%)",
+      "years": "År",
+      "monthly": "Månedlig betaling",
+      "totalPaid": "Totalt betalt",
+      "totalInterest": "Total rente"
+    },
+    "currencies": {
+      "USD": "Amerikansk dollar",
+      "EUR": "Euro",
+      "GBP": "Britisk pund",
+      "JPY": "Japansk yen"
+    },
+    "units": {
+      "Millimeter": "Millimeter",
+      "Centimeter": "Centimeter",
+      "Meter": "Meter",
+      "Kilometer": "Kilometer",
+      "Inch": "Tomme",
+      "Foot": "Fot",
+      "Yard": "Yard",
+      "Mile": "Mil",
+      "Square Meter": "Kvadratmeter",
+      "Square Foot": "Kvadratfot",
+      "Square Kilometer": "Kvadratkilometer",
+      "Square Mile": "Kvadratmil",
+      "Acre": "Acre",
+      "Hectare": "Hektar",
+      "Milligram": "Milligram",
+      "Gram": "Gram",
+      "Kilogram": "Kilogram",
+      "Dram": "Dram",
+      "Ounce": "Unse",
+      "Pound": "Pund",
+      "Stone": "Stone",
+      "Slug": "Slug",
+      "Short Ton": "Short Ton",
+      "Long Ton": "Long Ton",
+      "Metric Ton": "Metrisk tonn",
+      "Milliliter": "Milliliter",
+      "Liter": "Liter",
+      "Gallon": "Gallon",
+      "Quart": "Quart",
+      "Pint": "Pint",
+      "Cup": "Kopp",
+      "Fluid Ounce": "Fluid Unse",
+      "Meter per Second": "Meter per sekund",
+      "Kilometer per Hour": "Kilometer per time",
+      "Mile per Hour": "Mil per time",
+      "Knot": "Knop",
+      "Pascal": "Pascal",
+      "Kilopascal": "Kilopascal",
+      "Bar": "Bar",
+      "Atmosphere": "Atmosfære",
+      "Pound per Sq Inch": "Pund per kvadrat tomme",
+      "Inch of Mercury": "Tommer kvikksølv",
+      "Torr": "Torr",
+      "Watt": "Watt",
+      "Kilowatt": "Kilowatt",
+      "Horsepower": "Hestekraft",
+      "BTU per Minute": "BTU per minutt",
+      "Celsius": "Celsius",
+      "Fahrenheit": "Fahrenheit",
+      "Kelvin": "Kelvin",
+      "Radian": "Radian",
+      "Milliradian": "Milliradian",
+      "Microradian": "Mikroradian",
+      "Degree": "Grad",
+      "Arcminute": "Buesekund",
+      "Arcsecond": "Buesekund",
+      "Milliarcsecond": "Milli-buesekund",
+      "Microarcsecond": "Mikro-buesekund",
+      "Joule": "Joule",
+      "Kilojoule": "Kilojoule",
+      "Calorie": "Kalori",
+      "Kilocalorie": "Kilokalori",
+      "British Thermal Unit": "Britisk termisk enhet",
+      "Kilowatt-Hour": "Kilowatt-time",
+      "Erg": "Erg",
+      "Foot-Pound": "Fot-pund",
+      "Newton-Meter": "Newton-meter",
+      "Newton": "Newton",
+      "Kilogram-Force": "Kilogram-kraft",
+      "Pound-Force": "Pund-kraft",
+      "Poundal": "Poundal",
+      "Dyne": "Dyne",
+      "Kilometer per Liter": "Kilometer per liter",
+      "Mile per Gallon": "Mil per gallon",
+      "Liter per 100km": "Liter per 100 km",
+      "Gallon per 100mi": "Gallon per 100 mil",
+      "Millisecond": "Millisekund",
+      "Second": "Sekund",
+      "Minute": "Minutt",
+      "Hour": "Time",
+      "Day": "Dag",
+      "Week": "Uke",
+      "Year": "År",
+      "Byte": "Byte",
+      "Kilobyte": "Kilobyte",
+      "Megabyte": "Megabyte",
+      "Gigabyte": "Gigabyte",
+      "Terabyte": "Terabyte",
+      "Petabyte": "Petabyte"
+    }
+  },
+  "toolsHub": {
+    "title": "20 gratis kalkulatorer og konverterere, på nett og på iPhone",
+    "description": "Gratis konverterere for valuta, lengde, masse, volum, temperatur og mer, pluss alder, BMI, dato, rabatt og lånekalkulatorer.",
+    "h1": "Hvert verktøy i ConvCalc",
+    "lede": "Prøv en av dem her, og behold dem alle på din iPhone med den gratis appen."
+  },
+  "toolPage": {
+    "tryLabel": "Prøv den på telefonen",
+    "how": "Slik fungerer det",
+    "inApp": "Behold den på din iPhone",
+    "inAppText": "Dette verktøyet er ett av 20 i ConvCalc, sammen med en vitenskapelig kalkulator med historikk. Appen er gratis og har ingen annonser.",
+    "more": "Flere verktøy",
+    "popular": "Populære konverteringer"
+  },
+  "tools": {
+    "currency": {
+      "label": "Valuta",
+      "title": "Valutakalkulator: gratis vekslingskurskalkulator",
+      "description": "Konverter amerikanske dollar, euro, pund, yen og andre valutaer til en nylig vekslingskurs, gratis. Også tilgjengelig i ConvCalc iPhone-appen.",
+      "h1": "Valutakalkulator",
+      "intro": "Skriv inn et beløp i én valuta og se det i de andre med en gang.",
+      "how": "Trykk på en valuta for å gjøre den til den du skriver inn i. Kursene på denne siden oppdateres daglig og er kun for referanse, fordi banker og kortutstedere vanligvis legger til en margin. ConvCalc-appen lar deg velge din egen liste over valutaer."
+    },
+    "length": {
+      "label": "Lengde",
+      "title": "Lengdekonverterer: mm, cm, meter, km, tommer, fot, yards, mil",
+      "description": "Konverter mellom millimeter, centimeter, meter, kilometer, tommer, fot, yards og mil. Se hver enhet samtidig, gratis.",
+      "h1": "Lengdekonverterer",
+      "intro": "Se millimeter, centimeter, meter, kilometer, tommer, fot, yards og mil sammen mens du skriver.",
+      "how": "Trykk på en enhet, og skriv deretter inn verdien din. Hver annen enhet oppdateres umiddelbart, slik at du ikke trenger å velge en målenhet først. Det fungerer for alt fra en skruestørrelse til en biltur."
+    },
+    "area": {
+      "label": "Areal",
+      "title": "Arealomregner: kvadratmeter, kvadratfot, acres, hektar",
+      "description": "Konverter mellom kvadratmeter, kvadratfot, kvadratkilometer, kvadratmil, acres og hektar, gratis.",
+      "h1": "Arealomregner",
+      "intro": "Konverter kvadratmeter, kvadratfot, kvadratkilometer, kvadratmil, acres og hektar på ett sted.",
+      "how": "Trykk på en enhet og skriv inn verdien din for å se de andre. Det er nyttig for å sammenligne leilighetsoppføringer, landtomter og plantegninger som bruker forskjellige enheter."
+    },
+    "mass": {
+      "label": "Masse",
+      "title": "Vekt- og massekonverterer: kg, lbs, unser, gram, stone, tonn",
+      "description": "Konverter mellom kilogram, pund, unser, gram, stone, tonn og mer. Se hver enhet samtidig, gratis.",
+      "h1": "Vekt- og massekonverterer",
+      "intro": "Konverter milligram, gram, kilogram, unser, pund, stone og tonn, sammen med mindre vanlige enheter som dram og slug.",
+      "how": "Trykk på en enhet og skriv inn verdien din for å se alle de andre. Det dekker kjøkkenvekter, kroppsvekt, bagasjegrenser og frakt. Tonnene er oppført separat som short, long og metrisk, fordi de ikke er de samme."
+    },
+    "volume": {
+      "label": "Volum",
+      "title": "Volumkonverterer: liter, gallons, kopper, quarts, pints, ml",
+      "description": "Konverter mellom milliliter, liter, amerikanske gallons, quarts, pints, kopper og fluid ounces, gratis.",
+      "h1": "Volumkonverterer",
+      "intro": "Konverter milliliter, liter, gallons, quarts, pints, kopper og fluid ounces mens du skriver.",
+      "how": "Trykk på en enhet og skriv inn verdien din. Gallon, quart, pint, cup og fluid ounce er amerikanske mål, så resultater for britiske oppskrifter vil være annerledes."
+    },
+    "speed": {
+      "label": "Hastighet",
+      "title": "Hastighetskonverterer: km/t, mph, knop, m/s",
+      "description": "Konverter mellom kilometer per time, miles per time, knop og meter per sekund, gratis.",
+      "h1": "Hastighetskonverterer",
+      "intro": "Bytt mellom kilometer per time, miles per time, knop og meter per sekund.",
+      "how": "Trykk på en enhet og skriv inn verdien din for å se de andre. Det er praktisk for veiskilt i utlandet, vindprognoser og seiling eller flyging."
+    },
+    "pressure": {
+      "label": "Trykk",
+      "title": "Trykkomformer: PSI, bar, kPa, atm, inHg, torr",
+      "description": "Konverter mellom pascal, kilopascal, bar, atmosfærer, PSI, tommer kvikksølv og torr, gratis.",
+      "h1": "Trykkomformer",
+      "intro": "Konverter pascal, kilopascal, bar, atmosfærer, PSI, tommer kvikksølv og torr.",
+      "how": "Trykk på en enhet og skriv inn verdien din for å se de andre. Det er nyttig for dekktrykk, værmålinger og verkstedmålere."
+    },
+    "power": {
+      "label": "Effekt",
+      "title": "Effektomformer: watt, kilowatt, hestekraft, BTU per minutt",
+      "description": "Konverter mellom watt, kilowatt, hestekraft og BTU per minutt, gratis.",
+      "h1": "Effektomformer",
+      "intro": "Konverter watt, kilowatt, hestekraft og BTU per minutt.",
+      "how": "Trykk på en enhet og skriv inn verdien din for å se de andre. Det er nyttig for å sammenligne motorer, motorer og varme- eller kjøleutstyr."
+    },
+    "temperature": {
+      "label": "Temp",
+      "title": "Temperaturomformer: Celsius, Fahrenheit, Kelvin",
+      "description": "Konverter mellom Celsius, Fahrenheit og Kelvin umiddelbart, gratis.",
+      "h1": "Temperaturomformer",
+      "intro": "Konverter Celsius, Fahrenheit og Kelvin mens du skriver.",
+      "how": "Trykk på en skala og skriv inn verdien din for å se de andre. Bruk den til vær, ovnsinnstillinger og laboratoriearbeid."
+    },
+    "angle": {
+      "label": "Vinkel",
+      "title": "Vinkelomformer: grader, radianer, bueminutter, buesekunder",
+      "description": "Konverter mellom grader, radianer, bueminutter, buesekunder og mindre vinkelenheter, gratis.",
+      "h1": "Vinkelomformer",
+      "intro": "Konverter grader, radianer, milliradianer, bueminutter, buesekunder og mindre enheter.",
+      "how": "Trykk på en enhet og skriv inn verdien din for å se de andre. Det er nyttig for trigonometri-lekser, optikk og astronomi."
+    },
+    "energy": {
+      "label": "Energi",
+      "title": "Energiomformer: joule, kalorier, kWh, BTU",
+      "description": "Konverter mellom joule, kilojoule, kalorier, kilokalorier, BTU, kilowatt-timer og mer, gratis.",
+      "h1": "Energiomformer",
+      "intro": "Konverter joule, kilojoule, kalorier, kilokalorier, BTU, kilowatt-timer, erg og fot-pund.",
+      "how": "Trykk på en enhet og skriv inn verdien din for å se de andre. Det er nyttig for matetiketter, strømregninger og fysikkproblemer."
+    },
+    "force": {
+      "label": "Kraft",
+      "title": "Kraftomformer: newton, kilogram-kraft, pund-kraft",
+      "description": "Konverter mellom newton, kilogram-kraft, pund-kraft, poundals og dyne, gratis.",
+      "h1": "Kraftomformer",
+      "intro": "Konverter newton, kilogram-kraft, pund-kraft, poundals og dyne.",
+      "how": "Trykk på en enhet og skriv inn verdien din for å se de andre. Det er nyttig for tekniske spesifikasjoner og fysikkproblemer."
+    },
+    "fuel": {
+      "label": "Drivstoff",
+      "title": "Drivstofføkonomiomformer: mpg, L/100km, km/L",
+      "description": "Konverter drivstofføkonomi mellom miles per gallon, liter per 100 km, kilometer per liter og gallons per 100 miles, gratis.",
+      "h1": "Drivstofføkonomiomformer",
+      "intro": "Konverter miles per gallon, liter per 100 km, kilometer per liter og gallons per 100 miles.",
+      "how": "Trykk på en enhet og skriv inn verdien din for å se de andre. For liter per 100 km og gallons per 100 miles betyr et lavere tall bedre økonomi. Gallonen her er den amerikanske gallonen."
+    },
+    "time": {
+      "label": "Tid",
+      "title": "Tidskonverterer: sekunder, minutter, timer, dager, uker, år",
+      "description": "Konverter mellom millisekunder, sekunder, minutter, timer, dager, uker og år, gratis.",
+      "h1": "Tidskonverterer",
+      "intro": "Konverter millisekunder, sekunder, minutter, timer, dager, uker og år.",
+      "how": "Trykk på en enhet og skriv inn verdien din for å se de andre. Et år regnes som gjennomsnittlig 365,25 dager."
+    },
+    "data": {
+      "label": "Data",
+      "title": "Datastørrelseskonverterer: bytes, KB, MB, GB, TB, PB",
+      "description": "Konverter mellom bytes, kilobyte, megabyte, gigabyte, terabyte og petabyte, gratis.",
+      "h1": "Datastørrelseskonverterer",
+      "intro": "Konverter bytes, kilobyte, megabyte, gigabyte, terabyte og petabyte.",
+      "how": "Trykk på en enhet og skriv inn verdien din for å se de andre. Hvert trinn er 1024 av det under, som er slik operativsystemer ofte teller filstørrelser. Lagringsprodusenter bruker ofte 1000 i stedet."
+    },
+    "age": {
+      "label": "Alder",
+      "title": "Alderskalkulator: finn din eksakte alder fra fødselsdatoen din",
+      "description": "Skriv inn en fødselsdato for å se en eksakt alder i år, måneder og dager. Gratis, uten registrering.",
+      "h1": "Alderskalkulator",
+      "intro": "Skriv inn en fødselsdato og se den eksakte alderen i år, måneder og dager.",
+      "how": "Trykk på år, måned eller dag og skriv inn verdien. Resultatet bruker dagens dato på enheten din."
+    },
+    "bmi": {
+      "label": "BMI",
+      "title": "BMI kalkulator: kroppsmasseindeks fra høyde og vekt",
+      "description": "Skriv inn høyden din i centimeter og vekten din i kilogram for å se din kroppsmasseindeks og dens standardkategori. Gratis.",
+      "h1": "BMI kalkulator",
+      "intro": "Skriv inn høyden og vekten din for å se din kroppsmasseindeks og dens standardkategori.",
+      "how": "BMI er vekten din i kilogram delt på høyden din i meter, kvadrert. Kategoriene er undervektig under 18,5, normal opp til 25, overvektig opp til 30 og fedme over det. BMI er et grovt screeningmål og erstatter ikke medisinsk råd."
+    },
+    "date": {
+      "label": "Dato",
+      "title": "Datokalkulator: dager mellom to datoer",
+      "description": "Finn antall dager, uker, måneder og år mellom to datoer. Gratis, uten registrering.",
+      "h1": "Datokalkulator",
+      "intro": "Skriv inn to datoer for å se forskjellen i dager, uker, måneder og år.",
+      "how": "Trykk på et felt og skriv inn verdien. Måneder og år i resultatet er gjennomsnitt, 30,4375 og 365,25 dager lange, så de vises som desimaler."
+    },
+    "discount": {
+      "label": "Rabatt",
+      "title": "Rabattkalkulator: prosent avslag og salgspris",
+      "description": "Skriv inn en pris og en prosentandel for å se hvor mye du sparer og hva du vil betale. Gratis prosent avslag kalkulator.",
+      "h1": "Rabattkalkulator",
+      "intro": "Skriv inn en pris og en prosentandel for å se hvor mye du sparer og den endelige prisen.",
+      "how": "Besparelsen er prisen multiplisert med prosentandelen, delt på 100. Trekk besparelsen fra prisen for å få det du skal betale. Salgsavgift er ikke inkludert."
+    },
+    "loan": {
+      "label": "Lån",
+      "title": "Lånekalkulator: månedlig betaling og total rente",
+      "description": "Skriv inn et lånebeløp, årlig rente og løpetid for å se månedlig betaling, totalt betalt og total rente. Gratis.",
+      "h1": "Lånekalkulator",
+      "intro": "Skriv inn beløp, årlig rente og antall år for å se månedlig betaling, totalt betalt og total rente.",
+      "how": "Den forutsetter en fast rente og like månedlige betalinger, uten gebyrer eller forsikring. Behandle resultatet som et estimat og sjekk de endelige vilkårene med långiveren din."
+    }
+  },
+  "features": {
+    "scientific-calculator": {
+      "label": "Vitenskapelig kalkulator",
+      "title": "Gratis vitenskapelig kalkulator app for iPhone",
+      "description": "En gratis vitenskapelig kalkulator for iPhone med trig, inverse og hyperbolske funksjoner, logaritmer, potenser, fakulteter og konstanter. Ingen annonser.",
+      "h1": "En vitenskapelig kalkulator som ikke ser ut som en",
+      "intro": "Mesteparten av tiden trenger du bare å legge sammen ting, så ConvCalc starter enkelt. Ett trykk på hjørnetasten åpner det fullstendige vitenskapelige tastaturet.",
+      "sections": [
+        {
+          "title": "Alle funksjonene du forventer",
+          "text": "Sinus, cosinus og tangens, med inverse og hyperbolske versjoner. Naturlige og base 10 logaritmer, potenser, kvadratrøtter, fakulteter, resiproker, pi, e og en tilfeldig talltast."
+        },
+        {
+          "title": "Grader eller radianer",
+          "text": "Bytt vinkelmodus med én tast. Displayet viser hele uttrykket og et live resultat, slik at du kan fange en feil før du trykker lik."
+        },
+        {
+          "title": "Fiks det uten å starte på nytt",
+          "text": "Slett det siste du skrev, eller gå tilbake til en tidligere beregning i historikken din og fortsett derfra."
+        }
+      ],
+      "shot": "calculatorExpanded"
+    },
+    "calculator-with-history": {
+      "label": "Kalkulator med historikk",
+      "title": "Kalkulator app med historikk for iPhone",
+      "description": "En gratis iPhone-kalkulator som lagrer hver beregning. Åpne historikken din, trykk på et tidligere resultat og fortsett. Ingen annonser.",
+      "h1": "En kalkulator som husker",
+      "intro": "ConvCalc lagrer hver beregning du fullfører, slik at tallet fra ti minutter siden fortsatt er der når du trenger det.",
+      "sections": [
+        {
+          "title": "Dine tidligere beregninger, ett trykk unna",
+          "text": "Trykk på klokken i øverste hjørne for å se hvert uttrykk og dets resultat."
+        },
+        {
+          "title": "Gjenbruk ethvert resultat",
+          "text": "Trykk på en tidligere beregning for å hente den tilbake og fortsette å beregne fra den."
+        },
+        {
+          "title": "Slett den når du vil",
+          "text": "Historikken lagres på din iPhone, og du kan slette den når som helst."
+        }
+      ],
+      "shot": "history"
+    },
+    "calculator-no-ads": {
+      "label": "Kalkulator uten annonser",
+      "title": "Gratis kalkulator app uten annonser for iPhone",
+      "description": "ConvCalc er en gratis iPhone-kalkulator og konverterer uten annonser, bannere og pop-ups. Vitenskapelige taster, historikk og 20 verktøy inkludert.",
+      "h1": "En gratis kalkulator uten annonser",
+      "intro": "En kalkulator er noe du åpner i ti sekunder. Disse ti sekundene skal ikke inkludere et banner eller en pop-up.",
+      "sections": [
+        {
+          "title": "Ingenting mellom deg og svaret",
+          "text": "ConvCalc har ingen annonser av noe slag, og appen inneholder ingen annonsekode."
+        },
+        {
+          "title": "Alt er gratis i dag",
+          "text": "Det vitenskapelige tastaturet, historikk, valuta, konverterere og kalkulatorer er alle inkludert uten kostnad."
+        },
+        {
+          "title": "Åpen kildekode",
+          "text": "Appens kode er offentlig på GitHub, slik at du kan lese den selv."
+        }
+      ],
+      "shot": "calculatorInput"
+    }
+  },
+  "featurePage": {
+    "tryTitle": "Prøv det her"
+  },
+  "compareHub": {
+    "title": "Sammenlign iPhone kalkulator apper",
+    "description": "Hvordan ConvCalc sammenlignes med andre kalkulatorapper for iPhone, ved bruk av daterte App Store-priser og vurderinger.",
+    "h1": "Sammenlign kalkulatorapper",
+    "lede": "Vi lager ConvCalc, så les dette med det i tankene. Priser og vurderinger kommer fra App Store og er daterte, og våre meninger er merket som meninger."
+  },
+  "comparePage": {
+    "disclosure": "Vi lager ConvCalc, så vurder vårt valg deretter.",
+    "tableTitle": "Hvordan de sammenlignes",
+    "app": "App",
+    "price": "Pris",
+    "rating": "Vurdering",
+    "take": "Vår mening",
+    "builtIn": "Innebygd",
+    "notListed": "Ikke oppført",
+    "dataNote": "Last ned priser og amerikanske App Store-vurderinger per {date}. Kjøp i appen vises ikke, så sjekk hver oppføring for hva som er inkludert.",
+    "whyTitle": "Hvorfor vi velger ConvCalc",
+    "whyText": "Denne delen er vår mening: de fleste kalkulatorer er enten enkle eller overfylte. ConvCalc legger alt bak rene, taktile taster, med et vitenskapelig tastatur som åpnes med ett trykk, en historikk du kan gjenbruke, og 20 verktøy for enheter, valuta og hverdagsmatematikk. Den er også ung, med bare en håndfull App Store-vurderinger så langt, så den har ikke opparbeidet seg den historikken som noen apper på denne listen har."
+  },
+  "compare": {
+    "best-calculator-app-iphone": {
+      "label": "Beste kalkulator apper for iPhone",
+      "title": "De beste kalkulator appene for iPhone i 2027",
+      "description": "De beste kalkulator appene for iPhone i 2027 sammenlignet: ConvCalc, Apple Kalkulator, PCalc, Calcbot, Calculator₊ og Tydlig, med priser og vurderinger.",
+      "h1": "De beste kalkulator appene for iPhone i 2027",
+      "intro": "Vi lette etter en kalkulator som er behagelig å bruke hver dag. Vårt valg er ConvCalc, og vi bør si med en gang at vi har bygget den."
+    },
+    "best-free-calculator-app-iphone": {
+      "label": "Beste gratis kalkulator apper",
+      "title": "De beste gratis kalkulator appene for iPhone i 2027",
+      "description": "De beste gratis kalkulator appene for iPhone sammenlignet: ConvCalc, Apple Kalkulator, Calcbot, Calculator with History, Calculator₊ og PCalc Lite.",
+      "h1": "De beste gratis kalkulator appene for iPhone i 2027",
+      "intro": "Du trenger ikke å betale for en god iPhone-kalkulator. Disse er alle gratis å laste ned, og vårt valg er den vi bygget: ConvCalc."
+    },
+    "best-scientific-calculator-app-iphone": {
+      "label": "Beste vitenskapelige kalkulator apper",
+      "title": "De beste vitenskapelige kalkulator appene for iPhone i 2027",
+      "description": "De beste vitenskapelige kalkulator appene for iPhone sammenlignet: ConvCalc, PCalc, Desmos, Calcbot og Apple Kalkulator.",
+      "h1": "De beste vitenskapelige kalkulator appene for iPhone i 2027",
+      "intro": "Hvis du trenger trig og logaritmer på telefonen din, er dette alternativene vi ville sett på. Vi bygget ConvCalc, og PCalc er den du bør skaffe deg for programmering og RPN."
+    },
+    "convcalc-vs-apple-calculator": {
+      "label": "ConvCalc vs Apple Kalkulator",
+      "title": "ConvCalc vs Apple Kalkulator: hvilken bør du bruke på iPhone?",
+      "description": "En ærlig sammenligning av ConvCalc og Kalkulator-appen innebygd i iOS, fra folkene som lager ConvCalc.",
+      "h1": "ConvCalc vs Apple Kalkulator",
+      "intro": "Apples Kalkulator har blitt mye bedre, og den er allerede på telefonen din. Her er når ConvCalc er verdt å legge til."
+    }
+  },
+  "takes": {
+    "convcalc": "Vårt valg for design. Vitenskapelige taster, gjenbrukbar historikk, valuta og 19 flere verktøy, uten annonser.",
+    "apple": "Leveres med iOS. Siden iOS 18 inkluderer den en historikk, enhetskonvertering og Math Notes, så det er et godt sted å starte.",
+    "pcalc": "Kraftbrukerens valg. Oppføringen inkluderer valgfri RPN, en papirremse, flere knappoppsett, hex, oktal og binær, og en Apple Watch-app.",
+    "pcalclite": "En gratis versjon av PCalc med valgfri RPN, angre og gjenta, og enhetskonverteringer. Oppføringen forbeholder papirremse og noen temaer for fullversjonen.",
+    "calcbot": "En langvarig kalkulator fra Tapbots. Oppføringen inkluderer en historikkremse, en uttrykksvisning, vitenskapelige funksjoner, og enhets- og valutakonvertering.",
+    "calculatorplus": "Den mest vurderte appen her. Oppføringen dekker vitenskapelige, historikk-, enhets- og valutaverktøy, og annonserer et premium-nivå som er fritt for fullskjermsannonser.",
+    "tydlig": "En annerledes idé: et fritt format-lerret med koblede tall og live resultater, pluss grafer. Den siste App Store-oppdateringen var i 2017.",
+    "calchistory": "Et enkelt alternativ hvis oppføring lover ingen annonser, med historikk, valgfrie vitenskapelige funksjoner og tilpassbare tastaturfarger og lyder.",
+    "desmos": "En gratis, fokusert vitenskapelig kalkulator fra Desmos, med trigonometri, statistikk, kombinatorikk og dine egne funksjoner.",
+    "convcalcSci": "Vårt valg for daglig vitenskapelig bruk. Trig, inverse og hyperbolske funksjoner, logaritmer og fakulteter bak et tastatur du kan skjule, uten annonser.",
+    "appleSci": "Innebygd i iOS, med en vitenskapelig modus og historikk. Verdt å prøve før du laster ned noe."
+  },
+  "versus": {
+    "feature": "Funksjon",
+    "rows": [
+      [
+        "Pris",
+        "Gratis",
+        "Innebygd i iOS"
+      ],
+      [
+        "Vitenskapelige funksjoner",
+        "Ja",
+        "Ja"
+      ],
+      [
+        "Historikk",
+        "Ja",
+        "Ja, siden iOS 18"
+      ],
+      [
+        "Enhetskonvertering",
+        "14 kategorier, hver enhet vises samtidig",
+        "Ja, siden iOS 18"
+      ],
+      [
+        "Valutakonvertering",
+        "Ja",
+        "Ja, siden iOS 18"
+      ],
+      [
+        "Alder, BMI, dato, rabatt og lånekalkulatorer",
+        "Ja",
+        "Ingen dedikerte verktøy"
+      ],
+      [
+        "Håndskrevne og tastede mattnotater",
+        "Nei",
+        "Ja, med Math Notes"
+      ],
+      [
+        "Fungerer på iPad",
+        "Nei, kun iPhone",
+        "Ja, siden iPadOS 18"
+      ]
+    ],
+    "verdictTitle": "Hvilken bør du bruke?",
+    "verdict": "Hvis du vil ha mattnotater eller bruker en iPad, hold deg til Apples app. Hvis du vil ha hverdagsverktøy som låne-, alders- og datokalkulatorer på ett sted, eller du foretrekker hvordan ConvCalc ser ut, er det verdt den gratis nedlastingen. Mange mennesker kunne ha begge."
+  }
+}

@@ -1,85 +1,25 @@
 ---
+import { getTranslations, localizedPath, locales, localeNames, REPO, type Locale } from "../utils/i18n";
+import { GRID } from "../lib/tools.js";
+const { locale, path, englishOnly } = Astro.props as { locale: Locale; path: string; englishOnly?: boolean };
+const t = getTranslations(locale);
+const p = (x: string) => localizedPath(locale, x);
+const tools = t.tools as Record<string, { label: string; h1: string }>;
+const features = t.features as Record<string, { label: string }>;
+const compare = t.compare as Record<string, { label: string }>;
 ---
-
-<footer class="footer">
-  <div class="container footer-inner">
-    <p class="footer-credit">
-      Made by <a href="https://github.com/mgilangjanuar" target="_blank" rel="noopener noreferrer">Mathias Gilson</a>
-    </p>
-    <div class="footer-links">
-      <a
-        href="https://github.com/mgilangjanuar/convcalc"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        GitHub
-      </a>
-      <span class="footer-dot"></span>
-      <a
-        href="https://apps.apple.com/app/convcalc-calculator-converter/id6472445974"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        App Store
-      </a>
-    </div>
+<footer class="foot">
+  <div class="foot-in">
+    <div class="foot-a"><p class="brand-f"><img src="/icon.png" alt="" width="24" height="24" loading="lazy" />ConvCalc</p><p>{t.footer.tagline}</p></div>
+    <div class="foot-c foot-tools"><h2>{t.footer.tools}</h2><ul>{GRID.map(([k]) => <li><a href={p(`/tools/${k}`)}>{tools[k].h1}</a></li>)}</ul></div>
+    <div class="foot-c"><h2>{t.footer.features}</h2><ul>{Object.keys(features).map((k) => <li><a href={p(`/features/${k}`)}>{features[k].label}</a></li>)}</ul>
+      <h2 class="mt">{t.footer.compare}</h2><ul>{Object.keys(compare).map((k) => <li><a href={p(`/compare/${k}`)}>{compare[k].label}</a></li>)}</ul></div>
+    <div class="foot-c"><h2>{t.footer.more}</h2><ul>
+      <li><a href="/convert">{t.footer.conversions}</a></li>
+      <li><a href="/privacy">{t.footer.privacy}</a></li>
+      <li><a href="/support">{t.footer.support}</a></li>
+      <li><a href={REPO}>{t.footer.source}</a></li></ul>
+      <h2 class="mt">{t.footer.language}</h2>
+      <ul class="langs">{locales.map((l) => <li><a href={englishOnly ? localizedPath(l, "/") : localizedPath(l, path)} hreflang={l} lang={l} aria-current={l === locale ? "true" : undefined}>{localeNames[l]}</a></li>)}</ul></div>
   </div>
 </footer>
-
-<style>
-  .footer {
-    border-top: 1px solid var(--color-border);
-    padding: var(--space-lg) 0;
-  }
-
-  .footer-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .footer-credit {
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-  }
-
-  .footer-credit a {
-    color: var(--color-text);
-    font-weight: 500;
-    transition: color 0.2s ease;
-  }
-
-  .footer-credit a:hover {
-    color: var(--color-accent);
-  }
-
-  .footer-links {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-  }
-
-  .footer-links a {
-    font-size: 0.85rem;
-    color: var(--color-text-secondary);
-    transition: color 0.2s ease;
-  }
-
-  .footer-links a:hover {
-    color: var(--color-text);
-  }
-
-  .footer-dot {
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: var(--color-text-secondary);
-  }
-
-  @media (max-width: 480px) {
-    .footer-inner {
-      flex-direction: column;
-      gap: var(--space-sm);
-    }
-  }
-</style>

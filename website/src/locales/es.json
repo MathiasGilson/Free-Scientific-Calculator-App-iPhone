@@ -1,0 +1,550 @@
+{
+  "meta": {
+    "siteName": "ConvCalc",
+    "homeTitle": "ConvCalc: una hermosa calculadora iPhone gratuita y sin anuncios",
+    "homeDescription": "Una calculadora científica iPhone gratuita con historial, conversor de divisas, conversores de unidades y calculadoras diarias. Sin anuncios. Pruébala aquí mismo."
+  },
+  "nav": {
+    "tools": "Herramientas",
+    "compare": "Comparar",
+    "features": "Características",
+    "download": "Descargar"
+  },
+  "cta": {
+    "download": "Descargar gratis en la App Store",
+    "try": "Las teclas de esta página funcionan. Pruébalas.",
+    "bottomTitle": "Gratis. Sin anuncios. En tu iPhone en diez segundos."
+  },
+  "footer": {
+    "tagline": "Una calculadora y conversor gratuito para iPhone.",
+    "tools": "Herramientas",
+    "features": "Características",
+    "compare": "Comparar",
+    "more": "Más",
+    "conversions": "Todas las conversiones",
+    "privacy": "Privacidad",
+    "support": "Soporte",
+    "source": "Código fuente",
+    "language": "Idioma"
+  },
+  "home": {
+    "h1": "Las calculadoras en iOS se ven terribles. Esta no.",
+    "lede": "ConvCalc es una calculadora científica gratuita con 20 herramientas integradas para unidades, divisas y matemáticas cotidianas. Nativa para iPhone, sin anuncios en ninguna parte.",
+    "toolsTitle": "Una aplicación en lugar de una carpeta de ellas",
+    "toolsLede": "Toca cualquier herramienta para abrirla en el teléfono. Las herramientas y las matemáticas son las mismas que en la aplicación.",
+    "shots": {
+      "scientific": {
+        "title": "Teclas científicas",
+        "text": "Toca la tecla de la esquina para abrir funciones trigonométricas, logaritmos, potencias, factoriales y constantes. Toca de nuevo para guardarlas."
+      },
+      "history": {
+        "title": "Historial de calculadora",
+        "text": "Cada resultado se guarda. Toca uno para volver a usarlo en tu cálculo."
+      },
+      "currency": {
+        "title": "Conversor de divisas",
+        "text": "Escribe una cantidad y observa cómo las otras divisas se actualizan."
+      },
+      "loan": {
+        "title": "Préstamo",
+        "text": "Introduce la cantidad, la tasa y los años. Consulta el pago mensual y el interés total."
+      }
+    }
+  },
+  "demo": {
+    "tabs": {
+      "calculator": "Calculadora",
+      "currency": "Divisas",
+      "all": "Todas las herramientas"
+    },
+    "historyEmpty": "Tus cálculos aparecerán aquí.",
+    "rateNote": "Tasas desde {date}",
+    "labels": {
+      "year": "Año",
+      "month": "Mes",
+      "day": "Día",
+      "age": "Edad",
+      "height": "Altura (cm)",
+      "weight": "Peso (kg)",
+      "bmi": "IMC",
+      "underweight": "Bajo peso",
+      "normal": "Normal",
+      "overweight": "Sobrepeso",
+      "obese": "Obeso",
+      "year1": "Año de inicio",
+      "month1": "Mes de inicio",
+      "day1": "Día de inicio",
+      "year2": "Año de fin",
+      "month2": "Mes de fin",
+      "day2": "Día de fin",
+      "difference": "Diferencia",
+      "yearsUnit": "años",
+      "monthsUnit": "meses",
+      "weeksUnit": "semanas",
+      "daysUnit": "días",
+      "price": "Precio",
+      "percent": "Descuento (%)",
+      "savings": "Ahorras",
+      "finalPrice": "Precio final",
+      "principal": "Monto del préstamo",
+      "rate": "Tasa anual (%)",
+      "years": "Años",
+      "monthly": "Pago mensual",
+      "totalPaid": "Total pagado",
+      "totalInterest": "Interés total"
+    },
+    "currencies": {
+      "USD": "Dólar estadounidense",
+      "EUR": "Euro",
+      "GBP": "Libra esterlina",
+      "JPY": "Yen japonés"
+    },
+    "units": {
+      "Millimeter": "Milímetro",
+      "Centimeter": "Centímetro",
+      "Meter": "Metro",
+      "Kilometer": "Kilómetro",
+      "Inch": "Pulgada",
+      "Foot": "Pie",
+      "Yard": "Yarda",
+      "Mile": "Milla",
+      "Square Meter": "Metro cuadrado",
+      "Square Foot": "Pie cuadrado",
+      "Square Kilometer": "Kilómetro cuadrado",
+      "Square Mile": "Milla cuadrada",
+      "Acre": "Acre",
+      "Hectare": "Hectárea",
+      "Milligram": "Miligramo",
+      "Gram": "Gramo",
+      "Kilogram": "Kilogramo",
+      "Dram": "Dracma",
+      "Ounce": "Onza",
+      "Pound": "Libra",
+      "Stone": "Stone",
+      "Slug": "Slug",
+      "Short Ton": "Tonelada corta",
+      "Long Ton": "Tonelada larga",
+      "Metric Ton": "Tonelada métrica",
+      "Milliliter": "Mililitro",
+      "Liter": "Litro",
+      "Gallon": "Galón",
+      "Quart": "Cuarto",
+      "Pint": "Pinta",
+      "Cup": "Taza",
+      "Fluid Ounce": "Onza líquida",
+      "Meter per Second": "Metro por segundo",
+      "Kilometer per Hour": "Kilómetro por hora",
+      "Mile per Hour": "Milla por hora",
+      "Knot": "Nudo",
+      "Pascal": "Pascal",
+      "Kilopascal": "Kilopascal",
+      "Bar": "Bar",
+      "Atmosphere": "Atmósfera",
+      "Pound per Sq Inch": "Libra por pulgada cuadrada",
+      "Inch of Mercury": "Pulgada de mercurio",
+      "Torr": "Torr",
+      "Watt": "Vatio",
+      "Kilowatt": "Kilovatio",
+      "Horsepower": "Caballos de fuerza",
+      "BTU per Minute": "BTU por minuto",
+      "Celsius": "Celsius",
+      "Fahrenheit": "Fahrenheit",
+      "Kelvin": "Kelvin",
+      "Radian": "Radián",
+      "Milliradian": "Milirradián",
+      "Microradian": "Microrradián",
+      "Degree": "Grado",
+      "Arcminute": "Minuto de arco",
+      "Arcsecond": "Segundo de arco",
+      "Milliarcsecond": "Miliarcosegundo",
+      "Microarcsecond": "Microarcosegundo",
+      "Joule": "Julio",
+      "Kilojoule": "Kilojulio",
+      "Calorie": "Caloría",
+      "Kilocalorie": "Kilocaloría",
+      "British Thermal Unit": "Unidad térmica británica",
+      "Kilowatt-Hour": "Kilovatio-hora",
+      "Erg": "Ergio",
+      "Foot-Pound": "Pie-libra",
+      "Newton-Meter": "Newton-metro",
+      "Newton": "Newton",
+      "Kilogram-Force": "Kilogramo-fuerza",
+      "Pound-Force": "Libra-fuerza",
+      "Poundal": "Poundal",
+      "Dyne": "Dina",
+      "Kilometer per Liter": "Kilómetro por litro",
+      "Mile per Gallon": "Milla por galón",
+      "Liter per 100km": "Litro por 100 km",
+      "Gallon per 100mi": "Galón por 100 millas",
+      "Millisecond": "Milisegundo",
+      "Second": "Segundo",
+      "Minute": "Minuto",
+      "Hour": "Hora",
+      "Day": "Día",
+      "Week": "Semana",
+      "Year": "Año",
+      "Byte": "Byte",
+      "Kilobyte": "Kilobyte",
+      "Megabyte": "Megabyte",
+      "Gigabyte": "Gigabyte",
+      "Terabyte": "Terabyte",
+      "Petabyte": "Petabyte"
+    }
+  },
+  "toolsHub": {
+    "title": "20 calculadoras y conversores gratuitos, en la web y en iPhone",
+    "description": "Conversores gratuitos de divisas, longitud, masa, volumen, temperatura y más, además de calculadoras de edad, IMC, fechas, descuentos y préstamos.",
+    "h1": "Todas las herramientas en ConvCalc",
+    "lede": "Pruébalas aquí, luego tenlas todas en tu iPhone con la aplicación gratuita."
+  },
+  "toolPage": {
+    "tryLabel": "Pruébalo en el teléfono",
+    "how": "Cómo funciona",
+    "inApp": "Consérvalo en tu iPhone",
+    "inAppText": "Esta herramienta es una de las 20 en ConvCalc, junto con una calculadora científica con historial. La aplicación es gratuita y no tiene anuncios.",
+    "more": "Más herramientas",
+    "popular": "Conversiones populares"
+  },
+  "tools": {
+    "currency": {
+      "label": "Divisas",
+      "title": "Conversor de divisas: calculadora de tipo de cambio gratuita",
+      "description": "Convierte dólares estadounidenses, euros, libras, yenes y otras divisas a un tipo de cambio reciente, gratis. También disponible en la aplicación ConvCalc para iPhone.",
+      "h1": "Conversor de divisas",
+      "intro": "Escribe una cantidad en una divisa y vela en las otras al instante.",
+      "how": "Toca una divisa para que sea la que estás escribiendo. Las tasas en esta página se actualizan diariamente y son solo de referencia, porque los bancos y emisores de tarjetas suelen añadir un margen. La aplicación ConvCalc te permite elegir tu propia lista de divisas."
+    },
+    "length": {
+      "label": "Longitud",
+      "title": "Conversor de longitud: mm, cm, metros, km, pulgadas, pies, yardas, millas",
+      "description": "Convierte entre milímetros, centímetros, metros, kilómetros, pulgadas, pies, yardas y millas. Consulta todas las unidades a la vez, gratis.",
+      "h1": "Conversor de longitud",
+      "intro": "Consulta milímetros, centímetros, metros, kilómetros, pulgadas, pies, yardas y millas juntos mientras escribes.",
+      "how": "Toca una unidad, luego escribe tu valor. Todas las demás unidades se actualizan inmediatamente, por lo que no necesitas elegir una unidad de destino primero. Funciona para cualquier cosa, desde el tamaño de un tornillo hasta un viaje por carretera."
+    },
+    "area": {
+      "label": "Área",
+      "title": "Conversor de área: metros cuadrados, pies cuadrados, acres, hectáreas",
+      "description": "Convierte entre metros cuadrados, pies cuadrados, kilómetros cuadrados, millas cuadradas, acres y hectáreas, gratis.",
+      "h1": "Conversor de área",
+      "intro": "Convierte metros cuadrados, pies cuadrados, kilómetros cuadrados, millas cuadradas, acres y hectáreas en un solo lugar.",
+      "how": "Toca una unidad y escribe tu valor para ver las otras. Es útil para comparar listados de apartamentos, parcelas de tierra y planos de planta que usan diferentes unidades."
+    },
+    "mass": {
+      "label": "Masa",
+      "title": "Conversor de peso y masa: kg, lbs, onzas, gramos, stone, toneladas",
+      "description": "Convierte entre kilogramos, libras, onzas, gramos, stone, toneladas y más. Consulta todas las unidades a la vez, gratis.",
+      "h1": "Conversor de peso y masa",
+      "intro": "Convierte miligramos, gramos, kilogramos, onzas, libras, stone y toneladas, junto con unidades menos comunes como dracmas y slugs.",
+      "how": "Toca una unidad y escribe tu valor para ver todas las demás. Cubre básculas de cocina, peso corporal, límites de equipaje y carga. Las toneladas se enumeran por separado como cortas, largas y métricas, porque no son lo mismo."
+    },
+    "volume": {
+      "label": "Volumen",
+      "title": "Conversor de volumen: litros, galones, tazas, cuartos, pintas, ml",
+      "description": "Convierte entre mililitros, litros, galones estadounidenses, cuartos, pintas, tazas y onzas líquidas, gratis.",
+      "h1": "Conversor de volumen",
+      "intro": "Convierte mililitros, litros, galones, cuartos, pintas, tazas y onzas líquidas mientras escribes.",
+      "how": "Toca una unidad y escribe tu valor. El galón, cuarto, pinta, taza y onza líquida son medidas estadounidenses, por lo que los resultados para recetas británicas serán diferentes."
+    },
+    "speed": {
+      "label": "Velocidad",
+      "title": "Conversor de velocidad: km/h, mph, nudos, m/s",
+      "description": "Convierte entre kilómetros por hora, millas por hora, nudos y metros por segundo, gratis.",
+      "h1": "Conversor de velocidad",
+      "intro": "Cambia entre kilómetros por hora, millas por hora, nudos y metros por segundo.",
+      "how": "Toca una unidad y escribe tu valor para ver las otras. Es útil para señales de tráfico en el extranjero, pronósticos de viento y navegación o vuelo."
+    },
+    "pressure": {
+      "label": "Presión",
+      "title": "Conversor de presión: PSI, bar, kPa, atm, inHg, torr",
+      "description": "Convierte entre pascales, kilopascales, bar, atmósferas, PSI, pulgadas de mercurio y torr, gratis.",
+      "h1": "Conversor de presión",
+      "intro": "Convierte pascales, kilopascales, bar, atmósferas, PSI, pulgadas de mercurio y torr.",
+      "how": "Toca una unidad y escribe tu valor para ver las otras. Es útil para la presión de los neumáticos, lecturas meteorológicas y manómetros de taller."
+    },
+    "power": {
+      "label": "Potencia",
+      "title": "Conversor de potencia: vatios, kilovatios, caballos de fuerza, BTU por minuto",
+      "description": "Convierte entre vatios, kilovatios, caballos de fuerza y BTU por minuto, gratis.",
+      "h1": "Conversor de potencia",
+      "intro": "Convierte vatios, kilovatios, caballos de fuerza y BTU por minuto.",
+      "how": "Toca una unidad y escribe tu valor para ver las otras. Es útil para comparar motores y equipos de calefacción o refrigeración."
+    },
+    "temperature": {
+      "label": "Temp",
+      "title": "Conversor de temperatura: Celsius, Fahrenheit, Kelvin",
+      "description": "Convierte entre Celsius, Fahrenheit y Kelvin al instante, gratis.",
+      "h1": "Conversor de temperatura",
+      "intro": "Convierte Celsius, Fahrenheit y Kelvin mientras escribes.",
+      "how": "Toca una escala y escribe tu valor para ver las otras. Úsalo para el clima, la configuración del horno y el trabajo de laboratorio."
+    },
+    "angle": {
+      "label": "Ángulo",
+      "title": "Conversor de ángulo: grados, radianes, minutos de arco, segundos de arco",
+      "description": "Convierte entre grados, radianes, minutos de arco, segundos de arco y unidades de ángulo más pequeñas, gratis.",
+      "h1": "Conversor de ángulo",
+      "intro": "Convierte grados, radianes, milirradianes, minutos de arco, segundos de arco y unidades más pequeñas.",
+      "how": "Toca una unidad y escribe tu valor para ver las otras. Es útil para tareas de trigonometría, óptica y astronomía."
+    },
+    "energy": {
+      "label": "Energía",
+      "title": "Conversor de energía: julios, calorías, kWh, BTU",
+      "description": "Convierte entre julios, kilojulios, calorías, kilocalorías, BTU, kilovatios-hora y más, gratis.",
+      "h1": "Conversor de energía",
+      "intro": "Convierte julios, kilojulios, calorías, kilocalorías, BTU, kilovatios-hora, ergios y pie-libras.",
+      "how": "Toca una unidad y escribe tu valor para ver las otras. Es útil para etiquetas de alimentos, facturas de electricidad y problemas de física."
+    },
+    "force": {
+      "label": "Fuerza",
+      "title": "Conversor de fuerza: newtons, kilogramo-fuerza, libra-fuerza",
+      "description": "Convierte entre newtons, kilogramo-fuerza, libra-fuerza, poundals y dinas, gratis.",
+      "h1": "Conversor de fuerza",
+      "intro": "Convierte newtons, kilogramo-fuerza, libra-fuerza, poundals y dinas.",
+      "how": "Toca una unidad y escribe tu valor para ver las otras. Es útil para especificaciones de ingeniería y problemas de física."
+    },
+    "fuel": {
+      "label": "Combustible",
+      "title": "Conversor de consumo de combustible: mpg, L/100km, km/L",
+      "description": "Convierte el consumo de combustible entre millas por galón, litros por 100 km, kilómetros por litro y galones por 100 millas, gratis.",
+      "h1": "Conversor de consumo de combustible",
+      "intro": "Convierte millas por galón, litros por 100 km, kilómetros por litro y galones por 100 millas.",
+      "how": "Toca una unidad y escribe tu valor para ver las otras. Para litros por 100 km y galones por 100 millas, un número más bajo significa mejor economía. El galón aquí es el galón estadounidense."
+    },
+    "time": {
+      "label": "Tiempo",
+      "title": "Conversor de tiempo: segundos, minutos, horas, días, semanas, años",
+      "description": "Convierte entre milisegundos, segundos, minutos, horas, días, semanas y años, gratis.",
+      "h1": "Conversor de tiempo",
+      "intro": "Convierte milisegundos, segundos, minutos, horas, días, semanas y años.",
+      "how": "Toca una unidad y escribe tu valor para ver las otras. Un año se cuenta como el promedio de 365.25 días."
+    },
+    "data": {
+      "label": "Datos",
+      "title": "Conversor de tamaño de datos: bytes, KB, MB, GB, TB, PB",
+      "description": "Convierte entre bytes, kilobytes, megabytes, gigabytes, terabytes y petabytes, gratis.",
+      "h1": "Conversor de tamaño de datos",
+      "intro": "Convierte bytes, kilobytes, megabytes, gigabytes, terabytes y petabytes.",
+      "how": "Toca una unidad y escribe tu valor para ver las otras. Cada paso es 1,024 del anterior, que es como los sistemas operativos suelen contar los tamaños de archivo. Los fabricantes de almacenamiento a menudo usan 1,000 en su lugar."
+    },
+    "age": {
+      "label": "Edad",
+      "title": "Calculadora de edad: encuentra tu edad exacta a partir de tu fecha de nacimiento",
+      "description": "Introduce una fecha de nacimiento para ver una edad exacta en años, meses y días. Gratis, sin registro.",
+      "h1": "Calculadora de edad",
+      "intro": "Introduce una fecha de nacimiento y consulta la edad exacta en años, meses y días.",
+      "how": "Toca año, mes o día y escribe el valor. El resultado utiliza la fecha actual de tu dispositivo."
+    },
+    "bmi": {
+      "label": "IMC",
+      "title": "Calculadora de IMC: índice de masa corporal a partir de altura y peso",
+      "description": "Introduce tu altura en centímetros y peso en kilogramos para ver tu índice de masa corporal y su categoría estándar. Gratis.",
+      "h1": "Calculadora de IMC",
+      "intro": "Introduce tu altura y peso para ver tu índice de masa corporal y su categoría estándar.",
+      "how": "El IMC es tu peso en kilogramos dividido por tu altura en metros, al cuadrado. Las categorías son bajo peso por debajo de 18.5, normal hasta 25, sobrepeso hasta 30 y obeso por encima de eso. El IMC es una medida de detección aproximada y no reemplaza el consejo médico."
+    },
+    "date": {
+      "label": "Fecha",
+      "title": "Calculadora de fechas: días entre dos fechas",
+      "description": "Encuentra el número de días, semanas, meses y años entre dos fechas. Gratis, sin registro.",
+      "h1": "Calculadora de fechas",
+      "intro": "Introduce dos fechas para ver la diferencia en días, semanas, meses y años.",
+      "how": "Toca un campo y escribe el valor. Los meses y años en el resultado son promedios, de 30.4375 y 365.25 días de duración, por lo que aparecen como decimales."
+    },
+    "discount": {
+      "label": "Descuento",
+      "title": "Calculadora de descuentos: porcentaje de descuento y precio de venta",
+      "description": "Introduce un precio y un porcentaje para ver cuánto ahorras y cuánto pagarás. Calculadora de porcentaje de descuento gratuita.",
+      "h1": "Calculadora de descuentos",
+      "intro": "Introduce un precio y un porcentaje para ver cuánto ahorras y el precio final.",
+      "how": "El ahorro es el precio multiplicado por el porcentaje, dividido por 100. Resta el ahorro del precio para obtener lo que pagarás. El impuesto sobre las ventas no está incluido."
+    },
+    "loan": {
+      "label": "Préstamo",
+      "title": "Calculadora de préstamos: pago mensual e interés total",
+      "description": "Introduce el monto de un préstamo, la tasa de interés anual y el plazo para ver el pago mensual, el total pagado y el interés total. Gratis.",
+      "h1": "Calculadora de préstamos",
+      "intro": "Introduce la cantidad, la tasa anual y el número de años para ver el pago mensual, el total pagado y el interés total.",
+      "how": "Asume una tasa fija y pagos mensuales iguales, sin comisiones ni seguros. Trata el resultado como una estimación y verifica los términos finales con tu prestamista."
+    }
+  },
+  "features": {
+    "scientific-calculator": {
+      "label": "Calculadora científica",
+      "title": "Calculadora científica iPhone gratuita",
+      "description": "Una calculadora científica iPhone gratuita con funciones trigonométricas, inversas e hiperbólicas, logaritmos, potencias, factoriales y constantes. Sin anuncios.",
+      "h1": "Una calculadora científica que no parece una",
+      "intro": "La mayoría de las veces solo necesitas sumar cosas, por lo que ConvCalc comienza de forma sencilla. Un toque en la tecla de la esquina abre el teclado científico completo.",
+      "sections": [
+        {
+          "title": "Todas las funciones que esperarías",
+          "text": "Seno, coseno y tangente, con versiones inversas e hiperbólicas. Logaritmos naturales y de base 10, potencias, raíces cuadradas, factoriales, recíprocos, pi, e y una tecla de número aleatorio."
+        },
+        {
+          "title": "Grados o radianes",
+          "text": "Cambia el modo de ángulo con una tecla. La pantalla muestra la expresión completa y un resultado en vivo, para que puedas detectar un error antes de presionar igual."
+        },
+        {
+          "title": "Corrige sin empezar de nuevo",
+          "text": "Elimina lo último que escribiste, o vuelve a un cálculo anterior en tu historial y continúa desde allí."
+        }
+      ],
+      "shot": "calculatorExpanded"
+    },
+    "calculator-with-history": {
+      "label": "Calculadora con historial",
+      "title": "Aplicación de calculadora con historial para iPhone",
+      "description": "Una calculadora iPhone gratuita que guarda cada cálculo. Abre tu historial, toca un resultado anterior y sigue. Sin anuncios.",
+      "h1": "Una calculadora que recuerda",
+      "intro": "ConvCalc guarda cada cálculo que terminas, para que ese número de hace diez minutos siga ahí cuando lo necesites.",
+      "sections": [
+        {
+          "title": "Tus cálculos anteriores, a un toque de distancia",
+          "text": "Toca el reloj en la esquina superior para ver cada expresión y su resultado."
+        },
+        {
+          "title": "Reutiliza cualquier resultado",
+          "text": "Toca un cálculo anterior para recuperarlo y seguir calculando a partir de él."
+        },
+        {
+          "title": "Bórralo cuando quieras",
+          "text": "El historial se almacena en tu iPhone y puedes borrarlo en cualquier momento."
+        }
+      ],
+      "shot": "history"
+    },
+    "calculator-no-ads": {
+      "label": "Calculadora sin anuncios",
+      "title": "Aplicación de calculadora gratuita sin anuncios para iPhone",
+      "description": "ConvCalc es una calculadora y conversor iPhone gratuito sin anuncios, sin banners y sin ventanas emergentes. Teclas científicas, historial y 20 herramientas incluidas.",
+      "h1": "Una calculadora gratuita sin anuncios",
+      "intro": "Una calculadora es algo que abres durante diez segundos. Esos diez segundos no deberían incluir un banner o una ventana emergente.",
+      "sections": [
+        {
+          "title": "Nada entre tú y la respuesta",
+          "text": "ConvCalc no tiene anuncios de ningún tipo, y la aplicación no contiene código publicitario."
+        },
+        {
+          "title": "Todo es gratis hoy",
+          "text": "El teclado científico, el historial, las divisas, los conversores y las calculadoras están todos incluidos sin costo alguno."
+        },
+        {
+          "title": "Código abierto",
+          "text": "El código de la aplicación es público en GitHub, por lo que puedes leerlo tú mismo."
+        }
+      ],
+      "shot": "calculatorInput"
+    }
+  },
+  "featurePage": {
+    "tryTitle": "Pruébalo aquí mismo"
+  },
+  "compareHub": {
+    "title": "Compara aplicaciones de calculadora para iPhone",
+    "description": "Cómo se compara ConvCalc con otras aplicaciones de calculadora para iPhone, utilizando precios y calificaciones de la App Store con fecha.",
+    "h1": "Compara aplicaciones de calculadora",
+    "lede": "Nosotros hacemos ConvCalc, así que lee esto teniendo eso en cuenta. Los precios y las calificaciones provienen de la App Store y tienen fecha, y nuestras opiniones están etiquetadas como opiniones."
+  },
+  "comparePage": {
+    "disclosure": "Nosotros hacemos ConvCalc, así que valora nuestra elección en consecuencia.",
+    "tableTitle": "Cómo se comparan",
+    "app": "Aplicación",
+    "price": "Precio",
+    "rating": "Calificación",
+    "take": "Nuestra opinión",
+    "builtIn": "Integrada",
+    "notListed": "No listado",
+    "dataNote": "Precios de descarga y calificaciones de la App Store de EE. UU. a partir de {date}. Las compras dentro de la aplicación no se muestran, así que verifica cada listado para ver qué incluye.",
+    "whyTitle": "Por qué elegimos ConvCalc",
+    "whyText": "Esta parte es nuestra opinión: la mayoría de las calculadoras son simples o abarrotadas. ConvCalc pone todo detrás de teclas limpias y táctiles, con un teclado científico que se abre con un toque, un historial que puedes reutilizar y 20 herramientas para unidades, divisas y matemáticas cotidianas. También es joven, con solo un puñado de calificaciones en la App Store hasta ahora, por lo que no ha ganado la trayectoria de algunas aplicaciones en esta lista."
+  },
+  "compare": {
+    "best-calculator-app-iphone": {
+      "label": "Mejores calculadoras iPhone",
+      "title": "Las mejores calculadoras iPhone en 2027",
+      "description": "Las mejores calculadoras iPhone en 2027 comparadas: ConvCalc, Calculadora de Apple, PCalc, Calcbot, Calculator₊ y Tydlig, con precios y calificaciones.",
+      "h1": "Las mejores calculadoras iPhone en 2027",
+      "intro": "Buscamos una calculadora que fuera agradable de usar todos los días. Nuestra elección es ConvCalc, y debemos decir de antemano que la construimos nosotros."
+    },
+    "best-free-calculator-app-iphone": {
+      "label": "Mejores calculadoras gratuitas",
+      "title": "Las mejores calculadoras iPhone gratuitas en 2027",
+      "description": "Las mejores calculadoras iPhone gratuitas comparadas: ConvCalc, Calculadora de Apple, Calcbot, Calculator with History, Calculator₊ y PCalc Lite.",
+      "h1": "Las mejores calculadoras iPhone gratuitas en 2027",
+      "intro": "No tienes que pagar por una buena calculadora iPhone. Todas estas son gratuitas para descargar, y nuestra elección es la que construimos: ConvCalc."
+    },
+    "best-scientific-calculator-app-iphone": {
+      "label": "Mejores calculadoras científicas",
+      "title": "Las mejores calculadoras científicas iPhone en 2027",
+      "description": "Las mejores calculadoras científicas iPhone comparadas: ConvCalc, PCalc, Desmos, Calcbot y Calculadora de Apple.",
+      "h1": "Las mejores calculadoras científicas iPhone en 2027",
+      "intro": "Si necesitas trigonometría y logaritmos en tu teléfono, estas son las opciones que consideraríamos. Construimos ConvCalc, y PCalc es la opción para programación y RPN."
+    },
+    "convcalc-vs-apple-calculator": {
+      "label": "ConvCalc vs Calculadora de Apple",
+      "title": "ConvCalc vs Calculadora de Apple: ¿cuál usar en iPhone?",
+      "description": "Una comparación honesta de ConvCalc y la aplicación Calculadora integrada en iOS, de las personas que hacen ConvCalc.",
+      "h1": "ConvCalc vs Calculadora de Apple",
+      "intro": "La Calculadora de Apple ha mejorado mucho y ya está en tu teléfono. Aquí te mostramos cuándo vale la pena añadir ConvCalc."
+    }
+  },
+  "takes": {
+    "convcalc": "Nuestra elección por diseño. Teclas científicas, historial reutilizable, divisas y 19 herramientas más, sin anuncios.",
+    "apple": "Viene con iOS. Desde iOS 18 incluye historial, conversión de unidades y Math Notes, por lo que es un buen punto de partida.",
+    "pcalc": "La elección del usuario avanzado. Su listado incluye RPN opcional, una cinta de papel, múltiples diseños de botones, hexadecimal, octal y binario, y una aplicación para Apple Watch.",
+    "pcalclite": "Una versión gratuita de PCalc con RPN opcional, deshacer y rehacer, y conversiones de unidades. El listado reserva la cinta de papel y algunos temas para la aplicación completa.",
+    "calcbot": "Una calculadora de larga trayectoria de Tapbots. Su listado incluye una cinta de historial, una vista de expresión, funciones científicas y conversión de unidades y divisas.",
+    "calculatorplus": "La aplicación más valorada aquí. Su listado cubre herramientas científicas, de historial, de unidades y de divisas, y anuncia un nivel premium sin anuncios a pantalla completa.",
+    "tydlig": "Una idea diferente: un lienzo de forma libre con números vinculados y resultados en vivo, además de gráficos. Su última actualización en la App Store fue en 2017.",
+    "calchistory": "Una opción simple cuyo listado promete no tener anuncios, con historial, funciones científicas opcionales y colores y sonidos de teclado personalizables.",
+    "desmos": "Una calculadora científica gratuita y enfocada de Desmos, con trigonometría, estadísticas, combinatoria y tus propias funciones.",
+    "convcalcSci": "Nuestra elección para el uso científico diario. Funciones trigonométricas, inversas e hiperbólicas, logaritmos y factoriales detrás de un teclado que puedes ocultar, sin anuncios.",
+    "appleSci": "Integrada en iOS, con modo científico e historial. Vale la pena probarla antes de descargar cualquier otra cosa."
+  },
+  "versus": {
+    "feature": "Característica",
+    "rows": [
+      [
+        "Precio",
+        "Gratis",
+        "Integrada en iOS"
+      ],
+      [
+        "Funciones científicas",
+        "Sí",
+        "Sí"
+      ],
+      [
+        "Historial",
+        "Sí",
+        "Sí, desde iOS 18"
+      ],
+      [
+        "Conversión de unidades",
+        "14 categorías, todas las unidades mostradas a la vez",
+        "Sí, desde iOS 18"
+      ],
+      [
+        "Conversión de divisas",
+        "Sí",
+        "Sí, desde iOS 18"
+      ],
+      [
+        "Calculadoras de edad, IMC, fecha, descuento y préstamo",
+        "Sí",
+        "No hay herramientas dedicadas"
+      ],
+      [
+        "Notas matemáticas escritas a mano y a máquina",
+        "No",
+        "Sí, con Math Notes"
+      ],
+      [
+        "Funciona en iPad",
+        "No, solo iPhone",
+        "Sí, desde iPadOS 18"
+      ]
+    ],
+    "verdictTitle": "¿Cuál deberías usar?",
+    "verdict": "Si quieres notas matemáticas o usas un iPad, quédate con la aplicación de Apple. Si quieres herramientas cotidianas como calculadoras de préstamos, edad y fechas en un solo lugar, o prefieres el aspecto de ConvCalc, vale la pena la descarga gratuita. Mucha gente podría tener ambas."
+  }
+}

@@ -1,0 +1,22 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Shot from "./Shot.astro";
+import AppStore from "./AppStore.astro";
+import { getTranslations, type Locale } from "../utils/i18n";
+const { locale, slug } = Astro.props as { locale: Locale; slug: string };
+const t = getTranslations(locale);
+const f = (t.features as Record<string, any>)[slug];
+---
+<Layout title={f.title} description={f.description} locale={locale} path={`/features/${slug}`} pageType="feature" appSchema>
+<main class="wrap">
+  <section class="two first">
+    <div>
+      <h1>{f.h1}</h1>
+      <p class="lede">{f.intro}</p>
+      <AppStore locale={locale} placement="hero" />
+      {f.sections.map((s: { title: string; text: string }) => <><h2 class="h3 sect">{s.title}</h2><p>{s.text}</p></>)}
+    </div>
+    <div class="side-phone"><Shot name={f.shot} alt={f.h1} /></div>
+  </section>
+</main>
+</Layout>

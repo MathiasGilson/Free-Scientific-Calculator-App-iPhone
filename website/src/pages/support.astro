@@ -1,0 +1,16 @@
+---
+import Layout from "../layouts/Layout.astro";
+import AppStore from "../components/AppStore.astro";
+import { REPO } from "../utils/i18n";
+---
+<Layout title="Support" description="Get help with the ConvCalc calculator app for iPhone, or report a problem." locale="en" path="/support" pageType="support" englishOnly>
+<main class="wrap prose">
+  <section class="first">
+    <h1>Support</h1>
+    <p class="lede">Found a bug or a wrong result, or want to suggest something? <a href={`${REPO}/issues`}>Open an issue on GitHub</a> and include your iPhone model and iOS version.</p>
+    <h2 class="h3 sect">Requirements</h2>
+    <p>ConvCalc runs on iPhone with iOS 15.1 or later.</p>
+    <div class="mt-cta"><AppStore locale="en" placement="support" /></div>
+  </section>
+</main>
+</Layout>

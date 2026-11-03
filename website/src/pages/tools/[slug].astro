@@ -1,0 +1,6 @@
+---
+import ToolPage from "../../components/ToolPage.astro";
+import en from "../../locales/en.json";
+export const getStaticPaths = () => Object.keys(en.tools).map((slug) => ({ params: { slug } }));
+---
+<ToolPage locale="en" slug={Astro.params.slug} />

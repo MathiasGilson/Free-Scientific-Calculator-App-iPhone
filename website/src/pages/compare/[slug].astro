@@ -1,0 +1,6 @@
+---
+import ComparePage from "../../components/ComparePage.astro";
+import en from "../../locales/en.json";
+export const getStaticPaths = () => Object.keys(en.compare).map((slug) => ({ params: { slug } }));
+---
+<ComparePage locale="en" slug={Astro.params.slug} />

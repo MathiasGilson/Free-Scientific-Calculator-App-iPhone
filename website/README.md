@@ -1,43 +1,17 @@
-# Astro Starter Kit: Minimal
+# ConvCalc website
 
-```sh
-npm create astro@latest -- --template minimal
+Marketing site and free web tools for ConvCalc, at [convcalc.app](https://convcalc.app). Static Astro on Cloudflare Workers, with the same structure as Record Meeting's site.
+
+```bash
+npm install
+npm run dev
+npm test          # calculator engine, with cases from the Swift tests
+npm run build     # fetches rates, type checks, builds
+npm run verify    # checks every built page
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Copy lives in `src/locales/en.json`. Translate with `OPEN_ROUTER_API_KEY=... npm run translate`.
+- Conversion pages come from `src/data/conversions.json`, top search volume first. Keyword data is in `docs/superpowers/specs/2026-11-02-convcalc-website/keywords/`. To add a batch, append pairs from `pairs.json`.
+- `src/lib/engine.js` and `src/lib/tools.js` port the app's `ios/ConvCalc/Core`. Keep them in sync, including `test/engine-cases.json`.
+- `src/data/apps.json` holds the dated App Store figures on the comparison pages. Recheck them and the descriptions in `takes` when you update it.
+- Pushing to `master` deploys through `.github/workflows/deploy-website.yml`, which also rebuilds daily for fresh currency rates.

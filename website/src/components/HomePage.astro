@@ -1,0 +1,45 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Keys from "./Keys.astro";
+import Phone from "./Phone.astro";
+import Tabs from "./Tabs.astro";
+import Icon from "./Icon.astro";
+import Demo from "./Demo.astro";
+import Shot from "./Shot.astro";
+import AppStore from "./AppStore.astro";
+import { GRID } from "../lib/tools.js";
+import { getTranslations, type Locale } from "../utils/i18n";
+const { locale } = Astro.props as { locale: Locale };
+const t = getTranslations(locale);
+const tools = t.tools as Record<string, { label: string }>;
+const s = t.home.shots;
+const shots = [["calculatorExpanded", s.scientific], ["history", s.history], ["currency", s.currency], ["tool-loan", s.loan]] as const;
+---
+<Layout title={t.meta.homeTitle} description={t.meta.homeDescription} locale={locale} path="/" pageType="home" appSchema>
+<main>
+<section class="hero" data-calc data-autoplay='["3","6","5","*","2","4","eq"]'>
+  <div class="surface bigdisp" dir="ltr"><div class="prev" data-preview></div><div class="line"><div class="expr" data-expr aria-live="polite">0</div></div></div>
+  <div class="split">
+    <div class="pitch">
+      <h1>{t.home.h1}</h1>
+      <p>{t.home.lede}</p>
+      <AppStore locale={locale} placement="hero" />
+      <small>{t.cta.try}</small>
+    </div>
+    <div class="surface herokeys" dir="ltr"><Keys /></div>
+  </div>
+</section>
+<Demo locale={locale} initial="grid" class="tools" >
+  <div class="tools-copy" id="tools">
+    <h2>{t.home.toolsTitle}</h2>
+    <p>{t.home.toolsLede}</p>
+    <div class="surface bigtiles">{GRID.map(([k, , i]) => <button type="button" class="tile" data-open={k}><Icon name={i} /><span>{tools[k].label}</span></button>)}</div>
+  </div>
+  <div class="tools-phone"><Tabs locale={locale} /><Phone locale={locale} /></div>
+</Demo>
+<section class="shots">
+  {shots.map(([n, c]) => <figure><Shot name={n} alt={c.title} /><figcaption><b>{c.title}</b>{c.text}</figcaption></figure>)}
+</section>
+<section class="end"><h2>{t.cta.bottomTitle}</h2><AppStore locale={locale} placement="bottom" /></section>
+</main>
+</Layout>

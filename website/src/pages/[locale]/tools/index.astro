@@ -1,0 +1,7 @@
+---
+import ToolsHubPage from "../../../components/ToolsHubPage.astro";
+import { localePaths } from "../../../utils/i18n";
+export const getStaticPaths = localePaths;
+const { locale } = Astro.props;
+---
+<ToolsHubPage locale={locale} />

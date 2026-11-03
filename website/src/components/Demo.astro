@@ -1,0 +1,8 @@
+---
+// Root element for the interactive phone. demo.js reads the translated labels from data-i18n.
+import { getTranslations, type Locale } from "../utils/i18n";
+const { locale, tool, initial, class: c } = Astro.props as { locale: Locale; tool?: string; initial?: string; class?: string };
+const t = getTranslations(locale);
+const i18n = JSON.stringify({ labels: t.demo.labels, currencies: t.demo.currencies, units: t.demo.units, rateNote: t.demo.rateNote });
+---
+<div class={c} data-demo data-i18n={i18n} data-tool={tool} data-initial={initial}><slot /></div>

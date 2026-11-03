@@ -1,0 +1,7 @@
+---
+const { name, size = "1em", class: c } = Astro.props;
+const all = import.meta.glob("/node_modules/lucide-static/icons/*.svg", { query: "?raw", import: "default" });
+const svg = await all[`/node_modules/lucide-static/icons/${name}.svg`]();
+const inner = svg.replace(/<!--[\s\S]*?-->/g, "").replace(/width="24"/, `width="${size}"`).replace(/height="24"/, `height="${size}"`);
+---
+<span class:list={["ic", c]} aria-hidden="true" set:html={inner} />

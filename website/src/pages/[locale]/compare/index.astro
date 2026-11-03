@@ -1,0 +1,7 @@
+---
+import CompareHubPage from "../../../components/CompareHubPage.astro";
+import { localePaths } from "../../../utils/i18n";
+export const getStaticPaths = localePaths;
+const { locale } = Astro.props;
+---
+<CompareHubPage locale={locale} />
