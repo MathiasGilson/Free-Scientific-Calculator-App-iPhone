@@ -27,7 +27,7 @@ const more = GRID.map(([k]) => k).filter((k) => k !== slug);
     </div>
     <div class="side-phone"><Phone locale={locale} /></div>
   </Demo>
-  {popular.length > 0 && <section><h2>{t.toolPage.popular}</h2><div class="rel">{popular.map((c: any) => <a href={`/convert/${c.slug}`}>{c.h1}</a>)}</div></section>}
+  {popular.length > 0 && <section><h2>{t.toolPage.popular}</h2><div class="rel">{popular.map((c: any) => <a href={`/convert/${c.slug}`}>{c.name}</a>)}</div></section>}
   <section><h2>{t.toolPage.more}</h2><div class="rel">{more.map((k) => <a href={localizedPath(locale, `/tools/${k}`)}>{tools[k].h1}</a>)}</div></section>
 </main>
 </Layout>

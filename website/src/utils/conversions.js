@@ -16,6 +16,12 @@ const SPECIAL = {
   "fahrenheit to kelvin": "Subtract 32, multiply by 5/9, then add 273.15.",
   "kelvin to fahrenheit": "Subtract 273.15, multiply by 9/5, then add 32.",
 };
+// Searches name a specific reading ("40 c to f", "350 f to c"), so these charts list every common one.
+const range = (a, b, step = 1) => Array.from({ length: (b - a) / step + 1 }, (_, i) => a + i * step);
+const TEMP_ROWS = {
+  "celsius to fahrenheit": [-40, -20, -10, ...range(0, 36), 36.4, 36.5, 36.6, 36.7, 36.8, 37, 37.5, 38, 38.5, ...range(39, 100), ...range(110, 300, 10), 350, 400, 500],
+  "fahrenheit to celsius": [-40, -20, -10, ...range(0, 120), ...range(130, 300, 10), 325, 350, 375, 400, 425, 450, 500],
+};
 const trim = (n) => String(Number(n.toPrecision(7)));
 
 function formula(fromU, toU, name) {
@@ -39,7 +45,7 @@ export function getConversion(item) {
     return {
       ...item, slug, currency: true, from: A, to: B, fromName: CURRENCIES[a], toName: CURRENCIES[b], fromLabel: A, toLabel: B,
       title: `${A} to ${B} converter: ${cap(CURRENCIES[a])} to ${CURRENCIES[b]}`,
-      h1: `${A} to ${B}`,
+      h1: `${A} to ${B}`, name: `${A} to ${B}`, out: fmt(100 * r),
       description: `Convert ${CURRENCIES[a]} to ${CURRENCIES[b]}. 1 ${A} = ${f(1)} ${B} as of ${rates.date}, with a chart of common amounts.`,
       formula: `On ${rates.date}, 1 ${A} equals ${f(1)} ${B}. To convert, multiply the amount in ${A} by that rate.`,
       factor: r, rows: amounts.map((n) => [`${fmt(n)} ${A}`, `${f(n)} ${B}`]),
@@ -52,15 +58,18 @@ export function getConversion(item) {
   const fromU = list_.find((u) => u.label === A.label), toU = list_.find((u) => u.label === B.label);
   const conv = (n) => toU.from(fromU.to(n));
   const isTemp = item.t === "temperature";
-  const base = isTemp ? [-40, -20, -10, 0, 5, 10, 15, 20, 25, 30, 35, 37, 40, 50, 75, 100] : [1, 2, 3, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100, 150, 200, 500];
+  const base = TEMP_ROWS[item.k] || (isTemp ? [-40, -20, -10, 0, 5, 10, 15, 20, 25, 30, 35, 37, 40, 50, 75, 100] : [1, 2, 3, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100, 150, 200, 500]);
   const n = isTemp ? [20, 37, 100][h % 3] : [5, 12, 25, 40, 60, 75, 150][h % 7];
   const pretty = (v, u) => `${fmt(v)} ${v === 1 ? u.singular : u.plural}`;
   const tmpl = SCENARIOS[item.t][h % SCENARIOS[item.t].length];
+  // The title and heading must contain the phrase people search for, which is often not the unit names.
+  const name = `${cap(A.plural)} to ${B.plural}`.replace(/degrees /gi, "");
+  const named = name.toLowerCase().includes(item.k);
   return {
-    ...item, slug, from: a, to: b, fromName: A.plural, toName: B.plural, fromLabel: A.label, toLabel: B.label,
-    title: `${cap(A.plural)} to ${B.plural} converter (${A.label} to ${B.label})`,
-    h1: `${cap(A.plural)} to ${B.plural}`,
-    description: `Convert ${A.plural} to ${B.plural}: 1 ${A.label} = ${fmt(conv(1))} ${B.label}. Includes the formula, a chart and a worked example.`,
+    ...item, slug, from: a, to: b, fromName: A.plural, toName: B.plural, fromLabel: A.label, toLabel: B.label, name, out: fmt(conv(10)),
+    title: `${name} converter (${named ? `${A.label} to ${B.label}` : item.k})`,
+    h1: named ? name : `${name} (${item.k})`,
+    description: `Convert ${named ? (isTemp ? name : name.toLowerCase()) : item.k}: 1 ${A.label} = ${fmt(conv(1))} ${B.label}. Includes the formula, a chart and a worked example.`,
     formula: SPECIAL[item.k] || formula(fromU, toU, { from: A.plural }),
     unitsKey: `${fromU.name}|${toU.name}`,
     rows: base.map((v) => [`${fmt(v)} ${A.label}`, `${fmt(conv(v))} ${B.label}`]),
