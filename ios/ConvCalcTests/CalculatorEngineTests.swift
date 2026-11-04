@@ -294,6 +294,16 @@ final class ConverterCoreTests: XCTestCase {
         XCTAssertEqual(snapshot.updatedAt.timeIntervalSince1970, 1_700_000_000, accuracy: 0.001)
     }
 
+    func testOrderedUnitsFollowsSavedOrderAndKeepsEveryUnit() throws {
+        let length = try XCTUnwrap(ConverterTool.all.first { $0.key == "length" })
+
+        XCTAssertEqual(ConverterCore.orderedUnits(length.units, savedOrder: []).map(\.label), length.units.map(\.label))
+
+        // A saved order missing units (added later) or naming retired ones still lists each unit once.
+        let ordered = ConverterCore.orderedUnits(length.units, savedOrder: ["ft", "furlong", "cm", "ft"]).map(\.label)
+        XCTAssertEqual(ordered, ["ft", "cm", "mm", "m", "km", "in", "yd", "mi"])
+    }
+
     func testCurrencyRateShouldRefreshWhenMissingOrStale() {
         let now = Date(timeIntervalSince1970: 1_700_000_000)
 
@@ -411,6 +421,19 @@ final class CurrencyRatesModelTests: XCTestCase {
 
     private func storeSnapshot(age: TimeInterval) {
         CurrencyRateStore.save(CurrencyRateSnapshot(rates: ["USD": 1, "EUR": 0.5], updatedAt: now.addingTimeInterval(-age)), defaults: defaults)
+    }
+
+    func testReorderingCurrenciesPersistsAndRejectsOtherChanges() {
+        let model = makeModel(counter: FetchCounter())
+
+        model.reorderCurrencies(["GBP", "USD", "EUR", "JPY"])
+        XCTAssertEqual(model.displayedCurrencies, ["GBP", "USD", "EUR", "JPY"])
+        XCTAssertEqual(makeModel(counter: FetchCounter()).displayedCurrencies, ["GBP", "USD", "EUR", "JPY"])
+
+        model.reorderCurrencies(["GBP", "USD", "EUR", "CHF"])
+        model.reorderCurrencies(["GBP", "GBP", "EUR", "JPY"])
+        model.reorderCurrencies(["GBP", "USD", "EUR"])
+        XCTAssertEqual(model.displayedCurrencies, ["GBP", "USD", "EUR", "JPY"])
     }
 
     func testFirstOpenFetchesAndPersists() async {

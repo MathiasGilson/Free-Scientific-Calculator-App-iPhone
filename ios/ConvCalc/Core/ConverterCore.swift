@@ -138,6 +138,19 @@ public enum ConverterCore {
         }
     }
 
+    /// A tool's units in the order the user dragged them into. Units a saved order doesn't
+    /// know about, such as ones added in an update, follow in their built-in order, and saved
+    /// labels the tool no longer offers are ignored.
+    public static func orderedUnits(_ units: [UnitDefinition], savedOrder: [String]) -> [UnitDefinition] {
+        var remaining = units
+        var ordered: [UnitDefinition] = []
+        for label in savedOrder {
+            guard let index = remaining.firstIndex(where: { $0.label == label }) else { continue }
+            ordered.append(remaining.remove(at: index))
+        }
+        return ordered + remaining
+    }
+
     public static func formatConversionResult(_ value: Double, locale: Locale = .current) -> String {
         // Fuel units divide by the value, so typing 0 produces infinity.
         guard value.isFinite else { return "—" }
@@ -645,6 +658,18 @@ public final class CurrencyRatesModel: ObservableObject {
         } else {
             displayedCurrencies[index] = code
         }
+        saveDisplayedCurrencies()
+    }
+
+    /// Puts the shown currencies in a new order. Anything other than a reordering of the
+    /// same currencies is ignored, so a drag can never add, drop or duplicate a row.
+    public func reorderCurrencies(_ codes: [String]) {
+        guard codes != displayedCurrencies, codes.sorted() == displayedCurrencies.sorted() else { return }
+        displayedCurrencies = codes
+        saveDisplayedCurrencies()
+    }
+
+    private func saveDisplayedCurrencies() {
         guard let data = try? JSONEncoder().encode(displayedCurrencies) else { return }
         defaults.set(data, forKey: Self.displayedCurrenciesKey)
     }

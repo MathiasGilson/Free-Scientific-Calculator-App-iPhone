@@ -160,6 +160,10 @@ final class ConvCalcAppState: ObservableObject {
     @Published var toolOrder: [String] {
         didSet { saveToolOrder() }
     }
+    /// Unit labels per unit tool, in the order the user dragged them into.
+    @Published private(set) var unitOrders: [String: [String]] {
+        didSet { saveUnitOrders() }
+    }
     @Published var isRearrangingTools = false
     @Published var draggedToolKey: String?
 
@@ -179,11 +183,18 @@ final class ConvCalcAppState: ObservableObject {
     private let defaults: UserDefaults
     private let key: String
     private let toolOrderKey: String
+    private let unitOrderKey: String
 
-    init(userDefaults: UserDefaults = .standard, key: String = "pinnedConverterTools", toolOrderKey: String = "converterToolOrder") {
+    init(
+        userDefaults: UserDefaults = .standard,
+        key: String = "pinnedConverterTools",
+        toolOrderKey: String = "converterToolOrder",
+        unitOrderKey: String = "converterUnitOrder"
+    ) {
         self.defaults = userDefaults
         self.key = key
         self.toolOrderKey = toolOrderKey
+        self.unitOrderKey = unitOrderKey
         if
             let data = defaults.data(forKey: key),
             let decoded = try? JSONDecoder().decode([String].self, from: data),
@@ -202,6 +213,25 @@ final class ConvCalcAppState: ObservableObject {
         } else {
             toolOrder = Self.defaultToolOrder
         }
+
+        if
+            let data = defaults.data(forKey: unitOrderKey),
+            let decoded = try? JSONDecoder().decode([String: [String]].self, from: data)
+        {
+            unitOrders = decoded
+        } else {
+            unitOrders = [:]
+        }
+    }
+
+    func orderedUnits(for tool: ConverterTool) -> [UnitDefinition] {
+        ConverterCore.orderedUnits(tool.units, savedOrder: unitOrders[tool.key] ?? [])
+    }
+
+    /// Called on every drag update; only a real move should re-render and persist.
+    func setUnitOrder(_ labels: [String], for toolKey: String) {
+        guard unitOrders[toolKey] != labels else { return }
+        unitOrders[toolKey] = labels
     }
 
     var pinnedToolKeys: [String] {
@@ -348,6 +378,11 @@ final class ConvCalcAppState: ObservableObject {
     private func saveToolOrder() {
         guard let data = try? JSONEncoder().encode(Self.normalizedToolOrder(toolOrder)) else { return }
         defaults.set(data, forKey: toolOrderKey)
+    }
+
+    private func saveUnitOrders() {
+        guard let data = try? JSONEncoder().encode(unitOrders) else { return }
+        defaults.set(data, forKey: unitOrderKey)
     }
 
     private static var defaultToolOrder: [String] {
@@ -1921,6 +1956,8 @@ private struct ReorderTouchSurface: UIViewRepresentable {
     let isRearranging: Bool
     var onPressChanged: (Bool) -> Void = { _ in }
     var onTap: () -> Void = {}
+    /// Replaces `onTap` for a surface covering several targets, such as a currency row's code and amount.
+    var onTapAt: ((CGPoint) -> Void)?
     let onDragBegan: () -> Void
     let onDragChanged: (CGSize) -> Void
     let onDragEnded: () -> Void
@@ -1985,8 +2022,12 @@ private struct ReorderTouchSurface: UIViewRepresentable {
             self.surface = surface
         }
 
-        @objc func handleTap() {
-            surface.onTap()
+        @objc func handleTap(_ recognizer: UITapGestureRecognizer) {
+            if let onTapAt = surface.onTapAt {
+                onTapAt(recognizer.location(in: recognizer.view))
+            } else {
+                surface.onTap()
+            }
         }
 
         @objc func handleDrag(_ recognizer: UIGestureRecognizer) {
@@ -2007,6 +2048,160 @@ private struct ReorderTouchSurface: UIViewRepresentable {
         // While rearranging, a card under the finger moves rather than the page.
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
             otherGestureRecognizer.view is UIScrollView
+        }
+    }
+}
+
+// MARK: - Vertical List Reordering
+
+/// Lets the rows of a vertical list be held and dragged into a new order, the way the tool grid is.
+/// Rows differ in height (the active row is taller), so the order comes from their measured heights
+/// rather than from frames read back after each move, which trail the finger by a layout pass.
+private final class VerticalReorderModel: ObservableObject {
+    @Published private(set) var draggedID: String?
+    @Published private(set) var draggedOffset: CGFloat = 0
+
+    var heights: [String: CGFloat] = [:]
+    private var order: [String] = []
+    private var startTop: CGFloat = 0
+
+    func begin(_ id: String, order: [String]) {
+        guard order.contains(id) else { return }
+        impact(.medium)
+        self.order = order
+        startTop = top(of: id, in: order)
+        draggedID = id
+        draggedOffset = 0
+    }
+
+    /// Returns the order that puts the dragged row where the finger is, or nil while it stays put.
+    func update(translation: CGFloat) -> [String]? {
+        guard let draggedID else { return nil }
+        let center = startTop + translation + height(of: draggedID) / 2
+
+        var next = order.filter { $0 != draggedID }
+        var insertion = next.count
+        var top: CGFloat = 0
+        for (index, id) in next.enumerated() {
+            if center < top + height(of: id) / 2 {
+                insertion = index
+                break
+            }
+            top += height(of: id)
+        }
+        next.insert(draggedID, at: insertion)
+
+        // The row's slot moves when the order changes; the offset keeps it under the finger.
+        draggedOffset = startTop + translation - self.top(of: draggedID, in: next)
+        guard next != order else { return nil }
+        order = next
+        return next
+    }
+
+    func end() {
+        draggedID = nil
+        draggedOffset = 0
+    }
+
+    private func height(of id: String) -> CGFloat {
+        heights[id] ?? 0
+    }
+
+    private func top(of id: String, in order: [String]) -> CGFloat {
+        order.prefix { $0 != id }.reduce(0) { $0 + height(of: $1) }
+    }
+}
+
+private struct VerticalReorderHeightsKey: PreferenceKey {
+    static var defaultValue: [String: CGFloat] { [:] }
+
+    static func reduce(value: inout [String: CGFloat], nextValue: () -> [String: CGFloat]) {
+        value.merge(nextValue()) { $1 }
+    }
+}
+
+private struct VerticalReorderRow: ViewModifier {
+    let id: String
+    let order: [String]
+    @ObservedObject var model: VerticalReorderModel
+    let onReorder: ([String]) -> Void
+    let onTap: (CGPoint) -> Void
+
+    private static let animation = Animation.interactiveSpring(response: 0.24, dampingFraction: 0.82)
+
+    func body(content: Content) -> some View {
+        let dragged = model.draggedID == id
+        let index = order.firstIndex(of: id) ?? 0
+
+        content
+            .background(
+                GeometryReader { proxy in
+                    Color.clear.preference(key: VerticalReorderHeightsKey.self, value: [id: proxy.size.height])
+                }
+            )
+            .overlay(
+                ReorderTouchSurface(
+                    isRearranging: false,
+                    onTapAt: onTap,
+                    onDragBegan: { model.begin(id, order: order) },
+                    onDragChanged: { translation in
+                        guard let next = model.update(translation: translation.height) else { return }
+                        impact(.light)
+                        withAnimation(Self.animation) { onReorder(next) }
+                    },
+                    onDragEnded: {
+                        withAnimation(Self.animation) { model.end() }
+                    }
+                )
+            )
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Color(red: 0.17, green: 0.17, blue: 0.17))
+                    .padding(.horizontal, -8)
+                    .opacity(dragged ? 1 : 0)
+            )
+            .scaleEffect(dragged ? 1.03 : 1)
+            .shadow(color: dragged ? Color.black.opacity(0.38) : .clear, radius: 14, x: 0, y: 10)
+            .offset(y: dragged ? model.draggedOffset : 0)
+            .zIndex(dragged ? 1 : 0)
+            // The lifted row follows the finger exactly; only the rows it passes animate.
+            .transaction { transaction in
+                if dragged { transaction.animation = nil }
+            }
+            .accessibilityAction(named: "Move up") {
+                guard index > 0 else { return }
+                onReorder(Self.moving(order, from: index, to: index - 1))
+            }
+            .accessibilityAction(named: "Move down") {
+                guard index < order.count - 1 else { return }
+                onReorder(Self.moving(order, from: index, to: index + 1))
+            }
+    }
+
+    private static func moving(_ order: [String], from source: Int, to destination: Int) -> [String] {
+        var next = order
+        next.insert(next.remove(at: source), at: destination)
+        return next
+    }
+}
+
+private extension View {
+    /// One row of a list that `VerticalReorderModel` reorders. The row's own taps arrive through `onTap`,
+    /// since the surface that catches the hold also catches every other touch on the row.
+    func verticalReorderRow(
+        id: String,
+        order: [String],
+        model: VerticalReorderModel,
+        onReorder: @escaping ([String]) -> Void,
+        onTap: @escaping (CGPoint) -> Void
+    ) -> some View {
+        modifier(VerticalReorderRow(id: id, order: order, model: model, onReorder: onReorder, onTap: onTap))
+    }
+
+    /// Hands the measured row heights of a reorderable list to its model.
+    func verticalReorderList(_ model: VerticalReorderModel) -> some View {
+        onPreferenceChange(VerticalReorderHeightsKey.self) { heights in
+            model.heights = heights
         }
     }
 }
@@ -2206,12 +2401,24 @@ struct UnitConverterScreen: View {
     let tool: ConverterTool
     let onBack: (() -> Void)?
 
+    @EnvironmentObject private var appState: ConvCalcAppState
+    @StateObject private var reorder = VerticalReorderModel()
     @State private var input = "1"
     @State private var inputEdited = false
-    @State private var fromIndex = 0
+    // Kept by label so the typed value stays on its unit when the rows are reordered.
+    @State private var activeLabel: String?
+
+    private var units: [UnitDefinition] {
+        appState.orderedUnits(for: tool)
+    }
+
+    /// The unit being typed into: the one last tapped, else the top of the user's order.
+    private var fromIndex: Int {
+        units.firstIndex { $0.label == activeLabel } ?? 0
+    }
 
     private var results: [ConversionResult] {
-        ConverterCore.convertToAll(value: Double(input) ?? 0, fromIndex: fromIndex, units: tool.units)
+        ConverterCore.convertToAll(value: Double(input) ?? 0, fromIndex: fromIndex, units: units)
     }
 
     var body: some View {
@@ -2225,15 +2432,11 @@ struct UnitConverterScreen: View {
                 }
 
                 ScrollView {
+                    let order = results.map(\.id)
                     VStack(spacing: 0) {
                         ForEach(Array(results.enumerated()), id: \.element.id) { index, result in
                             Button {
-                                guard index != fromIndex else { return }
-                                withoutAnimation {
-                                    fromIndex = index
-                                    input = "1"
-                                    inputEdited = false
-                                }
+                                select(result.label)
                             } label: {
                                 HStack(alignment: .center) {
                                     Text(result.name)
@@ -2262,8 +2465,16 @@ struct UnitConverterScreen: View {
                             }
                             .buttonStyle(InstantButtonStyle())
                             .accessibilityValue(index == fromIndex ? "Active" : "")
+                            .verticalReorderRow(
+                                id: result.id,
+                                order: order,
+                                model: reorder,
+                                onReorder: reorderUnits,
+                                onTap: { _ in select(result.label) }
+                            )
                         }
                     }
+                    .verticalReorderList(reorder)
                     .padding(.horizontal, 16)
                     .padding(.top, topPadding)
                     .padding(.vertical, ToolDetailLayout.activeRowOverhang)
@@ -2284,6 +2495,27 @@ struct UnitConverterScreen: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(AppColor.background.ignoresSafeArea(edges: .bottom))
+    }
+
+    private var activeUnitLabel: String? {
+        units.indices.contains(fromIndex) ? units[fromIndex].label : nil
+    }
+
+    private func select(_ label: String) {
+        guard label != activeUnitLabel else { return }
+        withoutAnimation {
+            activeLabel = label
+            input = "1"
+            inputEdited = false
+        }
+    }
+
+    private func reorderUnits(_ labels: [String]) {
+        // Pin the active unit first, so moving another unit to the top doesn't take over the input.
+        if activeLabel == nil {
+            activeLabel = activeUnitLabel
+        }
+        appState.setUnitOrder(labels, for: tool.key)
     }
 
     private func appendValue(_ value: String) {
@@ -2880,6 +3112,7 @@ struct CurrencyScreen: View {
     @State private var inputEdited = false
     @State private var pickerVisible = false
     @State private var pickerRowIndex = 0
+    @StateObject private var reorder = VerticalReorderModel()
 
     // SwiftUI re-creates this struct on every parent update, so the catalog is decoded once.
     private static let sharedCatalog = CurrencyCatalog.load()
@@ -2904,8 +3137,9 @@ struct CurrencyScreen: View {
                 // Only scrolls if a tool page's back button still pushes the rows past the keypad.
                 ScrollView {
                     VStack(spacing: 0) {
-                        ForEach(currencyRates.displayedCurrencies.indices, id: \.self) { index in
-                            currencyRow(code: currencyRates.displayedCurrencies[index], index: index, compact: compact)
+                        // Keyed by code so a dragged row keeps its identity, and its touch, as it moves.
+                        ForEach(Array(currencyRates.displayedCurrencies.enumerated()), id: \.element) { index, code in
+                            currencyRow(code: code, index: index, compact: compact)
                         }
 
                         Button {
@@ -2928,6 +3162,7 @@ struct CurrencyScreen: View {
                         .padding(.top, 6)
                         .padding(.bottom, 4)
                     }
+                    .verticalReorderList(reorder)
                     .padding(.horizontal, 20)
                     .padding(.top, topPadding)
                     .padding(.top, ToolDetailLayout.activeRowOverhang)
@@ -3006,10 +3241,32 @@ struct CurrencyScreen: View {
         .appActiveRow(isActive, cornerRadius: 18)
         .padding(.vertical, 2)
         .contentShape(Rectangle())
-        .onTapGesture {
-            activateRow(index)
-        }
         .buttonStyle(.plain)
+        .verticalReorderRow(
+            id: code,
+            order: currencyRates.displayedCurrencies,
+            model: reorder,
+            onReorder: reorderCurrencies,
+            onTap: { location in
+                // Same split as the buttons: the code opens the picker, the rest of the row activates it.
+                if location.x < Self.codeTapWidth {
+                    pickerRowIndex = index
+                    pickerVisible = true
+                } else {
+                    activateRow(index)
+                }
+            }
+        )
+    }
+
+    /// The row's leading padding plus the code button.
+    private static let codeTapWidth: CGFloat = 12 + 88
+
+    private func reorderCurrencies(_ codes: [String]) {
+        let activeCode = currencyRates.displayedCurrencies[activeCurrencyIndex]
+        currencyRates.reorderCurrencies(codes)
+        // The typed amount stays with its currency, wherever that row lands.
+        activeCurrencyIndex = currencyRates.displayedCurrencies.firstIndex(of: activeCode) ?? 0
     }
 
     private func activateRow(_ index: Int) {
