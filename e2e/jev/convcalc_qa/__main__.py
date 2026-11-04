@@ -29,6 +29,8 @@ def run_jev(journey, device, folder):
     jev_agent.Browser = lambda _url: device
     problems, reached, last, cost, steps = [], [], None, 0.0, []
     device.gestures = journey.gestures
+    device.drags = journey.drags
+    device.last_drag = None
     agent = jev_agent.Agent("app://convcalc", journey.goal, record_dir=folder, screenshots=True)
     try:
         while agent.state["status"] not in {"done", "blocked"}:
@@ -54,7 +56,7 @@ def run_jev(journey, device, folder):
         if missing and not problems:
             problems.append(f"Checkpoints never seen: {missing}")
     finally:
-        device.gestures = False
+        device.gestures = device.drags = False
     return problems, steps, cost
 
 

@@ -253,7 +253,14 @@ final class ConverterCoreTests: XCTestCase {
     }
 
     func testSpecialCalculators() throws {
-        XCTAssertEqual(ConverterCore.calculateBMI(heightCm: 170, weightKg: 70), BMIResult(bmi: 24.2, category: "Normal"))
+        XCTAssertEqual(ConverterCore.calculateTip(bill: 100, tipPercent: 20, people: 3), TipResult(tip: 20, total: 120, perPerson: 40, billShare: 33.34, tipShare: 6.66))
+        XCTAssertEqual(ConverterCore.calculateTip(bill: 100, tipPercent: 15, people: 3), TipResult(tip: 15, total: 115, perPerson: 38.34, billShare: 33.34, tipShare: 5))
+        XCTAssertEqual(ConverterCore.calculateTip(bill: 0, tipPercent: 15, people: 2), TipResult(tip: 0, total: 0, perPerson: 0, billShare: 0, tipShare: 0))
+        XCTAssertEqual(ConverterCore.calculateTip(bill: 100, tipPercent: 0, people: 3)?.tipShare, 0)
+        XCTAssertEqual(ConverterCore.calculateTip(bill: 856.25, tipPercent: 10, people: 5), TipResult(tip: 85.63, total: 941.88, perPerson: 188.38, billShare: 171.25, tipShare: 17.13))
+        XCTAssertNil(ConverterCore.calculateTip(bill: 10, tipPercent: 15, people: 0))
+        XCTAssertNotNil(ConverterCore.calculateTip(bill: 10, tipPercent: 100, people: 1))
+        XCTAssertNil(ConverterCore.calculateTip(bill: 10, tipPercent: 100.01, people: 1))
         XCTAssertEqual(ConverterCore.calculateDiscount(price: 100, percent: 20), DiscountResult(savings: 20, finalPrice: 80))
 
         let diff = try XCTUnwrap(ConverterCore.calculateDateDiff(year1: 2024, month1: 1, day1: 1, year2: 2025, month2: 1, day2: 1, calendar: gregorianUTC))
@@ -653,6 +660,15 @@ final class AppStatePersistenceTests: XCTestCase {
         let reloaded = ConvCalcAppState(userDefaults: defaults)
         XCTAssertEqual(reloaded.orderedTools.map(\.key).prefix(4), ["currency", "length", "area", "pressure"])
         XCTAssertEqual(reloaded.screenOrder, ["_calculator", "length", "currency", "mass"])
+    }
+
+    func testPinForRemovedToolIsDropped() throws {
+        let suiteName = "ConvCalcRemovedToolTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        defaults.set(try JSONEncoder().encode(["_calculator", "bmi", "currency"]), forKey: "pinnedConverterTools")
+        XCTAssertEqual(ConvCalcAppState(userDefaults: defaults).screenOrder, ["_calculator", "currency"])
     }
 
     func testCalculatorTabKeepsItsPositionWhenPinningAndReloading() {

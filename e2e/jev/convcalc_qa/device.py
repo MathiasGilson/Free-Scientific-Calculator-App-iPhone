@@ -25,7 +25,12 @@ class Simulator:
         self.udid = udid
         self.app = app
         self.gestures = False
+        self.drags = False
+        self.last_drag = None
         self.centers = {}
+        # A freshly booted simulator counts as having a hardware keyboard and hides the on-screen one.
+        for setting in ("HardwareKeyboardLastSeen", "AutomaticMinimizationEnabled"):
+            run("xcrun", "simctl", "spawn", udid, "defaults", "write", "com.apple.keyboard.preferences", setting, "-bool", "NO")
 
     # ---- lifecycle
     def fresh_install(self, locale=None):
@@ -49,6 +54,21 @@ class Simulator:
 
     def pasteboard(self):
         return run("xcrun", "simctl", "pbpaste", self.udid)
+
+    # ---- keyboard
+    def tap_key(self, label):
+        """Press a key of the on-screen keyboard. `idb ui text` acts as a hardware keyboard, which hides it."""
+        for element in json.loads(run("idb", "ui", "describe-all", "--udid", self.udid)):
+            frame = element.get("frame") or {}
+            if element.get("type") == "Button" and (element.get("AXLabel") or "").lower() == label.lower():
+                self.tap(frame["x"] + frame["width"] / 2, frame["y"] + frame["height"] / 2)
+                time.sleep(0.15)
+                return
+        raise AssertionError(f"The keyboard has no {label!r} key")
+
+    def type_on_keyboard(self, text):
+        for character in text:
+            self.tap_key(character)
 
     # ---- reading
     def elements(self):
@@ -173,6 +193,8 @@ class Simulator:
             if self.gestures and not menu_open and (display_zero or element["button"]):
                 actions.append({"id": f"hold_{node}", "kind": "click", "node": 1000 + node, "role": "button", "label": f"Long-press: {label}"})
                 self.centers[1000 + node] = (element["x"], element["y"])
+            if self.drags and element["button"]:
+                actions.append({"id": f"drag_{node}", "kind": "fill", "node": 2000 + node, "source": element["label"], "role": "textbox", "label": f"Long-press {label} and drag it without lifting. Text: the exact name of the item to drop it on", "value": ""})
         if any(self.is_key(e) for e in elements):
             # Jev drops repeated digits and swaps neighbours when it picks keys one at a time, so
             # the text helper writes the sequence and every key is still a real tap.
@@ -238,6 +260,30 @@ class Simulator:
         self.tap(element["x"], element["y"], duration=0.7)
         time.sleep(0.5)
 
+    def touch(self, x, y, phase):
+        # idb cannot pause mid-swipe, so a hold that flows into a drag uses AXe. A second "down" moves the same finger.
+        run("axe", "touch", "-x", str(round(x)), "-y", str(round(y)), f"--{phase}", "--udid", self.udid)
+
+    def frame(self, label):
+        # The dragged card overlaps others, which elements() treats as covered.
+        raw = json.loads(run("idb", "ui", "describe-all", "--udid", self.udid))
+        return next(e["frame"] for e in raw if e.get("AXLabel") == label and e.get("type") not in IGNORED_TYPES)
+
+    def hold_and_drag(self, source, target):
+        """Long-press, then move and drop in one touch, measuring the item at each stage."""
+        origin, end = self.find(source, exact=True), self.find(target, exact=True)
+        self.touch(origin["x"], origin["y"], "down")
+        time.sleep(0.8)
+        held = self.frame(source)
+        for step in range(1, 13):
+            self.touch(origin["x"] + (end["x"] - origin["x"]) * step / 12, origin["y"] + (end["y"] - origin["y"]) * step / 12, "down")
+        time.sleep(0.2)
+        moved = self.frame(source)
+        self.touch(end["x"], end["y"], "up")
+        time.sleep(0.7)
+        self.last_drag = {"rest": origin["frame"], "held": held, "moved": moved, "dropped": self.frame(source), "finger": (end["x"], end["y"])}
+        return self.last_drag
+
     def next_page(self):
         self.swipe(370, 300, 30, 300)
 
@@ -259,8 +305,10 @@ class Simulator:
         elif ident == "press_keys":
             self.press_keys(text)
         elif ident == "type_search":
-            run("idb", "ui", "text", "--udid", self.udid, text)
+            self.type_on_keyboard(text)
             time.sleep(0.8)
+        elif ident.startswith("drag_"):
+            self.hold_and_drag(action["source"], text)
         elif kind == "fill":
             self.tap(*self.centers[action["node"]])
             run("idb", "ui", "text", "--udid", self.udid, text)

@@ -25,6 +25,19 @@ private enum AppColor {
     static let accent = Color(red: 0.96, green: 0.60, blue: 0.02)
 }
 
+// Selecting a row takes effect at once. Standard button styles fade the row for half a second.
+private func withoutAnimation(_ changes: () -> Void) {
+    var transaction = Transaction(animation: nil)
+    transaction.disablesAnimations = true
+    withTransaction(transaction, changes)
+}
+
+private struct InstantButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+    }
+}
+
 private let toolPageAnimation = Animation.interactiveSpring(response: 0.28, dampingFraction: 0.88, blendDuration: 0.02)
 private let toolPageTransition = AnyTransition.asymmetric(
     insertion: .move(edge: .trailing),
@@ -61,13 +74,20 @@ private extension View {
         }
     }
 
-    @ViewBuilder
-    func appGlassWhen(_ condition: Bool, cornerRadius: CGFloat, tint: Color? = nil, interactive: Bool = false, fallbackOpacity: Double = 0.16) -> some View {
-        if condition {
-            self.appGlass(cornerRadius: cornerRadius, tint: tint, interactive: interactive, fallbackOpacity: fallbackOpacity)
-        } else {
-            self
-        }
+    /// The box behind the row that is receiving input: unit rows, tool fields and currency rows.
+    /// A plain fill, because glass cannot get this faint on the black background. It extends past
+    /// the row so the text keeps lining up with the rows around it.
+    func appActiveRow(_ isActive: Bool, cornerRadius: CGFloat = 12) -> some View {
+        let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+        let opacity = isActive ? 0.072 : 0
+        return background(
+            shape.fill(Color.white.opacity(opacity))
+                .overlay(shape.stroke(Color.white.opacity(opacity), lineWidth: 0.8))
+                .padding(.horizontal, -8)
+                .padding(.vertical, -ToolDetailLayout.activeRowOverhang)
+        )
+        // Keeps the box from crowding the rows above and below it.
+        .padding(.vertical, isActive ? 8 : 0)
     }
 }
 
@@ -210,8 +230,10 @@ final class ConvCalcAppState: ObservableObject {
 
     private static func sanitizeScreenOrder(_ order: [String]) -> [String] {
         var seen: Set<String> = []
+        let knownKeys = Set(ConverterTool.all.map(\.key)).union(["_calculator"])
         let tabs = order.filter { key in
-            guard key != "_converter", !seen.contains(key) else { return false }
+            // A pin saved for a tool that no longer exists, such as BMI, would be a blank page.
+            guard knownKeys.contains(key), !seen.contains(key) else { return false }
             seen.insert(key)
             return true
         }
@@ -661,32 +683,19 @@ struct PinnedTabBar: View {
     let pageIndex: Int
 
     @State private var activeTabKey: String?
-    @State private var dragLocation = CGPoint.zero
-    @State private var fingerOffset = CGSize.zero
+    @State private var dragOrigin = CGPoint.zero
+    @State private var dragTranslation = CGSize.zero
 
-    private static let coordinateSpace = "pinnedTabBar"
     private static let iconWidth: CGFloat = 40
     private static let barHeight: CGFloat = 36
 
     var body: some View {
         let tabs = appState.screenOrder + ["_converter"]
 
-        Group {
-            if appState.isRearrangingTools {
-                reorderableBar(tabs: tabs)
-            } else {
-                staticBar(tabs: tabs)
-            }
-        }
+        bar(tabs: tabs)
         .padding(.horizontal, 6)
         .appGlass(cornerRadius: 18, tint: Color.white.opacity(0.04), fallbackOpacity: 0.08)
         .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .onLongPressGesture(minimumDuration: 0.42, maximumDistance: 24) {
-            // The bar also flashes while paging, but only the grid can exit rearranging.
-            guard pageIndex == appState.screenOrder.count else { return }
-            impact(.heavy)
-            appState.beginRearrangingTools()
-        }
         .onChange(of: appState.isRearrangingTools) { isRearranging in
             if !isRearranging {
                 finishDrag()
@@ -694,28 +703,28 @@ struct PinnedTabBar: View {
         }
     }
 
-    private func staticBar(tabs: [String]) -> some View {
-        HStack(spacing: 0) {
-            ForEach(Array(tabs.enumerated()), id: \.element) { index, key in
-                tabIcon(key: key, index: index)
-            }
-        }
-    }
-
-    private func reorderableBar(tabs: [String]) -> some View {
+    private func bar(tabs: [String]) -> some View {
         ZStack(alignment: .topLeading) {
             ForEach(Array(tabs.enumerated()), id: \.element) { index, key in
                 let isActive = activeTabKey == key
                 tabIcon(key: key, index: index)
+                    .overlay(
+                        ReorderTouchSurface(
+                            isRearranging: appState.isRearrangingTools,
+                            onDragBegan: { beginDrag(key: key, at: index) },
+                            onDragChanged: { updateDrag($0, tabs: tabs) },
+                            onDragEnded: finishDrag
+                        )
+                    )
+                    .scaleEffect(isActive ? 1.25 : 1)
+                    .animation(.spring(response: 0.28, dampingFraction: 0.62), value: isActive)
                     .position(position(for: index, isActive: isActive))
                     .shadow(color: isActive ? Color.black.opacity(0.35) : .clear, radius: 12, x: 0, y: 8)
                     .zIndex(isActive ? 10 : 1)
                     .animation(isActive ? nil : .interactiveSpring(response: 0.22, dampingFraction: 0.84), value: tabs)
-                    .simultaneousGesture(dragGesture(for: key, at: index, tabs: tabs))
             }
         }
         .frame(width: barWidth(tabCount: tabs.count), height: Self.barHeight)
-        .coordinateSpace(name: Self.coordinateSpace)
     }
 
     private func tabIcon(key: String, index: Int) -> some View {
@@ -752,36 +761,23 @@ struct PinnedTabBar: View {
         CGFloat(tabCount) * Self.iconWidth
     }
 
-    private func dragGesture(for key: String, at index: Int, tabs: [String]) -> some Gesture {
-        DragGesture(minimumDistance: 3, coordinateSpace: .named(Self.coordinateSpace))
-            .onChanged { value in
-                guard appState.isRearrangingTools, canDrag(key) else { return }
-                if activeTabKey != key {
-                    beginDrag(key: key, at: index, drag: value)
-                }
-                updateDrag(value, tabs: tabs)
-            }
-            .onEnded { _ in
-                guard appState.isRearrangingTools else { return }
-                finishDrag()
-            }
-    }
-
-    private func beginDrag(key: String, at index: Int, drag: DragGesture.Value) {
+    private func beginDrag(key: String, at index: Int) {
+        // The bar also flashes while paging, but only the grid can exit rearranging.
+        guard pageIndex == appState.screenOrder.count else { return }
+        if !appState.isRearrangingTools {
+            impact(.heavy)
+            appState.beginRearrangingTools()
+        }
+        guard canDrag(key) else { return }
         appState.draggedToolKey = key
         activeTabKey = key
-
-        let center = slotCenter(for: index)
-        fingerOffset = CGSize(
-            width: drag.startLocation.x - center.x,
-            height: drag.startLocation.y - center.y
-        )
-        dragLocation = drag.location
+        dragOrigin = slotCenter(for: index)
+        dragTranslation = .zero
     }
 
-    private func updateDrag(_ drag: DragGesture.Value, tabs: [String]) {
-        dragLocation = drag.location
+    private func updateDrag(_ translation: CGSize, tabs: [String]) {
         guard let activeTabKey else { return }
+        dragTranslation = translation
 
         let targetIndex = tabIndex(for: activeCenter().x, tabCount: tabs.count)
         withAnimation(.interactiveSpring(response: 0.22, dampingFraction: 0.84)) {
@@ -790,10 +786,11 @@ struct PinnedTabBar: View {
     }
 
     private func finishDrag() {
-        activeTabKey = nil
+        withAnimation(.interactiveSpring(response: 0.22, dampingFraction: 0.84)) {
+            activeTabKey = nil
+        }
         appState.draggedToolKey = nil
-        dragLocation = .zero
-        fingerOffset = .zero
+        dragTranslation = .zero
     }
 
     private func position(for index: Int, isActive: Bool) -> CGPoint {
@@ -801,10 +798,7 @@ struct PinnedTabBar: View {
     }
 
     private func activeCenter() -> CGPoint {
-        CGPoint(
-            x: dragLocation.x - fingerOffset.width,
-            y: dragLocation.y - fingerOffset.height
-        )
+        CGPoint(x: dragOrigin.x + dragTranslation.width, y: dragOrigin.y + dragTranslation.height)
     }
 
     private func slotCenter(for index: Int) -> CGPoint {
@@ -839,25 +833,20 @@ private struct ReorderShakeModifier: ViewModifier {
     let active: Bool
     @State private var shakeStart = Date()
 
-    @ViewBuilder
+    // One structure in both states: swapping branches rebuilds the views around the content,
+    // and with them a touch surface whose touch started the shaking.
     func body(content: Content) -> some View {
-        if active {
-            TimelineView(.animation) { timeline in
-                content
-                    .rotationEffect(.degrees(angle(at: timeline.date)))
-                    .transaction { transaction in
-                        transaction.animation = nil
-                    }
-            }
-            .onAppear {
-                shakeStart = Date()
-            }
-        } else {
+        TimelineView(.animation(minimumInterval: nil, paused: !active)) { timeline in
             content
-                .rotationEffect(.degrees(0))
+                .rotationEffect(.degrees(active ? angle(at: timeline.date) : 0))
                 .transaction { transaction in
                     transaction.animation = nil
                 }
+        }
+        .onChange(of: active) { isActive in
+            if isActive {
+                shakeStart = Date()
+            }
         }
     }
 
@@ -1716,21 +1705,15 @@ private struct ReorderableConverterToolGrid: View {
     let onSetPinned: (String, Bool) -> Void
 
     @State private var activeToolKey: String?
-    @State private var heldToolKey: String?
-    @GestureState private var pressedToolKey: String?
-    @State private var dragLocation = CGPoint.zero
-    @State private var fingerOffset = CGSize.zero
+    @State private var pressedToolKey: String?
+    @State private var dragOrigin = CGPoint.zero
+    @State private var dragTranslation = CGSize.zero
     @State private var blockToolbarPlacementUntil = Date.distantPast
-    @State private var activeDragTranslation = CGSize.zero
     @State private var pinToggleLockedUntil = Date.distantPast
 
-    private static let coordinateSpace = "converterToolReorderGrid"
     private static let columnCount = 4
     private static let columnSpacing: CGFloat = 14
     private static let rowSpacing: CGFloat = 18
-    private static let longPressDuration: TimeInterval = 0.42
-    private static let longPressMaxDistance: CGFloat = 28
-    private static let dragMinimumDistance: CGFloat = 12
     private static let toolbarDropDragThreshold: CGFloat = 36
 
     private var itemSize: CGFloat {
@@ -1759,7 +1742,6 @@ private struct ReorderableConverterToolGrid: View {
                     }
             }
         }
-        .coordinateSpace(name: Self.coordinateSpace)
         .onChange(of: appState.isRearrangingTools) { isRearranging in
             if !isRearranging {
                 finishDrag()
@@ -1770,7 +1752,7 @@ private struct ReorderableConverterToolGrid: View {
     @ViewBuilder
     private func toolInteraction(for tool: ConverterTool, at index: Int) -> some View {
         let isActive = activeToolKey == tool.key
-        let isPressed = pressedToolKey == tool.key || heldToolKey == tool.key
+        let isPressed = pressedToolKey == tool.key
         let card = ConverterToolCard(
             tool: tool,
             rearranging: appState.isRearrangingTools && !isActive,
@@ -1778,18 +1760,36 @@ private struct ReorderableConverterToolGrid: View {
             pressed: isPressed
         )
         .frame(width: itemSize, height: itemSize)
-        .contentShape(Rectangle())
+        .overlay(
+            ReorderTouchSurface(
+                isRearranging: appState.isRearrangingTools,
+                onPressChanged: { pressing in
+                    pressedToolKey = pressing ? tool.key : nil
+                },
+                onTap: {
+                    if appState.isRearrangingTools {
+                        handlePinTap(tool)
+                    } else {
+                        onSelect(tool)
+                    }
+                },
+                onDragBegan: { beginDrag(toolKey: tool.key, at: index) },
+                onDragChanged: updateDrag,
+                onDragEnded: endDrag
+            )
+        )
         .scaleEffect(cardScale(isActive: isActive, isPressed: isPressed))
         // Snap down fast on press; ease back up gently.
         .animation(.easeOut(duration: isPressed ? 0.05 : 0.18), value: isPressed)
         .animation(.spring(response: 0.28, dampingFraction: 0.62), value: appState.isRearrangingTools)
+        .animation(.spring(response: 0.28, dampingFraction: 0.62), value: isActive)
 
         // NOTE: position cards with `.position`, not `.offset`. `.offset` is a
         // render-only transform that does not move a view's hit-testing frame,
         // so every card's touches collapse onto the un-offset top-leading slot
         // and only the topmost card in the ZStack ever responds. `.position`
         // is layout-based, so hit-testing follows the card to its slot.
-        gestured(card, for: tool, at: index)
+        card
             .shadow(color: isActive ? Color.black.opacity(0.38) : .clear, radius: 18, x: 0, y: 14)
             .zIndex(isActive ? 10 : 0)
             .position(positionPoint(for: index, isActive: isActive))
@@ -1807,44 +1807,6 @@ private struct ReorderableConverterToolGrid: View {
             }
     }
 
-    @ViewBuilder
-    private func gestured(_ card: some View, for tool: ConverterTool, at index: Int) -> some View {
-        if appState.isRearrangingTools {
-            card
-                .onTapGesture {
-                    handlePinTap(tool)
-                }
-                .gesture(dragGesture(for: tool, at: index))
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 0)
-                        .updating($pressedToolKey) { _, state, _ in
-                            state = tool.key
-                        }
-                )
-        } else {
-            // A Button, unlike a custom tap gesture, lets a swipe that starts on the card reach
-            // the pager. Rearrange mode replaces this Button, so a hold never also opens the tool.
-            Button {
-                onSelect(tool)
-            } label: {
-                card
-            }
-            .buttonStyle(PressReportingButtonStyle { pressing in
-                heldToolKey = pressing ? tool.key : nil
-            })
-            .simultaneousGesture(
-                LongPressGesture(
-                    minimumDuration: Self.longPressDuration,
-                    maximumDistance: Self.longPressMaxDistance
-                )
-                .onEnded { _ in
-                    impact(.heavy)
-                    appState.beginRearrangingTools()
-                }
-            )
-        }
-    }
-
     private func positionPoint(for index: Int, isActive: Bool) -> CGPoint {
         isActive ? activeCenter() : slotCenter(for: index)
     }
@@ -1852,7 +1814,7 @@ private struct ReorderableConverterToolGrid: View {
     /// Scale a grid card: lifted while dragged, pressed-down while held, and
     /// nudged up in rearrange mode so it visibly reads as "movable".
     private func cardScale(isActive: Bool, isPressed: Bool) -> CGFloat {
-        if isActive { return 1.12 }
+        if isActive { return 1.2 }
         if isPressed { return 0.88 }
         if appState.isRearrangingTools { return 1.08 }
         return 1
@@ -1869,55 +1831,40 @@ private struct ReorderableConverterToolGrid: View {
         onSetPinned(tool.key, shouldPin)
     }
 
-    private func dragGesture(for tool: ConverterTool, at index: Int) -> some Gesture {
-        DragGesture(minimumDistance: Self.dragMinimumDistance, coordinateSpace: .named(Self.coordinateSpace))
-        .onChanged { value in
-            guard appState.isRearrangingTools else { return }
-            activeDragTranslation = value.translation
-            if activeToolKey != tool.key {
-                beginDrag(toolKey: tool.key, at: index, drag: value)
-            }
-            updateDrag(value)
+    private func beginDrag(toolKey: String, at index: Int) {
+        if !appState.isRearrangingTools {
+            impact(.heavy)
+            appState.beginRearrangingTools()
         }
-        .onEnded { _ in
-            guard appState.isRearrangingTools else { return }
-            if let activeToolKey, activeDragTranslation.height <= -Self.toolbarDropDragThreshold {
-                placeInShortcutBarIfNeeded(activeToolKey, center: activeCenter())
-            }
-            activeDragTranslation = .zero
-            finishDrag()
-        }
-    }
-
-    private func beginDrag(toolKey: String, at index: Int, drag: DragGesture.Value) {
-        appState.beginRearrangingTools()
         appState.draggedToolKey = toolKey
         activeToolKey = toolKey
-
-        let center = slotCenter(for: index)
-        fingerOffset = CGSize(
-            width: drag.startLocation.x - center.x,
-            height: drag.startLocation.y - center.y
-        )
-        dragLocation = drag.location
+        dragOrigin = slotCenter(for: index)
+        dragTranslation = .zero
     }
 
-    private func updateDrag(_ drag: DragGesture.Value) {
-        dragLocation = drag.location
-
+    private func updateDrag(_ translation: CGSize) {
         guard let activeToolKey else { return }
-        let center = activeCenter()
-        let targetIndex = index(for: center)
+        dragTranslation = translation
+
+        let targetIndex = index(for: activeCenter())
         withAnimation(.interactiveSpring(response: 0.24, dampingFraction: 0.82)) {
             appState.moveTool(activeToolKey, to: targetIndex)
         }
     }
 
+    private func endDrag() {
+        if let activeToolKey, dragTranslation.height <= -Self.toolbarDropDragThreshold {
+            placeInShortcutBarIfNeeded(activeToolKey, center: activeCenter())
+        }
+        finishDrag()
+    }
+
     private func finishDrag() {
-        activeToolKey = nil
+        withAnimation(.interactiveSpring(response: 0.24, dampingFraction: 0.82)) {
+            activeToolKey = nil
+        }
         appState.draggedToolKey = nil
-        dragLocation = .zero
-        fingerOffset = .zero
+        dragTranslation = .zero
     }
 
     private func slotOffset(for index: Int) -> CGSize {
@@ -1935,10 +1882,7 @@ private struct ReorderableConverterToolGrid: View {
     }
 
     private func activeCenter() -> CGPoint {
-        CGPoint(
-            x: dragLocation.x - fingerOffset.width,
-            y: dragLocation.y - fingerOffset.height
-        )
+        CGPoint(x: dragOrigin.x + dragTranslation.width, y: dragOrigin.y + dragTranslation.height)
     }
 
     private func index(for center: CGPoint) -> Int {
@@ -1970,11 +1914,100 @@ private struct ReorderableConverterToolGrid: View {
     }
 }
 
-private struct PressReportingButtonStyle: ButtonStyle {
-    let onPressChanged: (Bool) -> Void
+/// Carries one touch from press to drop, the way the iOS home screen does. A SwiftUI drag added once
+/// rearranging begins never sees the touch that started it, so the recognizers live here for good:
+/// a long press keeps reporting movement after it fires, and a swipe that moves first still reaches the pager.
+private struct ReorderTouchSurface: UIViewRepresentable {
+    let isRearranging: Bool
+    var onPressChanged: (Bool) -> Void = { _ in }
+    var onTap: () -> Void = {}
+    let onDragBegan: () -> Void
+    let onDragChanged: (CGSize) -> Void
+    let onDragEnded: () -> Void
 
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label.onChange(of: configuration.isPressed, perform: onPressChanged)
+    func makeCoordinator() -> Coordinator {
+        Coordinator(surface: self)
+    }
+
+    func makeUIView(context: Context) -> TouchView {
+        let view = TouchView()
+        view.isExclusiveTouch = true // a second finger must not start a second drag
+        let coordinator = context.coordinator
+
+        view.addGestureRecognizer(UITapGestureRecognizer(target: coordinator, action: #selector(Coordinator.handleTap)))
+
+        let hold = UILongPressGestureRecognizer(target: coordinator, action: #selector(Coordinator.handleDrag))
+        hold.minimumPressDuration = 0.42
+        hold.allowableMovement = 28
+        view.addGestureRecognizer(hold)
+
+        let move = UIPanGestureRecognizer(target: coordinator, action: #selector(Coordinator.handleDrag))
+        move.delegate = coordinator
+        move.isEnabled = isRearranging
+        view.addGestureRecognizer(move)
+        coordinator.move = move
+
+        view.onPressChanged = onPressChanged
+        return view
+    }
+
+    func updateUIView(_ view: TouchView, context: Context) {
+        context.coordinator.surface = self
+        context.coordinator.move?.isEnabled = isRearranging
+        view.onPressChanged = onPressChanged
+    }
+
+    final class TouchView: UIView {
+        var onPressChanged: (Bool) -> Void = { _ in }
+
+        override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+            super.touchesBegan(touches, with: event)
+            onPressChanged(true)
+        }
+
+        override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+            super.touchesEnded(touches, with: event)
+            onPressChanged(false)
+        }
+
+        override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+            super.touchesCancelled(touches, with: event)
+            onPressChanged(false)
+        }
+    }
+
+    final class Coordinator: NSObject, UIGestureRecognizerDelegate {
+        var surface: ReorderTouchSurface
+        weak var move: UIPanGestureRecognizer?
+        private var dragStart = CGPoint.zero
+
+        init(surface: ReorderTouchSurface) {
+            self.surface = surface
+        }
+
+        @objc func handleTap() {
+            surface.onTap()
+        }
+
+        @objc func handleDrag(_ recognizer: UIGestureRecognizer) {
+            let location = recognizer.location(in: nil)
+            switch recognizer.state {
+            case .began:
+                dragStart = location
+                surface.onDragBegan()
+            case .changed:
+                surface.onDragChanged(CGSize(width: location.x - dragStart.x, height: location.y - dragStart.y))
+            case .ended, .cancelled, .failed:
+                surface.onDragEnded()
+            default:
+                break
+            }
+        }
+
+        // While rearranging, a card under the finger moves rather than the page.
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            otherGestureRecognizer.view is UIScrollView
+        }
     }
 }
 
@@ -2126,6 +2159,8 @@ struct ConverterDetailScreen: View {
     var body: some View {
         if tool.kind == .unit {
             UnitConverterScreen(tool: tool, onBack: onBack)
+        } else if tool.key == "tip" {
+            TipCalculatorScreen(onBack: onBack)
         } else {
             UtilityCalculatorScreen(tool: tool, onBack: onBack)
         }
@@ -2160,6 +2195,7 @@ private enum ToolDetailLayout {
     static let headerTopExtra: CGFloat = 4
     static let headerBottomSpacing: CGFloat = 18
     static let pinnedContentTopExtra: CGFloat = 4
+    static let activeRowOverhang: CGFloat = 5
 
     static func contentTopInset(hasBackButton: Bool) -> CGFloat {
         hasBackButton ? 0 : pinnedContentTopExtra
@@ -2193,9 +2229,11 @@ struct UnitConverterScreen: View {
                         ForEach(Array(results.enumerated()), id: \.element.id) { index, result in
                             Button {
                                 guard index != fromIndex else { return }
-                                fromIndex = index
-                                input = "1"
-                                inputEdited = false
+                                withoutAnimation {
+                                    fromIndex = index
+                                    input = "1"
+                                    inputEdited = false
+                                }
                             } label: {
                                 HStack(alignment: .center) {
                                     Text(result.name)
@@ -2219,16 +2257,19 @@ struct UnitConverterScreen: View {
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 12)
                                 .padding(.horizontal, 12)
-                                .appGlassWhen(index == fromIndex, cornerRadius: 12, tint: Color.white.opacity(0.07), interactive: true, fallbackOpacity: 0.12)
+                                .appActiveRow(index == fromIndex)
                                 .contentShape(Rectangle())
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(InstantButtonStyle())
                             .accessibilityValue(index == fromIndex ? "Active" : "")
                         }
                     }
                     .padding(.horizontal, 16)
                     .padding(.top, topPadding)
+                    .padding(.vertical, ToolDetailLayout.activeRowOverhang)
                 }
+                // Room for the active row's box, which the scroll view would clip, without moving the rows.
+                .padding(.top, -ToolDetailLayout.activeRowOverhang)
 
                 NumericKeypad(
                     appendValue: appendValue,
@@ -2316,7 +2357,9 @@ struct UtilityCalculatorScreen: View {
                     VStack(spacing: 0) {
                         ForEach(fields) { field in
                             Button {
-                                activeField = field.key
+                                withoutAnimation {
+                                    activeField = field.key
+                                }
                             } label: {
                                 HStack {
                                     Text(field.label)
@@ -2333,10 +2376,10 @@ struct UtilityCalculatorScreen: View {
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, usesCompactRows ? 7 : 10)
                                 .padding(.horizontal, 12)
-                                .appGlassWhen(activeField == field.key, cornerRadius: 12, tint: Color.white.opacity(0.07), interactive: true, fallbackOpacity: 0.12)
+                                .appActiveRow(activeField == field.key)
                                 .contentShape(Rectangle())
                             }
-                            .buttonStyle(.plain)
+                            .buttonStyle(InstantButtonStyle())
                             .accessibilityValue(activeField == field.key ? "Active" : "")
                         }
 
@@ -2352,7 +2395,10 @@ struct UtilityCalculatorScreen: View {
                     }
                     .padding(.horizontal, 16)
                     .padding(.top, topPadding)
+                    .padding(.vertical, ToolDetailLayout.activeRowOverhang)
                 }
+                // Room for the active row's box, which the scroll view would clip, without moving the rows.
+                .padding(.top, -ToolDetailLayout.activeRowOverhang)
 
                 NumericKeypad(appendValue: appendValue, onClear: clear, onBackspace: backspace)
                     .padding(.top, 16)
@@ -2378,13 +2424,6 @@ struct UtilityCalculatorScreen: View {
                 return AnyView(VStack(alignment: .leading, spacing: 6) {
                     Text("Age").resultTitle()
                     Text("\(result.years) years, \(result.months) months, \(result.days) days").resultText()
-                })
-            }
-        case "bmi":
-            if let result = ConverterCore.calculateBMI(heightCm: nums["height"] ?? 0, weightKg: nums["weight"] ?? 0) {
-                return AnyView(VStack(alignment: .leading, spacing: 6) {
-                    Text("BMI").resultTitle()
-                    Text("\(ConverterCore.formatNumber(result.bmi, decimals: 1)) - \(result.category)").resultText()
                 })
             }
         case "date":
@@ -2463,10 +2502,6 @@ struct UtilityCalculatorScreen: View {
             CalcFieldConfig(key: "month", label: "Month", placeholder: "1", suffix: ""),
             CalcFieldConfig(key: "day", label: "Day", placeholder: "1", suffix: "")
         ],
-        "bmi": [
-            CalcFieldConfig(key: "height", label: "Height (cm)", placeholder: "170", suffix: ""),
-            CalcFieldConfig(key: "weight", label: "Weight (kg)", placeholder: "70", suffix: "")
-        ],
         "date": [
             CalcFieldConfig(key: "year1", label: "Year 1", placeholder: "2024", suffix: ""),
             CalcFieldConfig(key: "month1", label: "Month 1", placeholder: "1", suffix: ""),
@@ -2494,6 +2529,341 @@ private extension Text {
 
     func resultText() -> some View {
         self.font(.system(size: 18)).foregroundColor(.white)
+    }
+}
+
+// MARK: - Tip
+
+struct TipCalculatorScreen: View {
+    let onBack: (() -> Void)?
+
+    private enum Input {
+        case bill, customPercent
+    }
+
+    private static let presets = [10, 15, 18, 20]
+    private static let maxPeople = 99
+    // Keeps every amount on screen in full, and is well beyond any real restaurant bill.
+    private static let maxBillLength = 9
+    private static let maxPercentLength = 5
+    private static let mutedText = Color(red: 0.6, green: 0.6, blue: 0.6)
+
+    @State private var input = Input.bill
+    @State private var bill = "0"
+    @State private var billEdited = false
+    @State private var preset: Int? = 15
+    @State private var customPercent = ""
+    @State private var customEdited = false
+    @State private var hitTipLimit = false
+    @State private var people = 1
+
+    private var result: TipResult {
+        let percent = preset.map(Double.init) ?? Double(customPercent) ?? 0
+        return ConverterCore.calculateTip(bill: Double(bill) ?? 0, tipPercent: percent, people: people)
+            ?? TipResult(tip: 0, total: 0, perPerson: 0, billShare: 0, tipShare: 0)
+    }
+
+    var body: some View {
+        GeometryReader { geometry in
+            let bottomInset = geometry.resolvedSafeAreaInsets.bottom
+            let topPadding = ToolDetailLayout.contentTopInset(hasBackButton: onBack != nil)
+
+            VStack(spacing: 0) {
+                if onBack != nil {
+                    DetailHeader(onBack: onBack)
+                }
+
+                ScrollView {
+                    VStack(spacing: 0) {
+                        billRow
+                        tipSection
+                        peopleRow
+                        Rectangle()
+                            .fill(Color.white.opacity(0.12))
+                            .frame(height: 0.5)
+                            .padding(.horizontal, 12)
+                            .padding(.top, 10)
+                        results
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, topPadding)
+                    .padding(.vertical, ToolDetailLayout.activeRowOverhang)
+                }
+                .padding(.top, -ToolDetailLayout.activeRowOverhang)
+                .staysPutWhenContentFits()
+
+                NumericKeypad(appendValue: appendValue, onClear: clear, onBackspace: backspace)
+                    .padding(.top, 16)
+                    .padding(.bottom, bottomInset > 0 ? max(10, bottomInset - 16) : 10)
+            }
+            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .top)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .background(AppColor.background.ignoresSafeArea(edges: .bottom))
+    }
+
+    private var billRow: some View {
+        Button {
+            withoutAnimation {
+                input = .bill
+                billEdited = false
+            }
+        } label: {
+            HStack {
+                Text("Bill")
+                    .font(.system(size: 22, weight: .medium))
+                    .foregroundColor(input == .bill ? .white : Self.mutedText)
+                Spacer(minLength: 8)
+                Text(CalculatorNumberFormat.typedNumber(bill))
+                    .font(.system(size: 26))
+                    .foregroundColor(input == .bill ? AppColor.accent : .white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .padding(.horizontal, 12)
+            .appActiveRow(input == .bill)
+            // Matches the active row's margin, so moving the keypad elsewhere doesn't shift the screen.
+            .padding(.vertical, input == .bill ? 0 : 8)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(InstantButtonStyle())
+        .accessibilityValue(input == .bill ? "Active" : "")
+    }
+
+    private var tipSection: some View {
+        VStack(spacing: 10) {
+            amountRow(tipRowLabel, result.tip, labelColor: isTypingPercent ? AppColor.accent : Self.mutedText)
+            HStack(spacing: 8) {
+                ForEach(Self.presets, id: \.self) { percent in
+                    tipChip(label: "\(percent)%", selected: preset == percent) {
+                        preset = percent
+                        hitTipLimit = false
+                        if input != .bill {
+                            input = .bill
+                            billEdited = false
+                        }
+                    } content: {
+                        Text("\(percent)%")
+                    }
+                }
+                tipChip(label: otherChipLabel, selected: preset == nil, typing: isTypingPercent) {
+                    preset = nil
+                    input = .customPercent
+                    customEdited = false
+                } content: {
+                    if isTypingPercent {
+                        HStack(spacing: 1) {
+                            Text(customPercent)
+                            TypingCaret()
+                            Text("%")
+                        }
+                    } else {
+                        Text(otherChipLabel)
+                    }
+                }
+                // Room for the longest percentage, and it reads as the field being typed in.
+                .frame(width: isTypingPercent ? 92 : nil)
+            }
+            .padding(.horizontal, 12)
+        }
+        .padding(.top, 6)
+    }
+
+    private var isTypingPercent: Bool {
+        input == .customPercent
+    }
+
+    private var tipRowLabel: String {
+        guard isTypingPercent else { return "Tip" }
+        return hitTipLimit ? "Maximum tip is 100%" : "Type tip percentage"
+    }
+
+    private var otherChipLabel: String {
+        customPercent.isEmpty ? "Other" : "\(customPercent)%"
+    }
+
+    private func tipChip<Content: View>(
+        label: String,
+        selected: Bool,
+        typing: Bool = false,
+        action: @escaping () -> Void,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
+        return Button {
+            withoutAnimation(action)
+        } label: {
+            content()
+                .font(.system(size: 17, weight: .medium))
+                .foregroundColor(selected ? AppColor.accent : .white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+                .padding(.horizontal, 4)
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
+                .background(shape.fill(selected ? AppColor.accent.opacity(0.2) : Color.white.opacity(0.072)))
+                .overlay(shape.stroke(AppColor.accent, lineWidth: typing ? 1.5 : 0))
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(InstantButtonStyle())
+        .accessibilityLabel(label)
+        .accessibilityValue(typing ? "Typing" : selected ? "Selected" : "")
+    }
+
+    private var peopleRow: some View {
+        HStack(spacing: 0) {
+            Text("People")
+                .font(.system(size: 18, weight: .medium))
+                .foregroundColor(Self.mutedText)
+            Spacer(minLength: 8)
+            stepperButton(icon: "minus", label: "Remove person", enabled: people > 1) {
+                people -= 1
+            }
+            Text("\(people)")
+                .font(.system(size: 22, weight: .medium))
+                .foregroundColor(.white)
+                .frame(minWidth: 48)
+                .accessibilityLabel("\(people) people")
+            stepperButton(icon: "plus", label: "Add person", enabled: people < Self.maxPeople) {
+                people += 1
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.top, 10)
+    }
+
+    private func stepperButton(icon: String, label: String, enabled: Bool, action: @escaping () -> Void) -> some View {
+        Button {
+            impact(.light)
+            withoutAnimation(action)
+        } label: {
+            AppIcon(name: icon, size: 20, color: .white)
+                .frame(width: 44, height: 44)
+                .background(Circle().fill(Color.white.opacity(0.072)))
+                .contentShape(Circle())
+        }
+        .buttonStyle(PressableButtonStyle(cornerRadius: 22))
+        .disabled(!enabled)
+        .opacity(enabled ? 1 : 0.35)
+        .accessibilityLabel(label)
+    }
+
+    @ViewBuilder
+    private var results: some View {
+        if people > 1 {
+            amountRow("Total", result.total)
+                .padding(.top, 10)
+        }
+        HStack(alignment: .firstTextBaseline) {
+            Text(people > 1 ? "Each person pays" : "Total")
+                .font(.system(size: 18, weight: .medium))
+                .foregroundColor(.white)
+            Spacer(minLength: 8)
+            Text(Self.money(people > 1 ? result.perPerson : result.total))
+                .font(.system(size: 40))
+                .foregroundColor(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+        }
+        .padding(.horizontal, 12)
+        .padding(.top, 4)
+        .accessibilityElement(children: .combine)
+        Text("\(Self.money(result.billShare)) bill + \(Self.money(result.tipShare)) tip")
+            .font(.system(size: 15))
+            .foregroundColor(Self.mutedText)
+            .lineLimit(1)
+            .minimumScaleFactor(0.6)
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(.horizontal, 12)
+            .padding(.bottom, 4)
+    }
+
+    private func amountRow(_ label: String, _ amount: Double, labelColor: Color = TipCalculatorScreen.mutedText) -> some View {
+        HStack {
+            Text(label)
+                .font(.system(size: 18, weight: .medium))
+                .foregroundColor(labelColor)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Spacer(minLength: 8)
+            Text(Self.money(amount))
+                .font(.system(size: 18))
+                .foregroundColor(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+        }
+        .padding(.horizontal, 12)
+        .accessibilityElement(children: .combine)
+    }
+
+    private static func money(_ value: Double) -> String {
+        value.formatted(.number.precision(.fractionLength(2)))
+    }
+
+    private func appendValue(_ value: String) {
+        withoutAnimation {
+            switch input {
+            case .bill:
+                bill = Self.appending(value, to: bill, edited: billEdited, maxLength: Self.maxBillLength)
+                billEdited = true
+            case .customPercent:
+                let next = Self.appending(value, to: customPercent, edited: customEdited, maxLength: Self.maxPercentLength)
+                hitTipLimit = (Double(next) ?? 0) > ConverterCore.maxTipPercent
+                guard !hitTipLimit else { return }
+                customPercent = next
+                customEdited = true
+            }
+        }
+    }
+
+    private static func appending(_ value: String, to current: String, edited: Bool, maxLength: Int) -> String {
+        guard edited else { return value == "." ? "0." : value }
+        if value == ".", current.contains(".") { return current }
+        guard current.count < maxLength else { return current }
+        let next = current == "0" && value != "." ? value : current + value
+        return CalculatorNumberFormat.limitingFraction(of: next, to: 2)
+    }
+
+    private func backspace() {
+        withoutAnimation {
+            switch input {
+            case .bill:
+                bill = bill.count <= 1 ? "0" : String(bill.dropLast())
+                billEdited = true
+            case .customPercent:
+                customPercent = String(customPercent.dropLast())
+                customEdited = true
+                hitTipLimit = false
+            }
+        }
+    }
+
+    private func clear() {
+        withoutAnimation {
+            switch input {
+            case .bill:
+                bill = "0"
+                billEdited = true
+            case .customPercent:
+                customPercent = ""
+                customEdited = true
+                hitTipLimit = false
+            }
+        }
+    }
+}
+
+private struct TypingCaret: View {
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 0.5)) { context in
+            let isVisible = Int(context.date.timeIntervalSinceReferenceDate * 2) % 2 == 0
+            RoundedRectangle(cornerRadius: 1)
+                .fill(AppColor.accent)
+                .frame(width: 2, height: 20)
+                .opacity(isVisible ? 1 : 0)
+        }
     }
 }
 
@@ -2556,11 +2926,14 @@ struct CurrencyScreen: View {
                         }
                         .buttonStyle(.plain)
                         .padding(.top, 6)
-                        .padding(.bottom, 12)
+                        .padding(.bottom, 4)
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, topPadding)
+                    .padding(.top, ToolDetailLayout.activeRowOverhang)
                 }
+                .padding(.top, -ToolDetailLayout.activeRowOverhang)
+                .staysPutWhenContentFits()
 
                 NumericKeypad(appendValue: appendValue, onClear: reset, onBackspace: backspace)
                     .padding(.top, 16)
@@ -2599,7 +2972,7 @@ struct CurrencyScreen: View {
                 pickerVisible = true
             } label: {
                 Text(code)
-                    .font(.system(size: 22, weight: .semibold))
+                    .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(.white)
                     .frame(width: 88, alignment: .leading)
             }
@@ -2612,24 +2985,25 @@ struct CurrencyScreen: View {
             } label: {
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(displayedAmount(for: code, index: index))
-                        .font(.system(size: compact ? 28 : 42, weight: .regular))
+                        .font(.system(size: compact ? 28 : 34, weight: .regular))
                         .foregroundColor(isActive ? AppColor.accent : .white)
                         .lineLimit(1)
                         .minimumScaleFactor(0.55)
                     Text(info?.name ?? code)
-                        .font(.system(size: compact ? 13 : 18))
+                        .font(.system(size: compact ? 13 : 15))
                         .foregroundColor(Color(red: 0.35, green: 0.35, blue: 0.35))
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
             }
+            .buttonStyle(InstantButtonStyle())
             .accessibilityValue(isActive ? "Active" : "")
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 12)
         .padding(.vertical, compact ? 4 : 8)
-        .appGlassWhen(isActive, cornerRadius: 18, tint: Color.white.opacity(0.055), interactive: true, fallbackOpacity: 0.10)
+        .appActiveRow(isActive, cornerRadius: 18)
         .padding(.vertical, 2)
         .contentShape(Rectangle())
         .onTapGesture {
@@ -2640,9 +3014,11 @@ struct CurrencyScreen: View {
 
     private func activateRow(_ index: Int) {
         guard index != activeCurrencyIndex else { return }
-        activeCurrencyIndex = index
-        activeAmount = "1"
-        inputEdited = false
+        withoutAnimation {
+            activeCurrencyIndex = index
+            activeAmount = "1"
+            inputEdited = false
+        }
     }
 
     private func displayedAmount(for code: String, index: Int) -> String {
@@ -2724,35 +3100,51 @@ private struct CurrencyPicker: View {
     let catalog: [String: CurrencyInfo]
     let onSelect: (String) -> Void
     @State private var searchText = ""
-    @State private var searchPresented = true
     @FocusState private var searchFocused: Bool
 
+    private static let drawerColor = Color(red: 0.11, green: 0.11, blue: 0.118)
+
+    // A custom field because the system search bar always offers a button that closes the keyboard.
     var body: some View {
-        NavigationView {
-            searchableContent
-                .navigationTitle("Currency")
-        }
+        currencyList
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                searchField
+                    // Runs behind the keyboard too, so rows stop at the field instead of showing around the keys.
+                    .background(Self.drawerColor.ignoresSafeArea())
+            }
+            .background(Self.drawerColor.ignoresSafeArea())
+            .onAppear {
+                searchFocused = true
+            }
+            .onChange(of: searchFocused) { focused in
+                if !focused {
+                    searchFocused = true
+                }
+            }
     }
 
-    @ViewBuilder
-    private var searchableContent: some View {
-        if #available(iOS 18.0, *) {
-            currencyList
-                .searchable(text: $searchText, isPresented: $searchPresented)
-                .searchFocused($searchFocused)
-                .onAppear {
-                    focusSearchField()
+    private var searchField: some View {
+        HStack(spacing: 8) {
+            AppIcon(name: "search", size: 18, color: .secondary)
+            TextField("Search", text: $searchText)
+                .focused($searchFocused)
+                .disableAutocorrection(true)
+                .textInputAutocapitalization(.never)
+                .submitLabel(.search)
+            if !searchText.isEmpty {
+                Button {
+                    searchText = ""
+                } label: {
+                    AppIcon(name: "x", size: 18, color: .secondary)
                 }
-        } else if #available(iOS 17.0, *) {
-            currencyList
-                .searchable(text: $searchText, isPresented: $searchPresented)
-                .onAppear {
-                    searchPresented = true
-                }
-        } else {
-            currencyList
-                .searchable(text: $searchText)
+                .accessibilityLabel("Clear search")
+            }
         }
+        .padding(.horizontal, 16)
+        .frame(height: 44)
+        .appGlass(cornerRadius: 22, tint: Color.white.opacity(0.06), fallbackOpacity: 0.12)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
     }
 
     private var currencyList: some View {
@@ -2769,19 +3161,10 @@ private struct CurrencyPicker: View {
                         .foregroundColor(.secondary)
                 }
             }
+            .listRowBackground(Color.clear)
         }
-    }
-
-    private func focusSearchField() {
-        // Focus the search field immediately so the keyboard rises together with
-        // the picker. Re-assert on the next runloop as a safety net (no visible
-        // delay) in case the field isn't first responder on the first layout pass.
-        searchPresented = true
-        searchFocused = true
-        DispatchQueue.main.async {
-            searchPresented = true
-            searchFocused = true
-        }
+        .listStyle(.plain)
+        .pickerListChrome()
     }
 
     private var filteredCodes: [String] {
@@ -2790,6 +3173,28 @@ private struct CurrencyPicker: View {
         return codes.filter { code in
             code.localizedCaseInsensitiveContains(searchText) ||
             (catalog[code]?.name.localizedCaseInsensitiveContains(searchText) ?? false)
+        }
+    }
+}
+
+private extension View {
+    /// A drag on content that fits must not leave it shifted, with the active row's box cut off.
+    @ViewBuilder
+    func staysPutWhenContentFits() -> some View {
+        if #available(iOS 16.4, *) {
+            self.scrollBounceBehavior(.basedOnSize)
+        } else {
+            self
+        }
+    }
+
+    /// The list sits directly on the drawer, and scrolling it leaves the keyboard up.
+    @ViewBuilder
+    func pickerListChrome() -> some View {
+        if #available(iOS 16.0, *) {
+            self.scrollContentBackground(.hidden).scrollDismissesKeyboard(.never)
+        } else {
+            self
         }
     }
 }

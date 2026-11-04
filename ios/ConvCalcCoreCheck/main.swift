@@ -63,7 +63,7 @@ let temperature = ConverterTool.all.first { $0.key == "temperature" }!
 let temperatureResults = ConverterCore.convertToAll(value: 32, fromIndex: 1, units: temperature.units)
 try expectEqual(temperatureResults.first { $0.label == "°C" }!.value, 0, "fahrenheit to celsius")
 
-try expect(ConverterCore.calculateBMI(heightCm: 170, weightKg: 70) == BMIResult(bmi: 24.2, category: "Normal"), "BMI")
+try expect(ConverterCore.calculateTip(bill: 100, tipPercent: 15, people: 3) == TipResult(tip: 15, total: 115, perPerson: 38.34, billShare: 33.34, tipShare: 5), "tip split rounds up")
 try expect(ConverterCore.calculateDiscount(price: 100, percent: 20) == DiscountResult(savings: 20, finalPrice: 80), "discount")
 
 var gregorianUTC = Calendar(identifier: .gregorian)

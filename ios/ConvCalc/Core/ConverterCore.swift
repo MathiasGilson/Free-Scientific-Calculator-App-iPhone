@@ -57,13 +57,19 @@ public struct ConversionResult: Identifiable, Equatable, Sendable {
     public var id: String { label }
 }
 
-public struct BMIResult: Equatable, Sendable {
-    public let bmi: Double
-    public let category: String
+public struct TipResult: Equatable, Sendable {
+    public let tip: Double
+    public let total: Double
+    public let perPerson: Double
+    public let billShare: Double
+    public let tipShare: Double
 
-    public init(bmi: Double, category: String) {
-        self.bmi = bmi
-        self.category = category
+    public init(tip: Double, total: Double, perPerson: Double, billShare: Double, tipShare: Double) {
+        self.tip = tip
+        self.total = total
+        self.perPerson = perPerson
+        self.billShare = billShare
+        self.tipShare = tipShare
     }
 }
 
@@ -151,21 +157,25 @@ public enum ConverterCore {
         NumberFormatter.compactDecimal(maximumFractionDigits: decimals, locale: locale).string(from: NSNumber(value: value)) ?? "\(value)"
     }
 
-    public static func calculateBMI(heightCm: Double, weightKg: Double) -> BMIResult? {
-        guard heightCm > 0, weightKg > 0 else { return nil }
-        let heightM = heightCm / 100
-        let bmi = weightKg / (heightM * heightM)
-        let category: String
-        if bmi < 18.5 {
-            category = "Underweight"
-        } else if bmi < 25 {
-            category = "Normal"
-        } else if bmi < 30 {
-            category = "Overweight"
-        } else {
-            category = "Obese"
+    public static let maxTipPercent = 100.0
+
+    public static func calculateTip(bill: Double, tipPercent: Double, people: Int) -> TipResult? {
+        guard bill >= 0, (0...maxTipPercent).contains(tipPercent), people > 0 else { return nil }
+        let tip = roundCurrency(bill * (tipPercent / 100))
+        let total = roundCurrency(bill + tip)
+        // Shares round up so together they always cover the bill.
+        func share(of amount: Double) -> Double {
+            amount > 0 ? (amount / Double(people) * 100 - 1e-9).rounded(.up) / 100 : 0
         }
-        return BMIResult(bmi: (bmi * 10).rounded() / 10, category: category)
+        let perPerson = share(of: total)
+        let billShare = share(of: bill)
+        return TipResult(
+            tip: tip,
+            total: total,
+            perPerson: perPerson,
+            billShare: billShare,
+            tipShare: roundCurrency(perPerson - billShare)
+        )
     }
 
     public static func calculateAge(
@@ -406,7 +416,7 @@ extension ConverterTool {
             unit("PB", "Petabyte", factor: 1_125_899_906_842_624)
         ], fields: []),
         ConverterTool(key: "age", label: "Age", symbolName: "cake", kind: .calculator, units: [], fields: ["year", "month", "day"]),
-        ConverterTool(key: "bmi", label: "BMI", symbolName: "heart", kind: .calculator, units: [], fields: ["height", "weight"]),
+        ConverterTool(key: "tip", label: "Tip", symbolName: "receipt", kind: .calculator, units: [], fields: ["bill", "percent", "people"]),
         ConverterTool(key: "date", label: "Date", symbolName: "calendar", kind: .calculator, units: [], fields: ["year1", "month1", "day1", "year2", "month2", "day2"]),
         ConverterTool(key: "discount", label: "Discount", symbolName: "tag", kind: .calculator, units: [], fields: ["price", "percent"]),
         ConverterTool(key: "loan", label: "Loan", symbolName: "landmark", kind: .calculator, units: [], fields: ["principal", "rate", "years"])

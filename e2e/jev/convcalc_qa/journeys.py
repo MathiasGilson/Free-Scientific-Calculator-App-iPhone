@@ -5,7 +5,6 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from .device import run
 
 
 @dataclass(frozen=True)
@@ -20,6 +19,7 @@ class Journey:
     verify: Callable | None = field(default=None, compare=False)
     locale: str | None = None
     gestures: bool = False  # offer Jev long-press actions
+    drags: bool = False  # offer Jev long-press-and-drag actions
     expects_error: bool = False
     max_actions: int = 40
 
@@ -55,6 +55,42 @@ def tab_order(device):
 def tool_order(device):
     tools = [e for e in device.settled() if e["button"] and e["value"] in {"Pinned", "Not pinned", ""} and not e["label"].endswith(" tab")]
     return [e["label"] for e in sorted(tools, key=lambda e: (round(e["y"]), e["x"]))]
+
+
+def tip_split_script(device):
+    press(device, "1", "0", "0", "20%", "Add person", "Add person")
+
+
+def tip_rounds_up_script(device):
+    press(device, "1", "0", "0", "Add person", "Add person")
+
+
+def tip_custom_script(device):
+    press(device, "2", "0", "0", "Other", "1", "2", ".", "5")
+
+
+def tip_max_percent_script(device):
+    press(device, "1", "0", "0", "Other", "1", "5", "0")
+
+
+def tip_full_percent_script(device):
+    press(device, "1", "0", "0", "Other", "1", "0", "0")
+
+
+def tip_leave_percent_script(device):
+    press(device, "5", "0", "Other", "5", "15%", "8")
+
+
+def tip_keep_typing_script(device):
+    press(device, "8", "20%", "5")
+
+
+def tip_limits_script(device):
+    press(device, *"999999999999", "Other", *"12.3456")
+
+
+def tip_people_floor_script(device):
+    press(device, "5", "0", "Add person", "Remove person", "Remove person")
 
 
 def expand_collapse_script(device):
@@ -117,6 +153,45 @@ def loan_zero_script(device):
     press(device, "1")
 
 
+def currency_rows_stay_put_script(device):
+    rows = lambda: [e["y"] for e in device.settled() if e["label"].startswith("Change currency")]
+    before = rows()
+    device.swipe(200, 250, 200, 120, duration=0.4)
+    assert rows() == before, f"Dragging shifted the rows: {before} to {rows()}"
+
+
+def picker_keyboard_script(device):
+    device.tap_label("Change currency EUR", exact=True)
+    time.sleep(1)
+    device.settled()
+    assert device.keyboard, "Keyboard did not open with the picker"
+    assert not any(e["label"] in {"Close", "Cancel"} for e in device.settled()), "The picker offers a way to close the keyboard"
+    first = device.settled()[0]["label"]
+    device.swipe(200, 360, 200, 160)
+    device.settled()
+    assert device.keyboard, "Scrolling closed the keyboard"
+    assert device.settled()[0]["label"] != first, "The list did not scroll"
+    device.type_on_keyboard("swiss")
+    device.tap_key("search")
+    time.sleep(0.8)
+    device.settled()
+    assert device.keyboard, "The return key closed the keyboard"
+    device.tap_label("CHF, Swiss Franc", exact=True)
+    time.sleep(1)
+    device.settled()
+    assert not device.keyboard, "The keyboard outlived the picker"
+    device.find("Change currency CHF", exact=True)
+    device.tap_label("Change currency CHF", exact=True)
+    time.sleep(1)
+    device.settled()
+    assert device.keyboard, "Keyboard did not reopen"
+    device.swipe(200, 90, 200, 800, duration=0.25)
+    time.sleep(0.8)
+    device.settled()
+    assert not device.keyboard, "The keyboard outlived the swiped-away picker"
+    device.find("Change currency CHF", exact=True)
+
+
 CALCULATOR = [
     Journey("calc-arithmetic", "On the calculator keypad press 1, 2, Plus, 3, 0, then Equals.", ["The expression 12 + 30 is on the display", "The result 42 is shown"], [r"(?m)^42$"]),
     Journey("calc-precedence", "Calculate 2 plus 3 times 4 by pressing 2, Plus, 3, Multiply, 4, Equals.", ["A live result of 14 is previewed", "The final result 14 is shown"], [r"(?m)^14$"]),
@@ -172,6 +247,8 @@ CURRENCY = [
     Journey("currency-switch-active-row", "Press 5, 0. Then tap the amount row for Euro once, and finish when Euro is Active.", ["Euro is the active row"], [r"1, Euro \(Active\)"], before=to_currency),
     Journey("currency-tap-active-row-keeps-amount", "Press 5, 0. Then tap the amount row for US Dollar, which is already active.", [], [r"50, US Dollar \(Active\)"], before=to_currency),
     Journey("currency-backspace-and-clear", "Press 1, 2, 3, then Delete, then AC.", [], [r"1, US Dollar \(Active\)"], before=to_currency),
+    Journey("currency-rows-stay-put", script=currency_rows_stay_put_script, before=to_currency),
+    Journey("currency-picker-keyboard-stays", script=picker_keyboard_script, before=to_currency),
     Journey("currency-picker-search-select", "Press Change currency EUR. Type Swiss in the search field, then choose CHF, the Swiss Franc.", ["A currency list with a search field is open", "The currency screen shows CHF"], ["Change currency CHF"], ["Change currency EUR"], before=to_currency),
     Journey("currency-picker-keeps-active-amount", "Press 1, 0, 0. Press Change currency EUR, type Swiss in the search field, then choose CHF.", ["The currency screen shows CHF"], [r"100, US Dollar \(Active\)", "Change currency CHF"], before=to_currency),
     Journey("currency-picker-duplicate-swaps", "Press Change currency EUR. Type JPY in the search field, then choose JPY.", ["The currency screen lists both JPY and EUR"], ["Change currency JPY", "Change currency EUR"], before=to_currency),
@@ -211,7 +288,16 @@ TOOLS = [
     Journey("tool-unit-backspace-clear", "Press 1, 2, 3, then Delete, then AC.", [], [r"Millimeter, 0, mm \(Active\)"], before=open_tool("Length")),
     Journey("tool-age", "Year is active: use the Keypad to enter 2000. Then tap Month and use the Keypad to enter 6. Then tap Day and use the Keypad to enter 15.", ["An age result is shown"], [r"Year, 2000", r"26 years, 4 months, \d+ days"], forbid=[r"Year, 2,000"], before=open_tool("Age")),
     Journey("tool-age-future-birthday", "Tap Year and enter 2999.", [], [r"Year, 2999"], forbid=[r"\d+ years, \d+ months"], before=open_tool("Age")),
-    Journey("tool-bmi", "Tap Height and enter 180, then tap Weight and enter 81.", ["A BMI of 25 is shown"], [r"25 - Overweight"], before=open_tool("BMI")),
+    Journey("tool-tip-split", script=tip_split_script, expect=[r"Tip, 20\.00", r"Total, 120\.00", r"Each person pays, 40\.00", r"33\.34 bill \+ 6\.66 tip"], before=open_tool("Tip")),
+    Journey("tool-tip-share-rounds-up", script=tip_rounds_up_script, expect=[r"Tip, 15\.00", r"Total, 115\.00", r"Each person pays, 38\.34", r"33\.34 bill \+ 5\.00 tip"], before=open_tool("Tip")),
+    Journey("tool-tip-custom", script=tip_custom_script, expect=[r"12\.5%", r"Type tip percentage, 25\.00", r"Total, 225\.00", r"200\.00 bill \+ 25\.00 tip"], forbid=[r"Each person pays"], before=open_tool("Tip")),
+    Journey("tool-tip-people-floor", script=tip_people_floor_script, expect=[r"Total, 57\.50"], forbid=[r"Each person pays"], before=open_tool("Tip")),
+    Journey("tool-tip-max-percent", script=tip_max_percent_script, expect=[r"Maximum tip is 100%", r"15%", r"Total, 115\.00"], before=open_tool("Tip")),
+    Journey("tool-tip-exactly-100-percent", script=tip_full_percent_script, expect=[r"100%", r"Type tip percentage, 100\.00", r"Total, 200\.00"], forbid=[r"Maximum tip"], before=open_tool("Tip")),
+    Journey("tool-tip-preset-leaves-percent", script=tip_leave_percent_script, expect=[r"Bill, 8\b", r"Tip, 1\.20"], forbid=[r"Type tip percentage"], before=open_tool("Tip")),
+    Journey("tool-tip-preset-keeps-bill-typing", script=tip_keep_typing_script, expect=[r"Bill, 85\b", r"Tip, 17\.00"], before=open_tool("Tip")),
+    Journey("tool-tip-limits", script=tip_limits_script, expect=[r"Bill, 999,999,999", r"12\.34%"], before=open_tool("Tip")),
+    Journey("tool-tip-with-jev", "A restaurant bill is 80 and four people are splitting it with an 18% tip. Enter the bill with the keypad, choose 18%, and press Add person until there are 4 people.", ["An amount for each person is shown"], [r"Each person pays, 23\.60"], before=open_tool("Tip")),
     Journey("tool-date", "Tap Year 2 once to make it active, then use the Keypad to enter 2026.", ["A difference result is shown"], [r"731 days", r"104 weeks"], before=open_tool("Date")),
     Journey("tool-discount", "Tap Price and enter 250, then tap % and enter 10.", ["The result shows savings and a final price"], [r"Savings: 25", r"Final price: 225"], before=open_tool("Discount")),
     Journey("tool-discount-over-100", "Tap % and enter 150.", [], forbid=[r"Final price"], before=open_tool("Discount")),
@@ -332,6 +418,57 @@ def drag_calculator_tab_script(device):
     device.find("All clear", exact=True)  # still opens on the calculator
 
 
+def assert_lifted_and_followed(drag):
+    rest, held, moved, dropped = drag["rest"]["width"], drag["held"]["width"], drag["moved"], drag["dropped"]["width"]
+    assert held > rest * 1.15, f"Not bigger while held: {held} against {rest} at rest"
+    center = moved["x"] + moved["width"] / 2, moved["y"] + moved["height"] / 2
+    assert abs(center[0] - drag["finger"][0]) < 24 and abs(center[1] - drag["finger"][1]) < 24, f"Did not follow the finger: {center} against {drag['finger']}"
+    assert rest <= dropped <= rest * 1.1, f"Wrong size after the drop: {dropped} against {rest} at rest"
+
+
+def hold_drag_grid_script(device):
+    assert_lifted_and_followed(device.hold_and_drag("Length", "Mass"))
+    assert tool_order(device)[:4] == ["Currency", "Area", "Mass", "Length"], tool_order(device)
+    device.launch()
+    to_grid(device)
+    enter_rearrange(device)
+    assert tool_order(device)[:4] == ["Currency", "Area", "Mass", "Length"], "Order was not persisted"
+
+
+def hold_release_script(device):
+    length = device.find("Length", exact=True)
+    device.tap(length["x"], length["y"], duration=0.8)
+    time.sleep(0.5)
+    size = device.frame("Length")["width"]
+    assert length["frame"]["width"] <= size <= length["frame"]["width"] * 1.1, f"Wrong size after a hold: {size}"
+    device.tap_label("Length", exact=True)
+    assert device.find("Length", exact=True)["value"] == "Pinned", "Rearranging did not stay on after the hold"
+
+
+def hold_drag_to_tabbar_script(device):
+    device.hold_and_drag("Mass", "All tools tab")
+    assert "Mass" in tab_order(device), tab_order(device)
+
+
+def hold_drag_tabbar_script(device):
+    drag = device.hold_and_drag("Calculator tab", "Currency tab")
+    assert drag["held"]["width"] > drag["rest"]["width"] * 1.15, f"Tab not bigger while held: {drag}"
+    assert tab_order(device) == ["Currency", "Calculator", "All tools"], tab_order(device)
+
+
+def verify_length_moved(device):
+    if not device.last_drag:
+        return "Jev never long-press dragged"
+    assert_lifted_and_followed(device.last_drag)
+    if tool_order(device)[:4] != ["Currency", "Area", "Mass", "Length"]:
+        return f"Length did not land on Mass: {tool_order(device)}"
+
+
+def verify_mass_pinned(device):
+    if "Mass" not in tab_order(device):
+        return f"Mass did not reach the toolbar: {tab_order(device)}"
+
+
 def long_press_tabbar_on_other_page_script(device):
     device.next_page()
     # The bar is only briefly visible while paging. A hold where it sits must not start rearranging.
@@ -369,7 +506,7 @@ def currency_persist_script(device):
     to_currency(device)
     device.tap_label("Change currency EUR", exact=True)
     time.sleep(1)
-    run("idb", "ui", "text", "--udid", device.udid, "CHF")
+    device.type_on_keyboard("chf")
     time.sleep(1)
     device.tap_label("CHF")
     device.find("Change currency CHF", exact=True)
@@ -410,6 +547,12 @@ NAVIGATION = [
     Journey("grid-drag-tool-to-tabbar", script=drag_tool_to_tabbar_script, before=to_grid),
     Journey("tabbar-drag-reorder", script=reorder_tabbar_script, before=to_grid),
     Journey("tabbar-drag-calculator", script=drag_calculator_tab_script, before=to_grid),
+    Journey("grid-hold-drag", script=hold_drag_grid_script, before=to_grid),
+    Journey("grid-hold-release", script=hold_release_script, before=to_grid),
+    Journey("grid-hold-drag-to-tabbar", script=hold_drag_to_tabbar_script, before=to_grid),
+    Journey("tabbar-hold-drag", script=hold_drag_tabbar_script, before=to_grid),
+    Journey("grid-hold-drag-with-jev", "Reorganize the tools: long-press Length and, without lifting, drag it onto Mass. Then finish.", ["Tools show whether they are pinned"], before=to_grid, verify=verify_length_moved, drags=True, max_actions=6),
+    Journey("grid-hold-drag-to-tabbar-with-jev", "Add Mass to the top toolbar: long-press Mass and, without lifting, drag it onto the All tools tab. Then finish.", ["The top toolbar has a Mass tab"], before=to_grid, verify=verify_mass_pinned, drags=True, max_actions=6),
     Journey("grid-rearrange-with-jev", "Long-press Volume to start rearranging. Finish as soon as tools show whether they are pinned.", ["Tools show whether they are pinned"], [r"Volume \(Not pinned\)"], before=to_grid, gestures=True),
     Journey("persist-currencies", script=currency_persist_script),
     Journey("persist-history", script=history_persist_script),
