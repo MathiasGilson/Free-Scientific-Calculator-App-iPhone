@@ -34,7 +34,7 @@ if (!API_KEY) {
 }
 
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = 'google/gemini-2.5-flash';
+const MODEL = 'openrouter/auto';
 
 const LOCALES_DIR = path.join(__dirname, '..', 'src', 'locales');
 const EN_FILE = path.join(LOCALES_DIR, 'en.json');
